@@ -55,4 +55,12 @@ flush privileges;
 
 ### 用户初始化
 
+```sql
+insert into tb_sys_user
+values (1, 0, 'admin', 15557182659, '$2a$10$ABk.ZnK/vImt/v9WlHLRxOuUcEoPDPtAA8r3SulY5e0khGr6MIxPK', 0, 1618652880000,
+        'system', 1618652880000, 'system');
+insert into tb_sys_user_role
+values (1, 1, 100);
+```
 
+超级管理员初始化权限后，就可以通过给超级管理员分配权限来查看运营管理的页面了。分配权限后，需要刷新页面重新登录才会生效。
