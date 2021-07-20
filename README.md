@@ -29,10 +29,11 @@
 ## 技术选型
 
 - 核心框架：Spring Boot
-- 数据库层：Spring data jpa/
+- 数据库层：Spring data jpa
+- 安全框架：Spring Security
 - 数据库连接池：Druid
 - 前端：Vue.js
-- 数据库：mysql5.5以上
+- 数据库：mysql8以上
 
 ## 快速开始
 
