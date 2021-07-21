@@ -291,7 +291,6 @@
             </el-col>
           </el-row>
           <el-form-item label="服务详情">
-            <Tinymce v-model="detailForm.description"></Tinymce>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer" align="center">

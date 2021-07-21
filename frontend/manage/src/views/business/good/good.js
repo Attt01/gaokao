@@ -4,14 +4,12 @@ import {
   closeGood, outOfGood, auditUnPassGood, auditPassGood, unCloseGood
 } from "../../../api/business/good"
 import {auxiliaryComment as err} from "babel-core/lib/transformation/file/options/removed";
-import Tinymce from "../../../components/tiny-mce"
 import SingleUpload from "../../../components/Upload/singleUpload";
 import MultiUpload from "../../../components/Upload/multiUpload";
 
 export default {
   name: "Good",
   components: {
-    Tinymce,
     SingleUpload,
     MultiUpload,
   },
