@@ -5,25 +5,20 @@ package com.gaokao.backend.enums;
  * date:  2021/7/21
  * email: 757394026@qq.com
  */
-public enum SubjectRestrictionType {
 
-    ONE_MUST(1, "必选一科"),
+/**
+ * 录取批次
+ */
+public enum Batch {
+    NOTMAL_ONE(1, "普通类一段"),
 
-    TWO_MUST(2, "必选两科"),
-
-    THREE_MUST(3, "必选三科"),
-
-    ONE_OF_TWO(4, "二选一"),
-
-    ONE_OF_THREE(5, "三选一"),
-
-    TWO_OF_THREE(6, "三选二");
+    NOTMAL_TWO(2, "普通类二段");
 
     private final int code;
 
     private final String desc;
 
-    SubjectRestrictionType(int code, String desc) {
+    Batch(int code, String desc) {
         this.code = code;
         this.desc = desc;
     }
@@ -32,8 +27,7 @@ public enum SubjectRestrictionType {
         return this.code;
     }
 
-    public String getDesc() {
+    public String desc() {
         return this.desc;
     }
-
 }
