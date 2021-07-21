@@ -96,6 +96,5 @@ module.exports = {
   },
   //引入外部库
   externals:{
-    tinymce: 'tinymce'
   }
 }

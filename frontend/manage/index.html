@@ -7,12 +7,8 @@
   <% if (process.env.NODE_ENV === 'production') { %>
   <!-- 生产环境 -->
   <script>document.write('<script src="./config/index.js?t=' + new Date().getTime() + '"><\/script>');</script>
-  <script src="./static/tinymce.4.9.4/tinymce.min.js"></script>
-  <script src="./static/tinymce.4.9.4/zh_CN.js"></script>
   <% }else { %>
   <!-- 开发环境 -->
-  <script src="./static/tinymce.4.9.4/tinymce.min.js"></script>
-  <script src="./static/tinymce.4.9.4/zh_CN.js"></script>
   <% } %>
 </head>
 <body>
