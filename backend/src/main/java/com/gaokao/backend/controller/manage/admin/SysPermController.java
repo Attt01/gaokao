@@ -1,4 +1,4 @@
-package com.gaokao.backend.controller.admin;
+package com.gaokao.backend.controller.manage.admin;
 
 import com.gaokao.backend.meta.AjaxResult;
 import com.gaokao.backend.meta.vo.admin.PermTreeVO;
