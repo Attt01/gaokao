@@ -31,7 +31,7 @@ export default {
     carouses: '轮播图管理',
     category: '分类管理',
     tag: '标签管理',
-    service: '服务管理',
+    service: '大学管理',
     specAttr: '规格属性管理',
     shop: '商铺管理',
     settled: '入驻管理',
