@@ -1,6 +1,5 @@
 <template>
   <el-menu class="navbar" mode="horizontal">
-    <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
     <breadcrumb></breadcrumb>
     <div class="right-menu">
       <div class="international right-menu-item">
@@ -16,9 +15,9 @@
         </div>
         <el-dropdown-menu slot="dropdown">
           <router-link to="/account/profile">
-           <!-- <el-dropdown-item>
+           <el-dropdown-item>
               {{ $t('navbar.profile') }}
-            </el-dropdown-item>-->
+            </el-dropdown-item>
           </router-link>
           <router-link to="/account/updatePwd">
             <el-dropdown-item>
@@ -37,7 +36,6 @@
 <script>
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
-import Hamburger from '@/components/Hamburger'
 import LangSelect from '@/components/LangSelect'
 import {logOut,getUserInfo} from "../../../utils/auth";
 export default {
@@ -48,7 +46,6 @@ export default {
   },
   components: {
     Breadcrumb,
-    Hamburger,
     LangSelect
   },
   computed: {
@@ -83,12 +80,6 @@ export default {
     height: 50px;
     line-height: 50px;
     border-radius: 0px !important;
-    .hamburger-container {
-      line-height: 58px;
-      height: 50px;
-      float: left;
-      padding: 0 10px;
-    }
     .breadcrumb-container{
       float: left;
     }

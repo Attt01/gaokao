@@ -24,7 +24,6 @@
     "nprogress": "0.2.0",
     "path-to-regexp": "^3.0.0",
     "vue": "2.6.10",
-    "vue-baidu-map": "^0.21.22",
     "vue-echarts": "^3.1.2",
     "vue-i18n": "7.3.2",
     "vue-router": "3.0.3",

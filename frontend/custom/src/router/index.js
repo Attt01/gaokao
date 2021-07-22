@@ -23,25 +23,6 @@ import Layout from '../views/layout/Layout'
  **/
 export const constantRouterMap = [
   {
-    path: '/login',
-    component: () => import('@/views/login/index'),
-    hidden: true
-  },
-  {
-    path: '/test',
-    component: () => import('@/views/test/index'),
-    hidden: true
-  }
-]
-
-export default new Router({
-  // mode: 'history', //后端支持可开
-  scrollBehavior: () => ({y: 0}),
-  routes: constantRouterMap
-});
-
-export const asyncRouterMap = [
-  {
     path: '/',
     component: Layout,
     redirect: '/home',
@@ -60,12 +41,6 @@ export const asyncRouterMap = [
         meta: {title: 'dashboard', permCode: 'home'}
       },
       {
-        path: 'admin',
-        name: 'admin',
-        component: () => import('@/views/dashboard/indexAdmin'),
-        meta: {title: 'dashboardAdmin', permCode: 'admin'}
-      },
-      {
         path: '/account/updatePwd',
         name: '修改密码',
         component: () => import('@/views/account/updatePwd.vue'),
@@ -75,149 +50,67 @@ export const asyncRouterMap = [
     ]
   },
   {
-    path: '/data',
-    component: Layout,
-    redirect: '#',
-    name: 'data',
-    alwaysShow: true,
-    meta: {
-      permCode: 'data',
-      title: 'operation',
-      icon: 'edit'
-    },
-    children: [
-      // {
-      //   path: 'carouses',
-      //   name: 'carouses',
-      //   component: () => import('@/views/business/carouses/index'),
-      //   meta: {title: 'carouses', permCode: 'carouses'}
-      // },
-      // {
-      //   path: 'category',
-      //   name: 'category',
-      //   component: () => import('@/views/business/category/index'),
-      //   meta: {title: 'category', permCode: 'category'}
-      // },
-      // {
-      //   path: 'group',
-      //   name: 'group',
-      //   component: () => import('@/views/business/tag/index'),
-      //   meta: {title: 'tag', permCode: 'group'}
-      // },
-      {
-        path: 'service',
-        name: 'service',
-        component: () => import('@/views/business/good/index'),
-        meta: {title: 'service', permCode: 'goods'}
-      },
-      // {
-      //   path: 'attribute',
-      //   name: 'attribute',
-      //   component: () => import('@/views/business/specAttr/index'),
-      //   meta: {title: 'specAttr', permCode: 'attributes'}
-      // },
-      // {
-      //   path: 'address',
-      //   name: 'address',
-      //   component: () => import('@/views/business/shop/index'),
-      //   meta: {title: 'shop', permCode: 'shop'}
-      // },
-      // {
-      //   path: 'settled',
-      //   name: 'settled',
-      //   component: () => import('@/views/business/settled/index'),
-      //   meta: {title: 'settled', permCode: 'settled'}
-      // },
-      {
-        path: 'order',
-        name: 'order',
-        component: () => import('@/views/business/order/index'),
-        meta: {title: 'order', permCode: 'order'},
-      },
-      {
-        path: 'appuser',
-        name: 'appuser',
-        component: () => import('@/views/business/member/index'),
-        meta: {title: 'VIP', permCode: 'usermember',}
-      },
-      // {
-      //   path: 'comment',
-      //   name: 'comment',
-      //   component: () => import('@/views/business/comment/index'),
-      //   meta: {title: 'comment', permCode: 'comment'}
-      // },
-    ]
-  },
-  {
-    path: '/system',
-    component: Layout,
-    redirect: '#',
-    name: 'System',
-    alwaysShow: true,
-    permCode: 10,
-    meta: {
-      permCode: 'system',
-      title: 'systemMgr',
-      icon: 'table'
-    },
-    children: [
-      {
-        path: 'mgr',
-        name: 'Account',
-        component: () => import('@/views/system/user/index'),
-        meta: {
-          permCode: 'user',
-          title: 'userMgr'
-        }
-      },
-      {
-        path: 'role',
-        name: 'roleMgr',
-        component: () => import('@/views/system/role/index'),
-        meta: {
-          permCode: 'role',
-          title: 'roleMgr'
-        }
-      },
-      {
-        path: 'menu',
-        name: 'Menu',
-        component: () => import('@/views/system/menu/index'),
-        meta: {
-          permCode: 'perm',
-          title: 'menuMgr'
-        }
-      },
-      {
-        path: 'task',
-        name: 'Task',
-        component: () => import('@/views/system/task/index'),
-        meta: {permCode: 'task', title: 'taskMgr'}
-      }
-      // {
-      //   path: 'taskLog',
-      //   name: 'taskLog',
-      //   component: () => import('@/views/system/task/taskLog.vue'),
-      //   hidden: true,
-      //   meta: {title: 'taskLog'}
-      //
-      // },
-      // {
-      //   path: 'dict',
-      //   name: 'Dict',
-      //   component: () => import('@/views/system/dict/index'),
-      //   meta: {title: 'dictMgr'}
-      // },
-      // {
-      //   path: 'cfg',
-      //   name: 'Config',
-      //   component: () => import('@/views/system/cfg/index'),
-      //   meta: {
-      //     title: 'configMgr'
-      //   }
-      // }
-    ]
-  },
+    path: '/login',
+    component: () => import('@/views/login/index'),
+    hidden: true
+  }
+]
+
+export default new Router({
+  // mode: 'history', //后端支持可开
+  scrollBehavior: () => ({y: 0}),
+  routes: constantRouterMap
+});
+
+export const asyncRouterMap = [
+  // {
+  //   path: '/system',
+  //   component: Layout,
+  //   redirect: '#',
+  //   name: 'System',
+  //   alwaysShow: true,
+  //   permCode: 10,
+  //   meta: {
+  //     permCode: 'system',
+  //     title: 'systemMgr',
+  //     icon: 'table'
+  //   },
+  //   children: [
+  //     {
+  //       path: 'mgr',
+  //       name: 'Account',
+  //       component: () => import('@/views/system/user/index'),
+  //       meta: {
+  //         permCode: 'user',
+  //         title: 'userMgr'
+  //       }
+  //     },
+  //     {
+  //       path: 'role',
+  //       name: 'roleMgr',
+  //       component: () => import('@/views/system/role/index'),
+  //       meta: {
+  //         permCode: 'role',
+  //         title: 'roleMgr'
+  //       }
+  //     },
+  //     {
+  //       path: 'menu',
+  //       name: 'Menu',
+  //       component: () => import('@/views/system/menu/index'),
+  //       meta: {
+  //         permCode: 'perm',
+  //         title: 'menuMgr'
+  //       }
+  //     },
+  //     {
+  //       path: 'task',
+  //       name: 'Task',
+  //       component: () => import('@/views/system/task/index'),
+  //       meta: {permCode: 'task', title: 'taskMgr'}
+  //     }
+  //   ]
+  // },
   {
     path: '/404',
     component: () => import('@/views/404'),
