@@ -8,6 +8,7 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '../views/layout/Layout'
+import AccountLayout from '../views/account/accountLayout'
 
 /**
  * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
@@ -25,35 +26,39 @@ export const constantRouterMap = [
   {
     path: '/',
     component: Layout,
-    redirect: '/home',
+    redirect: 'recommand',
     name: 'dashboard',
     meta: {
       title: '主页',
       icon: 'dashboard',
       permCode: 'dashboard'
     },
-    hidden: false,
     children: [
       {
-        path: 'home',
-        name: 'home',
-        component: () => import('@/views/dashboard/index'),
-        meta: {title: 'dashboard', permCode: 'home'}
+        path: 'recommand',
+        name: '智能推荐',
+        component: () => import('@/views/recommand/index'),
+        meta: {title: 'recommand', permCode: 'recommand'}
       },
       {
-        path: '/account/updatePwd',
-        name: '修改密码',
-        component: () => import('@/views/account/updatePwd.vue'),
-        hidden: true,
-        meta: {title: '修改密码'}
+        path: 'preference',
+        name: '志愿表',
+        component: () => import('@/views/preference/index'),
+        meta: {title: 'preference', permCode: 'preference'}
       }
+      // {
+      //   path: 'star',
+      //   name: '收藏',
+      //   component: () => import('@/views/star/index'),
+      //   meta: {title: 'star', permCode: 'star'}
+      // }
     ]
   },
+  //登录和注册做在一起咩qwq？
   {
     path: '/login',
     component: () => import('@/views/login/index'),
-    hidden: true
-  }
+  },
 ]
 
 export default new Router({
@@ -63,57 +68,41 @@ export default new Router({
 });
 
 export const asyncRouterMap = [
-  // {
-  //   path: '/system',
-  //   component: Layout,
-  //   redirect: '#',
-  //   name: 'System',
-  //   alwaysShow: true,
-  //   permCode: 10,
-  //   meta: {
-  //     permCode: 'system',
-  //     title: 'systemMgr',
-  //     icon: 'table'
-  //   },
-  //   children: [
-  //     {
-  //       path: 'mgr',
-  //       name: 'Account',
-  //       component: () => import('@/views/system/user/index'),
-  //       meta: {
-  //         permCode: 'user',
-  //         title: 'userMgr'
-  //       }
-  //     },
-  //     {
-  //       path: 'role',
-  //       name: 'roleMgr',
-  //       component: () => import('@/views/system/role/index'),
-  //       meta: {
-  //         permCode: 'role',
-  //         title: 'roleMgr'
-  //       }
-  //     },
-  //     {
-  //       path: 'menu',
-  //       name: 'Menu',
-  //       component: () => import('@/views/system/menu/index'),
-  //       meta: {
-  //         permCode: 'perm',
-  //         title: 'menuMgr'
-  //       }
-  //     },
-  //     {
-  //       path: 'task',
-  //       name: 'Task',
-  //       component: () => import('@/views/system/task/index'),
-  //       meta: {permCode: 'task', title: 'taskMgr'}
-  //     }
-  //   ]
-  // },
+  {
+    path: '/account',
+    component: AccountLayout,
+    redirect: 'profile',
+    name: 'Account',
+    alwaysShow: true,
+    permCode: 10,
+    meta: {
+      permCode: 'account',
+      title: '账户信息',
+      icon: 'account'
+    },
+    children: [
+      {
+        path: 'profile',
+        name: '个人资料',
+        component: () => import('@/views/account/profile.vue'),
+        meta: {title: '个人资料', permCode: 'profile'}
+      },
+      {
+        path: 'updatePwd',
+        name: '修改密码',
+        component: () => import('@/views/account/updatePwd.vue'),
+        meta: {title: '修改密码', permCode: 'updatePwd'}
+      },
+      {
+        path: 'order',
+        name: '我的订单',
+        component: () => import('@/views/account/updatePwd.vue'),
+        meta: {title: '我的订单', permCode: 'updatePwd'}
+      }
+    ]
+  },
   {
     path: '/404',
     component: () => import('@/views/404'),
-    hidden: true
   }
 ]

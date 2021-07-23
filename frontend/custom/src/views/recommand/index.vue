@@ -49,7 +49,7 @@
   </div>
 </template>
 
-<script src="./dashboard.js"></script>
+<script src="./recommand.js"></script>
 
 <style scoped>
 .app-container {
