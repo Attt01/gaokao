@@ -55,12 +55,6 @@ export const asyncRouterMap = [
         meta: {title: 'dashboard', permCode: 'home'}
       },
       {
-        path: 'admin',
-        name: 'admin',
-        component: () => import('@/views/dashboard/indexAdmin'),
-        meta: {title: 'dashboardAdmin', permCode: 'admin'}
-      },
-      {
         path: '/account/updatePwd',
         name: '修改密码',
         component: () => import('@/views/account/updatePwd.vue'),
@@ -81,48 +75,12 @@ export const asyncRouterMap = [
       icon: 'edit'
     },
     children: [
-      // {
-      //   path: 'carouses',
-      //   name: 'carouses',
-      //   component: () => import('@/views/business/carouses/index'),
-      //   meta: {title: 'carouses', permCode: 'carouses'}
-      // },
-      // {
-      //   path: 'category',
-      //   name: 'category',
-      //   component: () => import('@/views/business/category/index'),
-      //   meta: {title: 'category', permCode: 'category'}
-      // },
-      // {
-      //   path: 'group',
-      //   name: 'group',
-      //   component: () => import('@/views/business/tag/index'),
-      //   meta: {title: 'tag', permCode: 'group'}
-      // },
       {
         path: 'service',
         name: 'service',
         component: () => import('@/views/business/good/index'),
         meta: {title: 'service', permCode: 'goods'}
       },
-      // {
-      //   path: 'attribute',
-      //   name: 'attribute',
-      //   component: () => import('@/views/business/specAttr/index'),
-      //   meta: {title: 'specAttr', permCode: 'attributes'}
-      // },
-      // {
-      //   path: 'address',
-      //   name: 'address',
-      //   component: () => import('@/views/business/shop/index'),
-      //   meta: {title: 'shop', permCode: 'shop'}
-      // },
-      // {
-      //   path: 'settled',
-      //   name: 'settled',
-      //   component: () => import('@/views/business/settled/index'),
-      //   meta: {title: 'settled', permCode: 'settled'}
-      // },
       {
         path: 'order',
         name: 'order',
@@ -135,12 +93,6 @@ export const asyncRouterMap = [
         component: () => import('@/views/business/member/index'),
         meta: {title: 'VIP', permCode: 'usermember',}
       },
-      // {
-      //   path: 'comment',
-      //   name: 'comment',
-      //   component: () => import('@/views/business/comment/index'),
-      //   meta: {title: 'comment', permCode: 'comment'}
-      // },
     ]
   },
   {
@@ -196,20 +148,6 @@ export const asyncRouterMap = [
       //   hidden: true,
       //   meta: {title: 'taskLog'}
       //
-      // },
-      // {
-      //   path: 'dict',
-      //   name: 'Dict',
-      //   component: () => import('@/views/system/dict/index'),
-      //   meta: {title: 'dictMgr'}
-      // },
-      // {
-      //   path: 'cfg',
-      //   name: 'Config',
-      //   component: () => import('@/views/system/cfg/index'),
-      //   meta: {
-      //     title: 'configMgr'
-      //   }
       // }
     ]
   },

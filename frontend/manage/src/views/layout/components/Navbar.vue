@@ -15,11 +15,6 @@
           <i class="el-icon-caret-bottom"/>
         </div>
         <el-dropdown-menu slot="dropdown">
-          <router-link to="/account/profile">
-           <!-- <el-dropdown-item>
-              {{ $t('navbar.profile') }}
-            </el-dropdown-item>-->
-          </router-link>
           <router-link to="/account/updatePwd">
             <el-dropdown-item>
               {{ $t('navbar.updatePwd') }}
