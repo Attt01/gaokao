@@ -3,14 +3,6 @@ import { getOverview } from '@/api/dashboard/dashboard'
 export default {
   data() {
     return {
-      todayOrderNum: '暂无数据',
-      allOrderNum: '暂无数据',
-      todaySaleVolume: '暂无数据',
-      allSaleVolume: '暂无数据',
-      todayFavoriteServiceNum: '暂无数据',
-      allFavoriteServiceNum: '暂无数据',
-      todayFavoriteShopNum: '暂无数据',
-      allFavoriteShopNum: '暂无数据'
     }
   },
   methods: {

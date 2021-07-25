@@ -5,9 +5,6 @@
       <div class="international right-menu-item">
         欢迎您，{{ userName }}
       </div>
-      <template>
-        <lang-select class="international right-menu-item"/>
-      </template>
       <el-dropdown class="avatar-container right-menu-item" trigger="click">
         <div class="avatar-wrapper">
           <img class="user-avatar" src="@/assets/img/avatar.gif">
@@ -36,7 +33,6 @@
 <script>
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
-import LangSelect from '@/components/LangSelect'
 import {logOut,getUserInfo} from "../../../utils/auth";
 export default {
   data() {
@@ -46,7 +42,6 @@ export default {
   },
   components: {
     Breadcrumb,
-    LangSelect
   },
   computed: {
     ...mapGetters([
