@@ -45,13 +45,13 @@ export const constantRouterMap = [
         name: '志愿表',
         component: () => import('@/views/preference/index'),
         meta: {title: 'preference', permCode: 'preference'}
+      },
+      {
+        path: 'stars',
+        name: '收藏',
+        component: () => import('@/views/stars/index'),
+        meta: {title: 'stars', permCode: 'stars'}
       }
-      // {
-      //   path: 'star',
-      //   name: '收藏',
-      //   component: () => import('@/views/star/index'),
-      //   meta: {title: 'star', permCode: 'star'}
-      // }
     ]
   },
   //登录和注册做在一起咩qwq？

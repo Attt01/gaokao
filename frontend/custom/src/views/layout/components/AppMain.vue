@@ -1,19 +1,50 @@
 <template>
-  <section class="app-main">
-    <transition name="fade" mode="out-in">
-      <!-- <router-view :key="key"></router-view> -->
+<section class="app-main">
+    <!-- <transition name="fade" mode="out-in">
       <router-view></router-view>
-    </transition>
-  </section>
+    </transition> -->
+  <div class="app-container">
+    <el-row>
+      <el-col :span="24">
+        <div class="tab-container">
+          <template>
+            <el-tabs v-model="activeTabName" type="card" @tab-click="onTabClick">
+              <el-tab-pane label="智能推荐" name="recommand"></el-tab-pane>
+              <el-tab-pane label="我的志愿表" name="preference"></el-tab-pane>
+              <el-tab-pane label="我的收藏" name="stars"></el-tab-pane>
+            </el-tabs>
+          </template>
+        </div>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="24">
+        <div class="main-container">
+          <router-view></router-view>
+        </div>
+      </el-col>
+    </el-row>
+  </div>
+  
+</section>
 </template>
 
 <script>
 export default {
   name: 'AppMain',
-  computed: {
-    // key() {
-    //   return this.$route.name !== undefined ? this.$route.name + +new Date() : this.$route + +new Date()
-    // }
+  data() {
+    return {
+      
+    }
+  },
+  methods: {
+    onTabClick(tab, event) {
+      console.log(tab, event, tab.name);
+      this.$router.push(tab.name);
+    }
+  },
+  mounted() {
+    console.log(this.activeTabName);
   }
 }
 </script>
@@ -24,5 +55,18 @@ export default {
   min-height: calc(100vh - 50px);
   position: relative;
   overflow: hidden;
+}
+.app-container {
+  margin-top: 50px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  background: linear-gradient(to right, aqua, yellow);
+}
+.tab-container {
+}
+.main-container {
+  border: black;
+  border-width: thick;
 }
 </style>

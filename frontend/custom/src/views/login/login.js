@@ -1,5 +1,4 @@
 import {isvalidUsername} from '@/utils/validate'
-import LangSelect from '@/components/LangSelect'
 import {getInfo, login} from "../../api/login";
 import {STATUS_CODE} from "../../api/statusCode";
 import {setToken, setUserInfo} from "../../utils/auth";
@@ -7,7 +6,7 @@ import {buildRouter} from "../../permission";
 
 export default {
   name: 'login',
-  components: {LangSelect},
+  // components: {LangSelect},
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!isvalidUsername(value)) {
