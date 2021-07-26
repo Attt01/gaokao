@@ -61,12 +61,4 @@ public class SysRoleController {
         return AjaxResult.SUCCESS(sysRoleService.list(keyword, UserUtils.getCorpId(), operatorCorpId, page, size));
     }
 
-    @GetMapping("/dropdown")
-    @PreAuthorize("hasPermission('role','view')")
-    public AjaxResult<List<NameValuePair>> dropdown() {
-        Long corpId = UserUtils.getCorpId();
-        return AjaxResult.SUCCESS(sysRoleService.list(corpId));
-    }
-
-
 }
