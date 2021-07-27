@@ -79,19 +79,19 @@ export const asyncRouterMap = [
         path: 'service',
         name: 'service',
         component: () => import('@/views/business/good/index'),
-        meta: {title: 'service', permCode: 'goods'}
+        meta: {title: '大学管理', permCode: 'goods'}
       },
       {
         path: 'order',
         name: 'order',
         component: () => import('@/views/business/order/index'),
-        meta: {title: 'order', permCode: 'order'},
+        meta: {title: '订单管理', permCode: 'order'},
       },
       {
         path: 'appuser',
         name: 'appuser',
         component: () => import('@/views/business/member/index'),
-        meta: {title: 'VIP', permCode: 'usermember',}
+        meta: {title: '会员管理', permCode: 'usermember',}
       },
     ]
   },
