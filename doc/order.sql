@@ -28,7 +28,7 @@ CREATE TABLE `tb_order_pay`
     PRIMARY KEY (`id`),
     INDEX `idx_order_id` (`order_id`) USING BTREE
 ) ENGINE = InnoDB
- DEFAULT CHARSET = utf8mb4 COMMENT='支付单';
+ DEFAULT CHARSET = utf8mb4 COMMENT='订单支付单';
 
 drop table if exists `tb_order_refund`;
 create table `tb_order_refund`
