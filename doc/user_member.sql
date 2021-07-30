@@ -6,7 +6,8 @@ CREATE TABLE `tb_user_member`
     username        varchar(64)  not null default '' comment '用户名',
     password        varchar(64)  not null default '' comment '密码',
     nickname        varchar(32)  not null default '' comment '昵称',
-    is_vip          tinyint(3)  not null default 0 comment '是否是vip，0为否，1为是'
+    is_vip          tinyint(3)  not null default 0 comment '是否是vip，0为否，1为是',
+    vip_expiration_time bigint  not null default 0 comment 'vip到期时间',
     status          tinyint(3) not null default 0 comment '用户状态, 0为正常, 1为锁定',
     score           bigint(20) not null default 0 comment '用户分数',
     province_rank   bigint(20) not null default 0 comment '全省排名',
