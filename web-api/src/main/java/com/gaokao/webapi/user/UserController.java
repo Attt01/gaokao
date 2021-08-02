@@ -1,4 +1,4 @@
-package com.gaokao.adminapi.controller.user;
+package com.gaokao.webapi.user;
 
 import com.gaokao.common.meta.AjaxResult;
 import com.gaokao.common.meta.vo.user.RegParams;

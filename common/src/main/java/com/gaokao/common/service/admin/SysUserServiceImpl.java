@@ -6,7 +6,7 @@ import com.gaokao.common.dao.SysUserDao;
 import com.gaokao.common.dao.SysUserRoleDao;
 import com.gaokao.common.exceptions.BusinessException;
 import com.gaokao.common.meta.bo.JwtUser;
-import com.gaokao.common.meta.bo.admin.UserInfo;
+import com.gaokao.common.meta.bo.UserInfo;
 import com.gaokao.common.meta.po.SysUser;
 import com.gaokao.common.meta.po.SysUserRole;
 import com.gaokao.common.meta.vo.admin.SysUserCreateParams;

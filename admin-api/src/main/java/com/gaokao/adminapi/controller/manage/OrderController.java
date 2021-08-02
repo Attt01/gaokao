@@ -1,4 +1,4 @@
-package com.gaokao.webapi.manage;
+package com.gaokao.adminapi.controller.manage;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
