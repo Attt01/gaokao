@@ -1,4 +1,4 @@
-package com.gaokao.adminapi.controller.manage.admin;
+package com.gaokao.adminapi.controller.admin;
 
 import com.gaokao.common.constants.AppConstant;
 import com.gaokao.common.meta.AjaxResult;
