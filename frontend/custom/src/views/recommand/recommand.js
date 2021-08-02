@@ -1,29 +1,64 @@
-import { getOverview } from '@/api/dashboard/dashboard'
-
 export default {
   data() {
     return {
+      userInfo: {},
+      major: {
+        props: { multiple: true },
+        options: [{
+          value: 1,
+          label: '计算机类',
+          children: [{
+            value: 2,
+            label: '计算机科学与技术'
+          }, {
+            value: 3,
+            label: '软件工程'
+          }]
+        }]
+      },
+      area: {
+        isShowDialog: false,
+        areas: ['qwq', 'owo', 'aaa'],
+        selected: []
+      },
+      plan: {
+        isShowDialog: false,
+        num: []
+      },
+      batch: {
+        options: [{
+          value: '选项1',
+          label: '普通一段'
+        }, {
+          value: '选项2',
+          label: '普通二段'
+        }],
+        selected: ''
+      },
+      isAutoRecommand: true
     }
   },
   methods: {
     initData() {
-      getOverview().then(response => {
-        const vo = response.data
-        if (vo) {
-          this.todayOrderNum = vo.todayOrderNum
-          this.allOrderNum = vo.allOrderNum
-          this.todaySaleVolume = vo.todaySaleVolume
-          this.allSaleVolume = vo.allSaleVolume
-          this.todayFavoriteServiceNum = vo.todayFavoriteServiceNum
-          this.allFavoriteServiceNum = vo.allFavoriteServiceNum
-          this.todayFavoriteShopNum = vo.todayFavoriteShopNum
-          this.allFavoriteShopNum = vo.allFavoriteShopNum
-        }
-      })
+      //if (getToken())
+      this.userInfo = JSON.parse(localStorage.getItem('userGaoKaoInfo'));
+      //console.log(this.userInfo);
+    },
+    onSubmit() {
+      alert('submit!');
+    }
+  },
+  computed: {
+    userInfoStr() {
+      if (this.userInfo.score) {
+        let subs = this.userInfo.subjects;
+        return '高考分数: ' + this.userInfo.score
+          + ' / 排名: ' + this.userInfo.rank
+          + ' / 选科: ' + subs[0][0] + ' ' + subs[1][0] + ' ' + subs[2][0];
+      }
     }
   },
   mounted() {
-    console.log('mounted')
-    this.initData()
-  }
+    this.initData();
+  },
 }
