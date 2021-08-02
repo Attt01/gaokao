@@ -1,6 +1,6 @@
 package com.gaokao.common.service.admin;
 
-import com.gaokao.common.meta.bo.admin.UserInfo;
+import com.gaokao.common.meta.bo.UserInfo;
 import com.gaokao.common.meta.po.SysUser;
 import com.gaokao.common.meta.vo.admin.SysUserCreateParams;
 import com.gaokao.common.meta.vo.admin.SysUserUpdateParams;

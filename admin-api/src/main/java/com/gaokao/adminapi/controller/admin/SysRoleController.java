@@ -1,9 +1,8 @@
-package com.gaokao.webapi.manage.admin;
+package com.gaokao.adminapi.controller.admin;
 
 import com.gaokao.common.meta.AjaxResult;
 import com.gaokao.common.meta.vo.admin.SysRoleSaveParams;
 import com.gaokao.common.meta.vo.admin.SysRoleVO;
-import com.gaokao.common.meta.vo.common.NameValuePair;
 import com.gaokao.common.service.admin.SysRoleService;
 import com.gaokao.common.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;

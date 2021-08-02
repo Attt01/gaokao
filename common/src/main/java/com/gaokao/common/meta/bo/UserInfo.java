@@ -1,4 +1,4 @@
-package com.gaokao.common.meta.bo.admin;
+package com.gaokao.common.meta.bo;
 
 import lombok.Data;
 

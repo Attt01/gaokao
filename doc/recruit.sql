@@ -4,7 +4,7 @@ CREATE TABLE `tb_minimum_score`
     id bigint auto_increment not null comment '主键',
     university_id bigint(20) not null default 0 comment '对应大学id',
     year int not null default 0 comment '年份',
-    batch int not null default 0 comment '录取批次',
+    batch varchar(11) not null default 0 comment '录取批次',
     type int not null default 0 comment '招生类型',
     lowest_score int not null default 0 comment '最低分数',
     lowest_rank int not null default 0 comment '最低位次',
@@ -39,8 +39,6 @@ CREATE TABLE `tb_recruit_score`
     average_score int not null default 0 comment '平均分',
     lowest_score int not null default 0 comment '最低分',
     lowest_rank int not null default 0 comment '最低位次',
-    subject_restriction_type tinyint(3) not null default 0 comment '选课要求类型',
-    subject_restriction_detail varchar(20) not null default 0 comment '具体要求了那几科 1;4;5',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
 DEFAULT CHARSET = utf8mb4 comment '专业分数线表';

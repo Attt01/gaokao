@@ -33,7 +33,7 @@ CREATE TABLE `tb_university_detail`
     environment_score         double       not null default 0 comment '生活指数',
     employment_score          double       not null default 0 comment '就业指数',
     average_score             double       not null default 0 comment '综合评分',
-    thumbnail                 varchar(200) not null default '' comment '学校缩略图',
+    thumbnail                 varchar(200) not null default '' comment '学校缩略图//存在本地',
     phd_first_level_point     bigint(20) not null default 0 comment '一级博士点',
     phd_second_level_point    bigint(20) not null default 0 comment '二级博士点',
     master_first_level_point  bigint(20) not null default 0 comment '一级硕士点',

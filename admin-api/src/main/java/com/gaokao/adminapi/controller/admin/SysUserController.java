@@ -1,9 +1,9 @@
-package com.gaokao.webapi.manage.admin;
+package com.gaokao.adminapi.controller.admin;
 
 import com.gaokao.common.constants.AppConstant;
 import com.gaokao.common.meta.AjaxResult;
 import com.gaokao.common.meta.bo.JwtUser;
-import com.gaokao.common.meta.bo.admin.UserInfo;
+import com.gaokao.common.meta.bo.UserInfo;
 import com.gaokao.common.meta.vo.admin.*;
 import com.gaokao.common.service.admin.SysUserService;
 import com.gaokao.common.utils.UserUtils;
