@@ -3,19 +3,21 @@
     <div class="main-container">
       <navbar></navbar>
       <app-main></app-main>
+      <user-info-dialog></user-info-dialog>
     </div>
   </div>
 </template>
 
 <script>
-import { Navbar, AppMain } from './components'
+import { Navbar, AppMain, UserInfoDialog } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 
 export default {
   name: 'layout',
   components: {
     Navbar,
-    AppMain
+    AppMain,
+    UserInfoDialog
   },
   mixins: [ResizeMixin],
   computed: {
