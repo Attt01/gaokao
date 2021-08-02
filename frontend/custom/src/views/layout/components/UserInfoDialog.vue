@@ -82,7 +82,9 @@ export default {
       this.$refs.userInfo.validate((isValid) => {
         if (isValid) {
           //console.log('submit!');
-          localStorage.setItem('userGaoKaoInfo', userInfo);
+          //console.log(userInfo);
+          localStorage.setItem('userGaoKaoInfo', JSON.stringify(userInfo));
+          //console.log(localStorage.getItem('userGaoKaoInfo'));
           this.dialogVisible = false;
         } else {
           //console.log('error submit!!');

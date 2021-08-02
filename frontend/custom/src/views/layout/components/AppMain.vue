@@ -61,7 +61,7 @@ export default {
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
-  background: linear-gradient(to right, aqua, yellow);
+  background-color: tan;
 }
 .tab-container {
 }
