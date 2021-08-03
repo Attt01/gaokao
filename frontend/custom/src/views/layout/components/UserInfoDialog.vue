@@ -33,12 +33,12 @@
               v-model="userInfo.subjects"
               :max="3"
             >
-              <el-checkbox label="物理" name="type"></el-checkbox>
-              <el-checkbox label="化学" name="type"></el-checkbox>
-              <el-checkbox label="生物" name="type"></el-checkbox>
-              <el-checkbox label="政治" name="type"></el-checkbox>
-              <el-checkbox label="历史" name="type"></el-checkbox>
-              <el-checkbox label="地理" name="type"></el-checkbox>
+              <el-checkbox label="物理"></el-checkbox>
+              <el-checkbox label="化学"></el-checkbox>
+              <el-checkbox label="生物"></el-checkbox>
+              <el-checkbox label="政治"></el-checkbox>
+              <el-checkbox label="历史"></el-checkbox>
+              <el-checkbox label="地理"></el-checkbox>
             </el-checkbox-group>
           </el-form-item>
           <el-form-item>
