@@ -1,14 +1,14 @@
 <template>
 <div>
-  <el-row type="flex" alien="middle" justify="space-around">
+  <el-row type="flex" justify="space-around">
     <el-col :span="0.5"></el-col>
     <el-col :span="12">
-      <div class="tmp">
+      <div class="left-container">
         <el-row type="flex" justify="space-around" align="center">
           <el-col :span="21">
-            <div class="tmp2">
+            <div class="form-container">
 
-              <el-form ref="form" label-width="80px">
+              <el-form ref="favorite" label-width="80px">
 
                 <el-form-item label="成绩信息">
                   <el-input
@@ -30,23 +30,31 @@
 
                 <el-form-item label="意向地区">
                   <!--按钮待替换-->
-                  <el-button type="primary" @click="area.isShowDialog=true">点击选择</el-button>
+                  <el-button type="primary" @click="area.isShowDialog=true;area.tmpSelected=area.selected;">点击选择</el-button>
                   <el-dialog
                     title="选择意向地区"
                     :visible.sync="area.isShowDialog"
                   >
-                    <el-checkbox-group v-model="area.selected">
-                      <el-checkbox v-for="availableArea in area.areas" :key="availableArea" :label="availableArea"></el-checkbox>
-                    </el-checkbox-group>
-                    <span slot="footer" class="dialog-footer">
-                      <el-button type="primary" @click="area.isShowDialog=false">确 定</el-button>
-                    </span>
+                    <el-form :rules="areaRules" :model="area" ref="areaSelect">
+                      <el-form-item prop="tmpSelected">
+                        <el-checkbox-group v-model="area.tmpSelected">
+                          <el-checkbox v-for="availableArea in area.areas" :key="availableArea" :label="availableArea"></el-checkbox>
+                        </el-checkbox-group>
+                      </el-form-item>
+                      <el-form-item>
+                        <el-row type="flex" justify="end">
+                          <el-col :span="3">
+                            <el-button type="primary" @click="onConfirmArea">确 定</el-button>
+                          </el-col>
+                        </el-row>
+                      </el-form-item>
+                    </el-form>
                   </el-dialog>
                 </el-form-item>
 
                 <el-form-item label="填报方案">
                   <!--按钮待替换-->
-                  <el-button type="primary" @click="plan.isShowDialog=true">点击选择</el-button>
+                  <el-button type="primary" @click="plan.isShowDialog=true; plan.tmpnum=plan.num.slice(0);">点击选择</el-button>
                   <el-dialog
                     title="选择填报方案"
                     :visible.sync="plan.isShowDialog"
@@ -54,17 +62,17 @@
                   >
                     <el-form>
                       <el-form-item label="冲击">
-                        <el-input v-model="plan.num[0]" placeholder="请输入内容"></el-input>
+                        <el-input v-model="plan.tmpnum[0]" placeholder="请输入冲击数"></el-input>
                       </el-form-item>
                       <el-form-item label="稳妥">
-                        <el-input v-model="plan.num[1]" placeholder="请输入内容"></el-input>
+                        <el-input v-model="plan.tmpnum[1]" placeholder="请输入稳妥数"></el-input>
                       </el-form-item>
                       <el-form-item label="保底">
-                        <el-input v-model="plan.num[2]" placeholder="请输入内容"></el-input>
+                        <el-input v-model="plan.tmpnum[2]" placeholder="请输入保底数"></el-input>
                       </el-form-item>
                     </el-form>
                     <span slot="footer" class="dialog-footer">
-                      <el-button type="primary" @click="plan.isShowDialog=false">确 定</el-button>
+                      <el-button type="primary" @click="onConfirmPlan">确 定</el-button>
                     </span>
                   </el-dialog>
                 </el-form-item>
@@ -99,11 +107,10 @@
       </div>
     </el-col>
     <el-col :span="10">
-      <div class="tmp">
+      <div class="right-container">
         <!--轮播图/宣传图留空-->
         <el-image
           src="https://z3.ax1x.com/2021/03/30/cigICq.jpg"
-          :fit="cover"
         >
         </el-image>
       </div>
@@ -116,16 +123,14 @@
 <script src="./recommand.js"></script>
 
 <style scoped>
-/* .recommand-main-container {
-  display: flex;
-  justify-content: center;
-} */
-.tmp {
+.left-container {
   background-color:peru;
+  height: 100%;
   width: 100%;
 }
-.tmp2 {
-  border:5px solid red;
+.form-container {
+  padding: 5% 0;
   width: 100%;
+  /*background-color: aqua;*/
 }
 </style>

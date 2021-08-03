@@ -19,11 +19,18 @@ export default {
       area: {
         isShowDialog: false,
         areas: ['qwq', 'owo', 'aaa'],
-        selected: []
+        selected: [],
+        tmpSelected: []
+      },
+      areaRules: {
+        tmpSelected: [
+          { required: true, message: '请至少选择一项', trigger: 'blur' }
+        ]
       },
       plan: {
         isShowDialog: false,
-        num: []
+        num: [],
+        tmpnum: []
       },
       batch: {
         options: [{
@@ -46,6 +53,37 @@ export default {
     },
     onSubmit() {
       alert('submit!');
+    },
+    onConfirmArea() {
+      // area.isShowDialog=false
+      // alert("qwq");
+      this.$refs.areaSelect.validate((isValid) => {
+        //alert("qqq");
+        if (isValid) {
+          //alert("Qwq");
+          this.area.selected = this.area.tmpSelected;
+          this.area.isShowDialog = false;
+        } else {
+          return false;
+        }
+      });
+    },
+    onConfirmPlan() {
+      let tmpNum = this.plan.tmpnum.slice(0), sum = 0;
+      console.log(tmpNum);
+      for (let index = 0; index < 3; index++) {
+        if (tmpNum[index] == undefined || tmpNum[index] == "") {
+          tmpNum[index] = 0;
+        }
+        sum += parseInt(tmpNum[index]);
+      }
+      if (sum != 96)
+      {
+        this.$message('三种志愿总和应该是96');
+      } else {
+        this.plan.num = tmpNum.slice(0);
+        this.plan.isShowDialog = false;
+      }
     }
   },
   computed: {
