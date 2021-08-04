@@ -84,20 +84,26 @@ export const asyncRouterMap = [
       {
         path: 'profile',
         name: '个人资料',
-        component: () => import('@/views/account/profile.vue'),
+        component: () => import('@/views/profile/index'),
         meta: {title: '个人资料', permCode: 'profile'}
+      },
+      {
+        path: 'myPreferenceList',
+        name: '我的志愿表',
+        component: () => import('@/views/myPreferenceList/index'),
+        meta: {title: '我的志愿表', permCode: 'myPreferenceList'}
+      },
+      {
+        path: 'myOrder',
+        name: '我的订单',
+        component: () => import('@/views/myOrder/index'),
+        meta: {title: '我的订单', permCode: 'myOrder'}
       },
       {
         path: 'updatePwd',
         name: '修改密码',
-        component: () => import('@/views/account/updatePwd.vue'),
+        component: () => import('@/views/updatePwd/index'),
         meta: {title: '修改密码', permCode: 'updatePwd'}
-      },
-      {
-        path: 'order',
-        name: '我的订单',
-        component: () => import('@/views/account/updatePwd.vue'),
-        meta: {title: '我的订单', permCode: 'updatePwd'}
       }
     ]
   },

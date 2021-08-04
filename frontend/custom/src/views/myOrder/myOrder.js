@@ -1,14 +1,15 @@
-
 export default {
   data() {
     return {
+      
     }
   },
   methods: {
-    initData() {
+    initData(){
+      
     }
   },
   mounted() {
     this.initData()
-  }
+  },
 }

@@ -1,12 +1,45 @@
 <template>
-<div>
-  <h1> 这里是账户信息的外框 </h1>
-  <router-view></router-view>
+<div class="profile-main-container">
+  <navbar></navbar>
+  <profile-main></profile-main>
+  <footer></footer>
 </div>
 </template>
 
-<script src="./account.js"></script>
+<script>
+import { Navbar, ProfileMain } from './components'
+import ResizeMixin from './mixin/ResizeHandler'
 
-<style lang="sass" scoped>
+export default {
+  name: 'layout',
+  components: {
+    Navbar,
+    ProfileMain
+  },
+  mixins: [ResizeMixin],
+  computed: {
+    sidebar() {
+      return this.$store.state.app.sidebar
+    },
+    device() {
+      return this.$store.state.app.device
+    },
+    classObj() {
+      return {
+        hideSidebar: !this.sidebar.opened,
+        openSidebar: this.sidebar.opened,
+        withoutAnimation: this.sidebar.withoutAnimation,
+        mobile: this.device === 'mobile'
+      }
+    }
+  },
+  methods: {
+  }
+}
+</script>
 
+<style scoped>
+.profile-main-container {
+  background-color:bisque;
+}
 </style>

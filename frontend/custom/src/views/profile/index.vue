@@ -1,5 +1,6 @@
 <template>
-  <div class="app-container">
+<h1> 这里是个人资料 </h1>
+  <!-- <div class="app-container">
     <div class="user">
       <strong>{{ user.name }}</strong><br>
       <small>{{ user.dept }} &nbsp;&nbsp; {{ user.roles }}</small>
@@ -44,7 +45,7 @@
     </el-row>
 
 
-  </div>
+  </div> -->
 </template>
 
 <script src="./profile.js"></script>
