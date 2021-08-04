@@ -1,4 +1,4 @@
-package com.gaokao.webapi.controller.user;
+package com.gaokao.controller;
 
 /**
  * @author attack204

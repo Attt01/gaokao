@@ -27,5 +27,11 @@ spring:
     multipart:
       max-file-size: 10MB
 
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*Mapper.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
 server:
   port: 9010

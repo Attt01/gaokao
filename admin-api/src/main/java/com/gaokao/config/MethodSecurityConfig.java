@@ -1,5 +1,6 @@
-package com.gaokao.common.config;
+package com.gaokao.config;
 
+import com.gaokao.common.config.AppPermissionEvaluator;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
@@ -8,7 +9,7 @@ import org.springframework.security.config.annotation.method.configuration.Globa
 
 /**
  * @author attack204
- * date:  2021/7/19
+ * date:  2021/8/4
  * email: 757394026@qq.com
  */
 @Configuration

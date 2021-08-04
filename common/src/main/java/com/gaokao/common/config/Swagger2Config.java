@@ -34,7 +34,7 @@ public class Swagger2Config {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("store.fission.o2o.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.gaokao.controller"))
                 .paths(PathSelectors.any())
                 .build()
                 .securitySchemes(securitySchemes())

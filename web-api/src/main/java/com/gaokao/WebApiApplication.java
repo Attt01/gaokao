@@ -1,4 +1,4 @@
-package com.gaokao.webapi;
+package com.gaokao;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

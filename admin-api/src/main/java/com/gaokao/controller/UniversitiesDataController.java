@@ -1,4 +1,4 @@
-package com.gaokao.adminapi.controller;
+package com.gaokao.controller;
 
 /**
  * @author attack204

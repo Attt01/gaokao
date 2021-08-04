@@ -355,22 +355,12 @@
             </dependency>
             <!-- message end-->
 
-            <dependency>
-                <groupId>store.fission.o2o</groupId>
-                <artifactId>infra</artifactId>
-                <version>${project.version}</version>
-            </dependency>
 
             <dependency>
-                <groupId>store.fission.o2o</groupId>
-                <artifactId>remote</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>store.fission.o2o</groupId>
-                <artifactId>application</artifactId>
-                <version>${project.version}</version>
+                <groupId>com.gaokao</groupId>
+                <artifactId>common</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+                <scope>compile</scope>
             </dependency>
 
             <!-- redis相关依赖-->

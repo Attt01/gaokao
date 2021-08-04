@@ -16,7 +16,7 @@ import java.util.Set;
  * date:  2021/7/19
  * email: 757394026@qq.com
  */
-@Repository
+
 public interface SysUserService extends UserDetailsService {
 
     /**

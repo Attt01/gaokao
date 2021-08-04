@@ -1,11 +1,10 @@
-package com.gaokao.adminapi;
+package com.gaokao;
 
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@MapperScan("com.gaokao")
 public class AdminApiApplication {
 
     public static void main(String[] args) {
