@@ -4,6 +4,7 @@
       <navbar></navbar>
       <app-main></app-main>
       <user-info-dialog></user-info-dialog>
+      <footer></footer>
     </div>
   </div>
 </template>

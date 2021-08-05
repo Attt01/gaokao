@@ -4,19 +4,17 @@
       <router-view></router-view>
     </transition> -->
   <div class="app-container">
-    <el-row>
-      <el-col :span="24">
-        <div class="tab-container">
-          <el-tabs v-model="activeTabName" type="card" @tab-click="onTabClick">
-            <el-tab-pane label="智能推荐" name="recommand"></el-tab-pane>
-            <el-tab-pane label="我的志愿表" name="preference"></el-tab-pane>
-            <el-tab-pane label="我的收藏" name="stars"></el-tab-pane>
-          </el-tabs>
-        </div>
+    <el-row type="flex" justify="space-around">
+      <el-col :span="3">
+        <!--这个tab不好看的话考虑手写-->
+        <el-tabs v-model="activeTabName" tabPosition="left" type="card" @tab-click="onTabClick">
+          <el-tab-pane label="高考信息" name="profile"></el-tab-pane>
+          <el-tab-pane label="我的志愿表" name="myPreferenceList"></el-tab-pane>
+          <el-tab-pane label="我的订单" name="myOrder"></el-tab-pane>
+          <el-tab-pane label="修改密码" name="updatePwd"></el-tab-pane>
+        </el-tabs>
       </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="24">
+      <el-col :span="21">
         <div class="main-container">
           <router-view></router-view>
         </div>
@@ -29,10 +27,10 @@
 
 <script>
 export default {
-  name: 'AppMain',
+  name: 'ProfileMain',
   data() {
     return {
-      activeTabName: 'recommand'
+      activeTabName: 'profile'
     }
   },
   methods: {
@@ -53,7 +51,6 @@ export default {
   min-height: calc(100vh - 50px);
   position: relative;
   overflow: hidden;
-  background-color: bisque;
 }
 .app-container {
   margin-top: 50px;
@@ -65,7 +62,7 @@ export default {
 /* .tab-container {
 } */
 .main-container {
-  border: black;
-  border-width: thick;
+  border: solid black;
+  /* background-color: aqua; */
 }
 </style>
