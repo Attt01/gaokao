@@ -45,12 +45,14 @@ public class UserMember {
     /**
      * 是否vip
      */
-    private boolean is_vip;
+    @Column(name = "is_vip")
+    private boolean vipIsOrNot;
 
     /**
      * vip 到期时间
      */
-    private long vip_expiration_time;
+    @Column(name = "vip_expiration_time")
+    private long vipExpirationTime;
 
     /**
      * 状态: 0为正常，1为锁定
@@ -65,7 +67,7 @@ public class UserMember {
     /**
      * 全省排名
      */
-    private Integer province_rank;
+    private Integer provinceRank;
     /**
      * 选考科目
      */
@@ -73,25 +75,25 @@ public class UserMember {
     /**
      * 微信登录openId
      */
-    @Column(name = "")
+    @Column(name = "wx_open_id")
     private String wxOpenId;
 
     /**
      * 微信登录sKey，用于生成认证token
      */
-    @Column(name = "")
+    @Column(name = "wx_s_key")
     private String wxSKey;
 
     /**
      * 微信登录sessionKey
      */
-    @Column(name = "")
+    @Column(name = "wx_session_key")
     private String wxSessionKey;
 
     /**
      * 微信登录头像地址
      */
-    @Column(name = "")
+    @Column(name = "wx_avatar_url")
     private String wxAvatarUrl;
 
     /**
@@ -102,12 +104,12 @@ public class UserMember {
     /**
      * 注册时间
      */
-    private long create_time;
+    private long createTime;
 
     /**
      * 更新时间
      */
-    private long update_time;
+    private long updateTime;
 
 
 }

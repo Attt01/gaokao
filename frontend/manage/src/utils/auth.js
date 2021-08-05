@@ -6,11 +6,11 @@ const platformUserCorpId = 0 || -1
 
 //这里可得记得改回来qwq
 export function getToken() {
-  //return sessionStorage.getItem(TokenKey)
-  if (sessionStorage.getItem(TokenKey))
-    return sessionStorage.getItem(TokenKey);
-  else
-    return "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2Mjc5ODg2NzUsInVzZXJuYW1lIjoiYWRtaW4ifQ.Et3146xhO0Szaq06LR_euK3V3DpWIekOri4yelAlHtI";
+  return sessionStorage.getItem(TokenKey)
+  // if (sessionStorage.getItem(TokenKey))
+  //   return sessionStorage.getItem(TokenKey);
+  // else
+  //   return "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2Mjc5ODg2NzUsInVzZXJuYW1lIjoiYWRtaW4ifQ.Et3146xhO0Szaq06LR_euK3V3DpWIekOri4yelAlHtI";
 }
 
 export function setToken(token) {
