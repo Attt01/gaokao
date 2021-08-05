@@ -1,8 +1,10 @@
-package com.gaokao.common.service.admin;
+package com.gaokao.common.service;
 
 
 import com.gaokao.common.meta.vo.user.MemberUpdateParams;
 import com.gaokao.common.meta.vo.user.RegParams;
+import com.gaokao.common.meta.vo.user.UserMemberVO;
+import org.springframework.data.domain.Page;
 
 public interface UserMemberService {
     /**
@@ -20,6 +22,15 @@ public interface UserMemberService {
      * @return 是否发送成功
      */
     //String sendVerifyCode(VeryCodeType type, String phone); 待做
+
+    /**
+     * 查询所有用户
+     * @param keyword
+     * @param page
+     * @param size
+     * @return
+     */
+    Page<UserMemberVO> list(String keyword, Integer page, Integer size);
 
 
     /**
