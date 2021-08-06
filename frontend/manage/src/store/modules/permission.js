@@ -1,13 +1,12 @@
 import { asyncRouterMap, constantRouterMap } from '@/router'
 
 // permission judge function
-// 为了开发方便先把守卫关掉了
 function hasPermission(routeItem, permCodes) {
-  // if (!routeItem.meta || !routeItem.meta.permCode) {
-  //   return true;
-  // }
-  // return permCodes.indexOf(routeItem.meta.permCode) > -1;
-  return true;
+  if (!routeItem.meta || !routeItem.meta.permCode) {
+    return true;
+  }
+  return permCodes.indexOf(routeItem.meta.permCode) > -1;
+  //return true;
 }
 
 function filterAsyncRouterByMenu(itemMap, permCodes) {
