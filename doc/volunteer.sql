@@ -19,11 +19,29 @@ CREATE TABLE `tb_user_volunteer`
 drop table if exists `tb_volunteer`;
 CREATE TABLE `tb_volunteer`
 (
-    id             bigint auto_increment not null comment '主键',
-    school_id      varchar(10) default '' comment '学校id',
-    major_plan_id  varchar(10) default '' comment '专业招生计划id',
-    major_score_id varchar(40) default '' comment '专业分数id',
-    code           varchar(10) default '' comment '招生代码',
+    id                         bigint auto_increment not null comment '主键',
+    university_code            varchar(11) not null default '' comment '高校代码',
+    name                       varchar(11) not null default '' comment '高校名称',
+    province                   varchar(11) not null default '' comment '所在省份',
+    city                       varchar(11) not null default '' comment '市',
+    level                      varchar(11) not null default '' comment '学校档次: 985/211/一本',
+    category                   varchar(11) not null default '' comment '学校分类。理工/师范/综合',
+
+
+    major_name                 varchar(32) not null default '' comment '专业名称',
+    major_code                 varchar(10) not null default '' comment '招生代码',
+    fee                        int         not null default 0 comment '每年学费',
+    recruit_number             bigint(20) not null default 0 comment '计划招生数量',
+    schooling_time             tinyint(3) not null default 0 comment '学制;即毕业所需时间3年或4年',
+    subject_restriction_type   tinyint(3) not null default 0 comment '选课要求类型',
+    subject_restriction_detail varchar(20) not null default 0 comment '具体要求了那几科 1;4;5',
+
+    lowest_score               int         not null default 0 comment '上一年最低分数',
+    lowest_rank                int         not null default 0 comment '上一年最低位次',
+
+--     school_id      varchar(10) default '' comment '学校id',
+--     major_plan_id  varchar(10) default '' comment '专业招生计划id',
+--     major_score_id varchar(40) default '' comment '专业分数id',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 comment '用户志愿表';
