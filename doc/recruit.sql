@@ -17,6 +17,7 @@ drop table if exists `tb_recruit_plan`;
 CREATE TABLE `tb_recruit_plan`
 (
     id bigint auto_increment not null comment '主键',
+    year int not null default 0 comment '年份',
     university_id bigint(20) not null default 0 comment '对应高校id',
     major_name varchar(32) not null default '' comment '专业名称',
     subject_category varchar(32) not null default '' comment '学科门类',
@@ -28,11 +29,11 @@ CREATE TABLE `tb_recruit_plan`
 ) ENGINE = InnoDB
 DEFAULT CHARSET = utf8mb4 comment '招生计划表';
 
-
 drop table if exists `tb_recruit_score`;
 CREATE TABLE `tb_recruit_score`
 (
     id bigint auto_increment not null comment '主键',
+    year int not null default 0 comment '年份',
     university_id bigint(20) not null default 0 comment '对应高校id',
     major_name varchar(32) not null default '' comment '专业名称',
     batch int not null default 0 comment '录取批次',
