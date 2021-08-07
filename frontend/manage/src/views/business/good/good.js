@@ -39,19 +39,17 @@ export default {
       goodsCreateStep: 1,
       //列信息
       columns: [
-        {key: 0, label: `商品名称`, visible: true},
-        {key: 1, label: `商品图片`, visible: true},
-        {key: 2, label: `状态`, visible: true},
-        {key: 3, label: `所属商铺`, visible: true},
-        {key: 4, label: `商品分类`, visible: true},
-        {key: 5, label: `商品分组`, visible: true},
-        {key: 6, label: `简要描述`, visible: true},
-        {key: 7, label: `商品原价`, visible: true},
-        {key: 8, label: `商品现价`, visible: false},
-        {key: 9, label: `优先级`, visible: false},
-        {key: 10, label: `到店服务`, visible: false},
-        {key: 11, label: `上门服务`, visible: false},
-        {key: 12, label: `审核信息`, visible: false},
+        {key: 0, label: `高校名称`, visible: true},
+        {key: 1, label: `所在省份`, visible: true},
+        {key: 2, label: `所在市`, visible: true},
+        {key: 3, label: `所在区/县`, visible: true},
+        {key: 4, label: `详细地址`, visible: true},
+        {key: 5, label: `官方网址`, visible: true},
+        {key: 6, label: `官方电话`, visible: true},
+        {key: 7, label: `官方邮箱`, visible: true},
+        {key: 8, label: `学校档次`, visible: true},
+        {key: 9, label: `人气值`, visible: true},
+        
       ],
       // 显隐数据
       visibleValue: [],
@@ -385,6 +383,29 @@ export default {
       this.edit = false;
       this.dialogFormVisible = true;
     },
+    beforeHandleCommand(flag, command) {
+      return {
+         'flag': flag,
+         'command': command
+      }
+    },
+    changeItem(val) {
+      const formItem = val.command
+      switch (val.flag) {
+        case 'guide':
+          this.viewItem(formItem)
+          break
+        case 'university':
+          this.viewItem(formItem)
+          break
+        case 'major':
+          this.viewItemw(formItem)
+          break
+        default:
+          break
+      }
+    },
+     
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
