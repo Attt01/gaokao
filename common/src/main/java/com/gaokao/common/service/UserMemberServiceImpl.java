@@ -4,6 +4,7 @@ package com.gaokao.common.service;
 import com.gaokao.common.dao.UserMemberDao;
 import com.gaokao.common.enums.UserMemberStatus;
 import com.gaokao.common.exceptions.BusinessException;
+import com.gaokao.common.meta.bo.JwtUser;
 import com.gaokao.common.meta.po.UserMember;
 import com.gaokao.common.meta.vo.user.MemberUpdateParams;
 import com.gaokao.common.meta.vo.user.RegParams;
@@ -14,6 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -73,5 +77,19 @@ public class UserMemberServiceImpl implements UserMemberService{
     @Override
     public Long unlock(Long userId) {
         return null;
+    }
+
+
+    @Override
+    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+        UserMember userMember = userMemberDao.findUserMemberByPhone(s);
+        if (userMember != null) {
+            return new JwtUser(userMember.getPhone(), userMember.getPassword(), AuthorityUtils.commaSeparatedStringToAuthorityList("HasLoggedIn"), userMember.getId());
+        }
+        userMember = userMemberDao.findUserMemberByUsername(s);
+        if (userMember == null) {
+            throw new UsernameNotFoundException("用户不存在");
+        }
+        return new JwtUser(userMember.getUsername(), userMember.getPassword(), AuthorityUtils.commaSeparatedStringToAuthorityList("HasLoggedIn"), userMember.getId());
     }
 }

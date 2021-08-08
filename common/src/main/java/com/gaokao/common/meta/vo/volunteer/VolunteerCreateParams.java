@@ -1,5 +1,7 @@
 package com.gaokao.common.meta.vo.volunteer;
 
+import lombok.Data;
+
 import java.util.List;
 
 /**
@@ -7,6 +9,7 @@ import java.util.List;
  * date:  2021/8/7
  * email: 757394026@qq.com
  */
+@Data
 public class VolunteerCreateParams {
 
     /**
@@ -23,10 +26,5 @@ public class VolunteerCreateParams {
      * 分数
      */
     private Long score;
-
-    /**
-     * 位次
-     */
-    private Long rank;
 
 }

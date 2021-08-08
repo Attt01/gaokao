@@ -1,9 +1,8 @@
-drop table if exists `tb_user_volunteer`;
-CREATE TABLE `tb_user_volunteer`
+drop table if exists `tb_volunteer_form`;
+CREATE TABLE `tb_volunteer_form`
 (
     id             bigint auto_increment not null comment '主键',
     user_id        bigint      not null default 0 comment '用户Id',
-    form_id        int         not null default 0 comment '志愿表Id',
     name           varchar(20) not null default '' comment '志愿表名称',
     score          int         not null default 0 comment '用户分数',
     subject        varchar(10) not null default '' comment '用户的选课信息',

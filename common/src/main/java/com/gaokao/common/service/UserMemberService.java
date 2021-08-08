@@ -5,8 +5,9 @@ import com.gaokao.common.meta.vo.user.MemberUpdateParams;
 import com.gaokao.common.meta.vo.user.RegParams;
 import com.gaokao.common.meta.vo.user.UserMemberVO;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
-public interface UserMemberService {
+public interface UserMemberService extends UserDetailsService {
     /**
      * 注册
      *
