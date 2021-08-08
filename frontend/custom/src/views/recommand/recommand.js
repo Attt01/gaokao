@@ -70,7 +70,7 @@ export default {
     },
     onConfirmPlan() {
       let tmpNum = this.plan.tmpnum.slice(0), sum = 0;
-      console.log(tmpNum);
+      //console.log(tmpNum);
       for (let index = 0; index < 3; index++) {
         if (tmpNum[index] == undefined || tmpNum[index] == "") {
           tmpNum[index] = 0;

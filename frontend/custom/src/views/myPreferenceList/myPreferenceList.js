@@ -27,6 +27,7 @@ export default {
       if (preferData.iscurrent == '是') {
         this.activeIndex = 0;
       }
+      //200if
       this.tableData.splice(index, 1);
       if (this.activeIndex == 0 && this.tableData.length) {
         this.tableData[0].iscurrent = '是';
