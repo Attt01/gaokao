@@ -86,6 +86,13 @@ export default {
           localStorage.setItem('userGaoKaoInfo', JSON.stringify(userInfo));
           //console.log(localStorage.getItem('userGaoKaoInfo'));
           this.dialogVisible = false;
+          this.$router.replace({
+            path: '/refresh',
+            query: {
+              path: '/recommand'
+            }
+          });
+
         } else {
           //console.log('error submit!!');
           return false;
@@ -93,7 +100,8 @@ export default {
       });
     },
   },
-  mounted() {
+  //mounted的话可能会出现一点闪动
+  beforeMount() {
     if (localStorage.getItem('userGaoKaoInfo')) {
       this.dialogVisible = false;
     }

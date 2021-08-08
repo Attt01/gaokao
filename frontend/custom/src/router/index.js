@@ -57,8 +57,12 @@ export const constantRouterMap = [
   //登录和注册做在一起咩qwq？
   {
     path: '/login',
-    component: () => import('@/views/login/index'),
+    component: () => import('@/views/login/index')
   },
+  {
+    path: '/refresh',
+    component: () => import('@/components/refresh/index')
+  }
 ]
 
 export default new Router({
