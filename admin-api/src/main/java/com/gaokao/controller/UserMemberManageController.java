@@ -6,10 +6,7 @@ import com.gaokao.common.service.UserMemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,11 +23,36 @@ public class UserMemberManageController {
     @Autowired
     private UserMemberService userMemberService;
 
+    /**
+     * 获取全部用户
+     * @param keyword
+     * @param page
+     * @param size
+     * @return
+     */
     @GetMapping("/")
     public AjaxResult<Page<UserMemberVO>> list(@RequestParam(required = false, defaultValue = "") String keyword,
                                                @RequestParam(required = false, defaultValue = "1") Integer page,
                                                @RequestParam(required = false, defaultValue = "10") Integer size)  {
         return AjaxResult.SUCCESS(userMemberService.list(keyword, page, size));
+    }
+
+    /**
+     * 锁定用户
+     * @param id
+     * @return
+     */
+    @GetMapping("/lock/{id}")
+    public AjaxResult<Long> lock(@PathVariable Long id) {
+        return null;
+    }
+
+    /**
+     * 解锁用户
+     */
+    @GetMapping("/unlock/{id}")
+    public AjaxResult<Long> unlock(@PathVariable Long id) {
+        return null;
     }
 
 }

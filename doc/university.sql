@@ -2,7 +2,9 @@ drop table if exists `tb_university`;
 CREATE TABLE `tb_university`
 (
     id               bigint auto_increment not null comment '主键',
+    university_code  varchar(11) not null default '' comment '高校代码',
     name             varchar(11) not null default '' comment '高校名称',
+    category         varchar(11) not null default '' comment '学校分类。理工/师范/综合',
     province         varchar(11) not null default '' comment '所在省份',
     city             varchar(11) not null default '' comment '市',
     zone             varchar(11) not null default '' comment '区/县',
@@ -12,7 +14,7 @@ CREATE TABLE `tb_university`
     official_email   varchar(60) not null default '' comment '官方邮箱',
     level            varchar(11) not null default '' comment '学校档次: 985/211/一本',
     popularity_value bigint(20) not null default 0 comment '人气值',
-        status tinyint(3) not null default 0 comment '状态 0为显示 1为不显示',
+    status           tinyint(3) not null default 0 comment '状态 0为显示 1为不显示',
     create_time      bigint(20) not null default 0 comment '注册时间',
     creator          varchar(32) not null default 0 comment '创建者',
     update_time      bigint(20) not null default 0 comment '更新时间',
@@ -60,10 +62,10 @@ CREATE TABLE `tb_university_category`
     id            bigint auto_increment not null comment '主键',
     university_id bigint(20) not null comment '高校id',
     name          varchar(32) not null comment '大类名称',
-    create_time      bigint(20) not null default 0 comment '注册时间',
-    creator          varchar(32) not null default 0 comment '创建者',
-    update_time      bigint(20) not null default 0 comment '更新时间',
-    updater          varchar(32) not null default 0 comment '更新者',
+    create_time   bigint(20) not null default 0 comment '注册时间',
+    creator       varchar(32) not null default 0 comment '创建者',
+    update_time   bigint(20) not null default 0 comment '更新时间',
+    updater       varchar(32) not null default 0 comment '更新者',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 comment '高校大类表';
@@ -77,10 +79,10 @@ CREATE TABLE `tb_university_major`
     university_id bigint(20) not null default 0 comment '高校id',
     name          varchar(32) not null default 0 comment '专业名称',
     detail        text comment '详细信息',
-    create_time      bigint(20) not null default 0 comment '注册时间',
-    creator          varchar(32) not null default 0 comment '创建者',
-    update_time      bigint(20) not null default 0 comment '更新时间',
-    updater          varchar(32) not null default 0 comment '更新者',
+    create_time   bigint(20) not null default 0 comment '注册时间',
+    creator       varchar(32) not null default 0 comment '创建者',
+    update_time   bigint(20) not null default 0 comment '更新时间',
+    updater       varchar(32) not null default 0 comment '更新者',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 comment '高校专业表';

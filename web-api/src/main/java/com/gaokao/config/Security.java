@@ -2,6 +2,7 @@ package com.gaokao.config;
 
 import com.gaokao.common.config.JwtAuthenticationFilter;
 import com.gaokao.common.config.JwtAuthorizationFilter;
+import com.gaokao.common.service.UserMemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -27,6 +28,8 @@ public class Security extends WebSecurityConfigurerAdapter {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private UserMemberService userMemberService;
 
     @Bean
     public AuthenticationProvider authenticationProvider() {

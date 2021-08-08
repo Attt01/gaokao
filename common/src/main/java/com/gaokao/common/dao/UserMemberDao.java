@@ -13,10 +13,13 @@ import java.util.List;
 @Repository
 public interface UserMemberDao extends PagingAndSortingRepository<UserMember, Long> {
 
+    UserMember findUserMemberByUsername(String username);
 
     UserMember findUserMemberById(Long userId);
 
     List<UserMember> findByUsernameContaining(String keyword, Pageable pageable);
 
     void deleteById(Long userId);
+
+    UserMember findUserMemberByPhone(String phone);
 }
