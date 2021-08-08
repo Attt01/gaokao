@@ -62,13 +62,13 @@
                   >
                     <el-form>
                       <el-form-item label="冲击">
-                        <el-input v-model="plan.tmpnum[0]" placeholder="请输入冲击数"></el-input>
+                        <el-input v-model="plan.tmpnum[0]" type="number" placeholder="请输入冲击数"></el-input>
                       </el-form-item>
                       <el-form-item label="稳妥">
-                        <el-input v-model="plan.tmpnum[1]" placeholder="请输入稳妥数"></el-input>
+                        <el-input v-model="plan.tmpnum[1]" type="number" placeholder="请输入稳妥数"></el-input>
                       </el-form-item>
                       <el-form-item label="保底">
-                        <el-input v-model="plan.tmpnum[2]" placeholder="请输入保底数"></el-input>
+                        <el-input v-model="plan.tmpnum[2]" type="number" placeholder="请输入保底数"></el-input>
                       </el-form-item>
                     </el-form>
                     <span slot="footer" class="dialog-footer">
