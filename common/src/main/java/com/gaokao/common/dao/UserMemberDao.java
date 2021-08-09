@@ -14,15 +14,15 @@ public interface UserMemberDao extends PagingAndSortingRepository<UserMember, Lo
 
     UserMember findUserMemberByPhone(String phone);
 
-    List<UserMember> findAllByUserId(Long userId);
+    //List<UserMember> findAllByUserId(Long userId);
 
-    UserMember findUserMemberById(Long userId);
+    //UserMember findUserMemberById(Long userId);
 
     List<UserMember> findByUsernameContaining(String keyword, Pageable pageable);
 
     void deleteById(Long userId);
 
-    Long deleteAllByUserId(Long userId);
+   // Long deleteAllByUserId(Long userId);
 
     UserMember findByWxOpenId(String s);
 }
