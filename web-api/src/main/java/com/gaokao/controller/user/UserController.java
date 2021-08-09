@@ -1,9 +1,14 @@
-package com.gaokao.webapi.controller.user;
+package com.gaokao.controller.user;
 
+import com.gaokao.common.enums.VeryCodeType;
 import com.gaokao.common.meta.AjaxResult;
+import com.gaokao.common.meta.bo.JwtUser;
+import com.gaokao.common.meta.vo.user.MemberUpdateParams;
 import com.gaokao.common.meta.vo.user.RegParams;
 import com.gaokao.common.meta.vo.user.UserUpdateParams;
+import com.gaokao.common.service.UserMemberService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,28 +23,33 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/xhr/v1/userMember")
 public class UserController {
+    @Autowired
+    private UserMemberService userMemberService;
 
     @GetMapping("/needLogin")
     public AjaxResult<String> needLogin() {
-        return null;
+        return AjaxResult.UNAUTHORIZED("请登陆或者注册");
     }
 
     @GetMapping("/sendVerifyCode")
     public AjaxResult<String> sendVerifyCode(String phone) {
-        return null;
+        return AjaxResult.SUCCESSMSG(userMemberService.sendVerifyCode(VeryCodeType.REG, phone));
     }
 
     /**
      * 更新用户信息
      */
     @PostMapping("/{id}")
-    public AjaxResult<Long> update(Authentication authentication, @PathVariable Long id, @Valid @RequestBody UserUpdateParams params) {
-        return null;
+    public AjaxResult<Long> update(Authentication authentication,
+                                   @PathVariable Long id,
+                                   @Valid @RequestBody MemberUpdateParams params) {
+        JwtUser jwtUser = (JwtUser) authentication.getPrincipal();
+        return AjaxResult.SUCCESS(userMemberService.update(id, jwtUser.getId(), params));
     }
 
     @PostMapping("/reg")
     public AjaxResult<Long> reg(@Valid @RequestBody RegParams regParams) {
-        return null;
+        return AjaxResult.SUCCESS(userMemberService.reg(regParams));
     }
 
 

@@ -1,12 +1,14 @@
 package com.gaokao.common.service;
 
 
+import com.gaokao.common.enums.VeryCodeType;
 import com.gaokao.common.meta.vo.user.MemberUpdateParams;
 import com.gaokao.common.meta.vo.user.RegParams;
 import com.gaokao.common.meta.vo.user.UserMemberVO;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
-public interface UserMemberService {
+public interface UserMemberService extends UserDetailsService {
     /**
      * 注册
      *
@@ -21,7 +23,7 @@ public interface UserMemberService {
      * @param phone 手机号码
      * @return 是否发送成功
      */
-    //String sendVerifyCode(VeryCodeType type, String phone); 待做
+    String sendVerifyCode(VeryCodeType type, String phone);
 
     /**
      * 查询所有用户
