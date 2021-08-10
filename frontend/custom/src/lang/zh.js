@@ -50,7 +50,7 @@ export default {
     size: '布局大小'
   },
   login: {
-    title: '尚家后台管理系统',
+    title: '高考志愿推系统',
     logIn: '登录',
     username: '账号',
     password: '密码'

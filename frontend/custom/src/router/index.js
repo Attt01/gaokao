@@ -54,10 +54,13 @@ export const constantRouterMap = [
       }
     ]
   },
-  //登录和注册做在一起咩qwq？
   {
     path: '/login',
     component: () => import('@/views/login/index')
+  },
+  {
+    path: '/register',
+    component: () => import('@/views/register/index')
   },
   {
     path: '/refresh',

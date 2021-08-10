@@ -37,12 +37,6 @@
         </span>
       </el-form-item>
 
-      <el-form-item>
-        <router-link to="/register">
-          &nbsp;没有账号？点击注册
-        </router-link>
-      </el-form-item>
-
       <el-button :loading="loading" type="warning" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">{{ $t('login.logIn') }}</el-button>
     </el-form>
 
@@ -50,5 +44,5 @@
   </div>
 </template>
 
-<script src="./login.js"></script>
-<style rel="stylesheet/scss" lang="scss" src="./login.scss"></style>
+<script src="./register.js"></script>
+<style rel="stylesheet/scss" lang="scss" src="./register.scss"></style>
