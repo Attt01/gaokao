@@ -49,6 +49,7 @@ export default {
           this.loading = true;
           login(this.loginForm.username, this.loginForm.password).then((res) => {
             this.loading = false;
+            console.log(res);
             console.log(this.loading)
             if (res.code === STATUS_CODE.SUCCESS) {
               console.log("登陆成功");
