@@ -48,6 +48,14 @@ public interface UserMemberService extends UserDetailsService {
     Long update(Long id, Long userId, MemberUpdateParams params);
 
     /**
+     * 获取用户信息
+     * @param id
+     * @return
+     */
+    UserMemberVO getInfo(Long id);
+
+
+    /**
      * 修改密码
      * @param id     记录Id
      * @param originPwd 之前的密码

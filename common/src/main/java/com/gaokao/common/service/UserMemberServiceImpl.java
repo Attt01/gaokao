@@ -142,4 +142,17 @@ public class UserMemberServiceImpl implements UserMemberService{
             return userId;
         }
     }
+
+    @Override
+    public UserMemberVO getInfo(Long id) {
+        UserMember userMember = userMemberDao.findById(id).orElse(null);
+
+        UserMemberVO userMemberVO = new UserMemberVO();
+
+        BeanUtils.copyProperties(userMember, userMemberVO);
+
+        return userMemberVO;
+
+
+    }
 }

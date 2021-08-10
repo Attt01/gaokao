@@ -14,6 +14,9 @@ CREATE TABLE `tb_volunteer_form`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 comment '用户志愿表';
 
+/*
+  id userId formId volunteerId index
+ */
 
 drop table if exists `tb_volunteer`;
 CREATE TABLE `tb_volunteer`

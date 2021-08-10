@@ -85,6 +85,7 @@ public class Security extends WebSecurityConfigurerAdapter {
                     out.close();
                 })
                 .and()
+                .addFilter(new JwtAuthorizationFilter(authenticationManager(), userMemberService))
                 // 前后端分离是 STATELESS，故 session 使用该策略
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }

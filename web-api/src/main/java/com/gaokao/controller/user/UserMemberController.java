@@ -5,6 +5,7 @@ import com.gaokao.common.meta.AjaxResult;
 import com.gaokao.common.meta.bo.JwtUser;
 import com.gaokao.common.meta.vo.user.MemberUpdateParams;
 import com.gaokao.common.meta.vo.user.RegParams;
+import com.gaokao.common.meta.vo.user.UserMemberVO;
 import com.gaokao.common.meta.vo.user.UserUpdateParams;
 import com.gaokao.common.service.UserMemberService;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +23,7 @@ import javax.validation.Valid;
 @Slf4j
 @RestController
 @RequestMapping("/xhr/v1/userMember")
-public class UserController {
+public class UserMemberController {
     @Autowired
     private UserMemberService userMemberService;
 
@@ -50,6 +51,12 @@ public class UserController {
     @PostMapping("/reg")
     public AjaxResult<Long> reg(@Valid @RequestBody RegParams regParams) {
         return AjaxResult.SUCCESS(userMemberService.reg(regParams));
+    }
+
+    @GetMapping("/info")
+    public AjaxResult<UserMemberVO> getInfo(Authentication authentication) {
+        JwtUser jwtUser = (JwtUser) authentication.getPrincipal();
+        return AjaxResult.SUCCESS(userMemberService.getInfo(jwtUser.getId()));
     }
 
 
