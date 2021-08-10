@@ -5,8 +5,8 @@ const userInfoKey = "userInfo"
 const platformUserCorpId = 0 || -1
 
 export function getToken() {
-  //return sessionStorage.getItem(TokenKey)
-  return true;
+  //return true;
+  return sessionStorage.getItem(TokenKey)
 }
 
 export function setToken(token) {

@@ -2,30 +2,37 @@
   <el-menu class="navbar" mode="horizontal">
     <breadcrumb></breadcrumb>
     <div class="right-menu">
-      <div class="international right-menu-item">
-        欢迎您，{{ userName }}
-      </div>
-      <el-dropdown class="avatar-container right-menu-item" trigger="click">
-        <div class="avatar-wrapper">
-          <img class="user-avatar" src="@/assets/img/avatar.gif">
-          <i class="el-icon-caret-bottom"/>
+      <div v-if="isLogin">
+        <div class="international right-menu-item">
+          欢迎您，{{ userName }}
         </div>
-        <el-dropdown-menu slot="dropdown">
-          <router-link to="/account/profile">
-           <el-dropdown-item>
-              {{ $t('navbar.profile') }}
-            </el-dropdown-item>
-          </router-link>
-          <router-link to="/account/updatePwd">
+        <el-dropdown class="avatar-container right-menu-item" trigger="click">
+          <div class="avatar-wrapper">
+            <img class="user-avatar" src="@/assets/img/avatar.gif">
+            <i class="el-icon-caret-bottom"/>
+          </div>
+          <el-dropdown-menu slot="dropdown">
+            <router-link to="/account/profile">
             <el-dropdown-item>
-              {{ $t('navbar.updatePwd') }}
+                {{ $t('navbar.profile') }}
+              </el-dropdown-item>
+            </router-link>
+            <router-link to="/account/updatePwd">
+              <el-dropdown-item>
+                {{ $t('navbar.updatePwd') }}
+              </el-dropdown-item>
+            </router-link>
+            <el-dropdown-item divided>
+              <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>
             </el-dropdown-item>
-          </router-link>
-          <el-dropdown-item divided>
-            <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>
-          </el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
+      <div v-else>
+        <router-link to="/login">
+          <el-button type="primary">登录/注册</el-button>
+        </router-link>
+      </div>
     </div>
   </el-menu>
 </template>
@@ -33,11 +40,12 @@
 <script>
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
-import {logOut,getUserInfo} from "../../../utils/auth";
+import {logOut, getUserInfo, getToken} from '@/utils/auth';
 export default {
   data() {
     return {
-      userName: null
+      userName: null,
+      isLogin: false
     }
   },
   components: {
@@ -50,9 +58,18 @@ export default {
     ])
   },
   mounted() {
-    this.getUserName()
+    this.initData();
   },
   methods: {
+    initData() {
+      if (!getToken()) {
+        return;
+      }
+      this.isLogin = true;
+      //nickName?
+      const { name } = JSON.parse(getUserInfo());
+      this.userName = name;
+    },
     toggleSideBar() {
       this.$store.dispatch('ToggleSideBar')
     },
@@ -60,10 +77,6 @@ export default {
       logOut()
       this.$router.push({path: '/login'})
       window.location.reload()
-    },
-    getUserName() {
-      const { name } = JSON.parse(getUserInfo())
-      this.userName = name
     }
   }
 }
