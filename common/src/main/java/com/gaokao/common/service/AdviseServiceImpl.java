@@ -54,8 +54,26 @@ public class AdviseServiceImpl implements AdviseService{
             String universityCode = adviseDao.findUniversityCodeById(guessRank.getUniversityId());
             String majorName = adviseDao.findMajorNameByID(guessRank.getUniversityId(), guessRank.getMajorCode());
             String majorCode = guessRank.getMajorCode();
-            int guess = guessRank.getGuessRank();
-            int rate = guessRankList.size();
+            int guess = guessRank.getGuessRank();   //guess为预估录取名次
+            //接下来根据专业预估录取名次guess与用户名次rank来计算录取几率rate
+            int dif = Math.abs(rank - guess);
+            int rate = 0;
+            if(rank > guess){//用户排名大于预估最低录取名次
+                if(dif < 1000)
+                    rate = 70 - dif/100;
+                else
+                    rate = 60 - (dif-1000)/50;
+                if (rate < 10)
+                    rate = 10;
+            }
+            else if(rank <= guess){//用户排名小于预估最低录取名次
+                if(dif < 1000)
+                    rate = 70 + dif/100;
+                else
+                    rate = 80 + (dif-1000)/50;
+                if(rate > 95)
+                    rate = 95;
+            }
             adviseVO.setUniversityName(universityName);
             adviseVO.setUniversityCode(universityCode);
             adviseVO.setMajorName(majorName);

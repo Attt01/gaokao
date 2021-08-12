@@ -25,8 +25,8 @@ public class AdviseController {
         return adviseService.getUserRank(score);
     }
 
-    @GetMapping("/111")
-    public AjaxResult<Page<AdviseVO>> advise(@RequestParam(required = false, defaultValue = "1") Integer score,
+    @GetMapping("/{score}")
+    public AjaxResult<Page<AdviseVO>> advise(@PathVariable Integer score,
                                              @RequestParam(required = false, defaultValue = "1") Integer page,
                                              @RequestParam(required = false, defaultValue = "10") Integer size){
        return AjaxResult.SUCCESS(adviseService.list(score, page, size));
