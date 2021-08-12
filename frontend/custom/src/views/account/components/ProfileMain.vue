@@ -5,23 +5,26 @@
     </transition> -->
   <div class="app-container">
     <el-row type="flex" justify="space-around">
-      <el-col :span="3">
+      <el-col :span="24">
         <!--这个tab不好看的话考虑手写-->
-        <el-tabs v-model="activeTabName" tabPosition="left" type="card" @tab-click="onTabClick">
-          <el-tab-pane label="高考信息" name="profile"></el-tab-pane>
-          <el-tab-pane label="我的志愿表" name="myPreferenceList"></el-tab-pane>
-          <el-tab-pane label="我的订单" name="myOrder"></el-tab-pane>
-          <el-tab-pane label="修改密码" name="updatePwd"></el-tab-pane>
+        <el-tabs v-model="activeTabName" tab-position="left" @tab-click="onTabClick">
+          <el-tab-pane label="高考信息" name="profile">
+              <router-view></router-view>
+          </el-tab-pane>
+          <el-tab-pane label="我的志愿表" name="myPreferenceList">
+            <router-view></router-view>
+          </el-tab-pane>
+          <el-tab-pane label="我的订单" name="myOrder">
+            <router-view></router-view>
+          </el-tab-pane>
+          <el-tab-pane label="修改密码" name="updatePwd">
+            <router-view></router-view>
+          </el-tab-pane>
         </el-tabs>
-      </el-col>
-      <el-col :span="21">
-        <div class="main-container">
-          <router-view></router-view>
-        </div>
       </el-col>
     </el-row>
   </div>
-  
+
 </section>
 </template>
 
@@ -53,16 +56,12 @@ export default {
   overflow: hidden;
 }
 .app-container {
-  margin-top: 50px;
-  max-width: 1200px;
+  max-width: 1500px;
   margin-left: auto;
   margin-right: auto;
-  background-color: tan;
+  padding: 20px;
+  background-color: #ffffff;
 }
 /* .tab-container {
 } */
-.main-container {
-  border: solid black;
-  /* background-color: aqua; */
-}
 </style>
