@@ -16,7 +16,7 @@ public interface UserMemberDao extends PagingAndSortingRepository<UserMember, Lo
 
     //List<UserMember> findAllByUserId(Long userId);
 
-    //UserMember findUserMemberById(Long userId);
+    UserMember findUserMemberById(Long userId);
 
     List<UserMember> findByUsernameContaining(String keyword, Pageable pageable);
 
@@ -25,4 +25,8 @@ public interface UserMemberDao extends PagingAndSortingRepository<UserMember, Lo
    // Long deleteAllByUserId(Long userId);
 
     UserMember findByWxOpenId(String s);
+
+    UserMember findByUsernameContaining(String s);
+
+    UserMember findByUsername(String s);
 }
