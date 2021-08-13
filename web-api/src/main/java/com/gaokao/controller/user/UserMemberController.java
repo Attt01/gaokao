@@ -38,7 +38,7 @@ public class UserMemberController {
     }
 
     /**
-     * 更新用户信息
+     * 更新用户信息 通过Authentication.getPrincipal()可以获取到代表当前用户的信息
      */
     @PostMapping("/{id}")
     public AjaxResult<Long> update(Authentication authentication,
