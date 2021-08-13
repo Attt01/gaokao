@@ -49,7 +49,7 @@ flush privileges;
 
 ## 数据初始化
 
-* 创建好收据库后，执行doc文件夹下的几个sql文件。（除了insert_perm_data.sql）
+* 创建好数据库后，执行doc文件夹下的几个sql文件。（除了insert_perm_data.sql）
 * 注：**最后一步执行insert_perm_data.sql**，导入管理平台权限信息。
   * 超管帐号：admin
   * 密码：12345678
