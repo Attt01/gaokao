@@ -4,10 +4,11 @@
       <router-view></router-view>
     </transition> -->
   <div class="app-container">
+    <el-card>
     <el-row>
       <el-col :span="24">
         <div class="tab-container">
-          <el-tabs v-model="activeTabName" type="card" @tab-click="onTabClick">
+          <el-tabs v-model="activeTabName" @tab-click="onTabClick">
             <el-tab-pane label="智能推荐" name="recommand"></el-tab-pane>
             <el-tab-pane label="手动填报" name="screen"></el-tab-pane>
             <el-tab-pane label="我的志愿表" name="preference"></el-tab-pane>
@@ -23,6 +24,7 @@
         </div>
       </el-col>
     </el-row>
+    </el-card>
   </div>
 
 </section>
@@ -48,20 +50,20 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .app-main {
   /*50 = navbar  */
-  min-height: calc(100vh - 50px);
+  min-height: calc(100vh - 70px);
   position: relative;
   overflow: hidden;
-  background-color: bisque;
+  //background-color: white;
 }
 .app-container {
-  margin-top: 50px;
+  margin-top: 20px;
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
-  background-color: tan;
+  //background-color: white;
 }
 /* .tab-container {
 } */
