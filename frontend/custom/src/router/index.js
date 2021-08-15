@@ -41,6 +41,12 @@ export const constantRouterMap = [
         meta: {title: 'recommand', permCode: 'recommand'}
       },
       {
+        path: 'screen',
+        name: '手动填报',
+        component: () => import('@/views/screen/index'),
+        meta: {title: 'screen', permCode: 'screen'}
+      },
+      {
         path: 'preference',
         name: '志愿表',
         component: () => import('@/views/preference/index'),
