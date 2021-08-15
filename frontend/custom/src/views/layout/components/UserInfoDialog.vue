@@ -26,6 +26,11 @@
               maxlength="7"
               placeholder="请输入高考排名"
             >
+              <i slot="suffix">
+                <el-button type="primary" @click="getPredictedRank">
+                  获取预测排名
+                </el-button>
+              </i>
             </el-input>
           </el-form-item>
           <el-form-item label="选考科目" prop="subjects">
@@ -53,6 +58,9 @@
 </template>
 
 <script>
+import { getRank } from '@/api/recommand.js';
+import {STATUS_CODE} from "@/api/statusCode";
+
 export default {
   data() {
     return {
@@ -99,6 +107,17 @@ export default {
         }
       });
     },
+    getPredictedRank() {
+      this.$refs.userInfo.validate((isValid) => {
+        if (isValid) {
+          getRank(this.userInfo.score).then((res) => {
+            if (res.code === STATUS_CODE.SUCCESS) {
+              this.userInfo.rank = res.data;
+            }
+          });
+        }
+      })
+    }
   },
   //mounted的话可能会出现一点闪动
   beforeMount() {
