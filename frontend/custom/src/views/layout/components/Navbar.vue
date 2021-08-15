@@ -67,8 +67,8 @@ export default {
       }
       this.isLogin = true;
       //nickName?
-      const { name } = JSON.parse(getUserInfo());
-      this.userName = name;
+      const { nickname, phone } = JSON.parse(getUserInfo());
+      this.userName = nickname === "" ? phone : nickname;
     },
     toggleSideBar() {
       this.$store.dispatch('ToggleSideBar')
