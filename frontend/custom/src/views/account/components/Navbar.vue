@@ -62,8 +62,8 @@ export default {
       window.location.reload()
     },
     getUserName() {
-      const { name } = JSON.parse(getUserInfo())
-      this.userName = name
+      const { nickname, phone } = JSON.parse(getUserInfo());
+      this.userName = nickname === "" ? phone : nickname;
     }
   }
 }

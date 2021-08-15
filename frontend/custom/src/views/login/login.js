@@ -56,7 +56,24 @@ export default {
               setToken(res.data)
               getInfo().then((res) => {
                 if (res.code === STATUS_CODE.SUCCESS) {
-                  setUserInfo(res.data)
+                  console.log("userInfo:", res.data);
+                  if (!res.data.provinceRank) {
+                    let tmpInfo = JSON.parse(localStorage.getItem('userGaoKaoInfo'));
+                    //update(tmpInfo);
+                    getInfo().then((res) => {
+                      if (res.code === STATUS_CODE.SUCCESS) {
+                        setUserInfo(res.data);
+                      } else {
+                        this.$message({
+                          message: res.msg,
+                          type: 'error'
+                        })
+                      }
+                    })
+                  } else {
+                    localStorage.setItem('userGaoKaoInfo', JSON.stringify(res.data));
+                    setUserInfo(res.data);
+                  }
                   this.$router.push({path: '/'})
                 } else {
                   this.$message({
