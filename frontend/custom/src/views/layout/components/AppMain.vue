@@ -9,6 +9,7 @@
         <div class="tab-container">
           <el-tabs v-model="activeTabName" type="card" @tab-click="onTabClick">
             <el-tab-pane label="智能推荐" name="recommand"></el-tab-pane>
+            <el-tab-pane label="手动填报" name="screen"></el-tab-pane>
             <el-tab-pane label="我的志愿表" name="preference"></el-tab-pane>
             <el-tab-pane label="我的收藏" name="stars"></el-tab-pane>
           </el-tabs>
