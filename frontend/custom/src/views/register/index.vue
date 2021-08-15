@@ -21,7 +21,6 @@
         <el-input
           :type="pwdType"
           v-model="loginForm.password"
-          :placeholder="$t('login.password')"
           name="password"
           auto-complete="on"
         />
@@ -50,7 +49,13 @@
         />
       </el-form-item>
 
-      <el-button :loading="loading" type="warning" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleRegister">{{ $t('login.logIn') }}</el-button>
+      <el-form-item>
+        <router-link to="/login">
+          &nbsp;已有帐号，前往登录
+        </router-link>
+      </el-form-item>
+
+      <el-button :loading="loading" type="warning" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleRegister"> 注册 </el-button>
     </el-form>
 
 

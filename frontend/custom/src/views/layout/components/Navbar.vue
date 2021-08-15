@@ -85,7 +85,8 @@ export default {
 <style rel="stylesheet/scss" lang="scss" scoped>
 
   .navbar {
-    height: 50px;
+    height: 70px;
+    padding: 10px 5px;
     line-height: 50px;
     border-radius: 0px !important;
     .breadcrumb-container{
@@ -138,4 +139,3 @@ export default {
     }
   }
 </style>
-

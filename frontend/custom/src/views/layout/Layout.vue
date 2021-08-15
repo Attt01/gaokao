@@ -7,6 +7,16 @@
       <footer></footer>
     </div>
   </div>
+  <!-- <el-container>
+    <el-header>
+      <navbar></navbar>
+    </el-header>
+    <el-main>
+      <user-info-dialog></user-info-dialog>
+      <app-main></app-main>
+    </el-main>
+    <el-footer></el-footer>
+  </el-container> -->
 </template>
 
 <script>

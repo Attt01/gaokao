@@ -3,7 +3,10 @@
   <el-row type="flex" justify="space-around">
     <el-col :span="0.5"></el-col>
     <el-col :span="12">
-      <div class="left-container">
+      <el-card
+        :body-style="{ padding: '0px', backgroundColor: '#F5F7FA' }"
+        shadow="hover"
+      >
         <el-row type="flex" justify="space-around" align="center">
           <el-col :span="21">
             <div class="form-container">
@@ -30,7 +33,7 @@
 
                 <el-form-item label="意向地区">
                   <!--按钮待替换-->
-                  <el-button type="primary" @click="area.isShowDialog=true;area.tmpSelected=area.selected;">点击选择</el-button>
+                  <!-- <el-button type="primary" @click="area.isShowDialog=true;area.tmpSelected=area.selected;">点击选择</el-button>
                   <el-dialog
                     title="选择意向地区"
                     :visible.sync="area.isShowDialog"
@@ -49,7 +52,14 @@
                         </el-row>
                       </el-form-item>
                     </el-form>
-                  </el-dialog>
+                  </el-dialog> -->
+                  <el-cascader
+                    :options="area.options"
+                    :props="area.props"
+                    clearable
+                    collapse-tags
+                  >
+                  </el-cascader>
                 </el-form-item>
 
                 <el-form-item label="填报方案">
@@ -96,21 +106,23 @@
                   <span v-if="!isAutoRecommand">&nbsp;不允许</span>
                 </el-form-item>
 
-                <el-form-item>
-                  <el-button type="primary" @click="onSubmit">立即生成推荐表</el-button>
-                  <el-button>取消</el-button>
-                </el-form-item>
+                <el-row type="flex" justify="space-around">
+                  <el-col :span="8">
+                    <el-button type="primary" @click="onSubmit">立即生成推荐表</el-button>
+                  </el-col>
+                </el-row>
+                
               </el-form>
             </div>
           </el-col>
         </el-row>
-      </div>
+      </el-card>
     </el-col>
     <el-col :span="10">
       <div class="right-container">
         <!--轮播图/宣传图留空-->
         <el-image
-          src="https://z3.ax1x.com/2021/03/30/cigICq.jpg"
+          src="https://imagezy.eol.cn/_nuxt/img/banner-s1.1b8e78b.png"
         >
         </el-image>
       </div>
@@ -122,12 +134,7 @@
 
 <script src="./recommand.js"></script>
 
-<style scoped>
-.left-container {
-  background-color:peru;
-  height: 100%;
-  width: 100%;
-}
+<style lang="scss" scoped>
 .form-container {
   padding: 5% 0;
   width: 100%;

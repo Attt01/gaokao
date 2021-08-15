@@ -1,3 +1,5 @@
+import {provinceAndCityDataPlus} from "element-china-area-data";
+
 export default {
   data() {
     return {
@@ -17,8 +19,10 @@ export default {
         }]
       },
       area: {
-        isShowDialog: false,
-        areas: ['qwq', 'owo', 'aaa'],
+        props: { multiple: true },
+        options: provinceAndCityDataPlus,
+        // isShowDialog: false,
+        // areas: ['qwq', 'owo', 'aaa'],
         selected: [],
         tmpSelected: []
       },
