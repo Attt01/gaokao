@@ -44,7 +44,7 @@ public class UserMemberServiceImpl implements UserMemberService{
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        UserMember userMember = userMemberDao.findByUsername(s);
+        UserMember userMember = userMemberDao.findUserMemberByPhone(s);
         if (userMember != null) {
             return new JwtUser(userMember.getPhone(), userMember.getPassword(), AuthorityUtils.commaSeparatedStringToAuthorityList("HasLoggedIn"), userMember.getId());
         }
