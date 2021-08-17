@@ -12,13 +12,13 @@
         <br>
         <el-form class="base-info">
           <el-form-item label="用户名">
-            <span></span>
+            <span>{{ user.username }}</span>
           </el-form-item>
           <el-form-item label="昵称">
-            <span></span>
+            <span>{{ user.nickname }}</span>
           </el-form-item>
           <el-form-item label="VIP">
-            <span></span>
+            <span>{{ user.vipIsOrNot ? "会员用户" : "您还不是会员" }}</span>
           </el-form-item>
         </el-form>
       </el-col>
@@ -27,25 +27,24 @@
         <el-form class="form1"  label-width="80px">
           <h4>基本信息</h4>
           <el-form-item label="高考分数">
-            <span></span>
+            <span>{{ user.score }}</span>
           </el-form-item>
           <el-form-item label="排名预测">
-            <span></span>
+            <span>{{ user.provinceRank }}</span>
           </el-form-item>
           <el-form-item label="选课">
-            <span> </span>
+            <span>{{ user.subject }}</span>
           </el-form-item>
         </el-form>
-
         <el-divider></el-divider>
 
         <el-form class="form2" label-width="80px">
           <h4>额外信息</h4>
           <el-form-item label="手机">
-            <span></span>
+            <span>{{ user.phone }}</span>
           </el-form-item>
           <el-form-item label="邮箱">
-            <span> </span>
+            <span>{{ user.email }}</span>
           </el-form-item>
           <el-form-item label="其它">
             <span> 暂时不知道还有什么信息</span>
