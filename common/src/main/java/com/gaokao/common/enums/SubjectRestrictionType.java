@@ -7,6 +7,8 @@ package com.gaokao.common.enums;
  */
 public enum SubjectRestrictionType {
 
+    NONE(0, "没有限制"),
+
     ONE_MUST(1, "必选一科"),
 
     TWO_MUST(2, "必选两科"),

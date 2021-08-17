@@ -17,6 +17,7 @@
   "dependencies": {
     "ali-oss": "^6.15.2",
     "axios": "0.18.1",
+    "element-china-area-data": "^5.0.2",
     "element-ui": "2.11.0",
     "image-conversion": "^2.1.1",
     "js-cookie": "2.2.0",
