@@ -25,7 +25,10 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
+/**
+ * @author wyc
+ * date:  2021/8/16
+ */
 @Slf4j
 @Service
 public class UserMemberServiceImpl implements UserMemberService{
@@ -65,9 +68,14 @@ public class UserMemberServiceImpl implements UserMemberService{
         }
 
         userMember = new UserMember();
+        userMember.setProvinceRank(Math.toIntExact(regParams.getProvince_rank()));
+        userMember.setScore(regParams.getScore());
+        userMember.setNickname(regParams.getNickname());
         userMember.setPhone(regParams.getPhone());
+        userMember.setSubject(regParams.getSubject());
         userMember.setStatus(UserMemberStatus.NORMAL.getCode());
         userMember.setPassword(passwordEncoder.encode(regParams.getPassword()));
+
         long currentTime = System.currentTimeMillis();
         userMember.setCreateTime(currentTime);
         userMember.setUpdateTime(currentTime);
