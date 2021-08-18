@@ -14,7 +14,7 @@ CREATE TABLE `tb_volunteer_form`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 comment '用户志愿表';
 
-/*
+/*1
   id userId formId volunteerId index
  */
 
@@ -42,7 +42,7 @@ CREATE TABLE `tb_volunteer`
 
     lowest_score_one                  int          not null default 0 COMMENT '一段录取最低分',
     lowest_position_one               int          not null default 0 COMMENT '一段录取最低位次',
-    professional_name_one             VARCHAR(255) COMMENT '一段专业名称',
+    professional_name_one             VARCHAR(255) not null default '' COMMENT '一段专业名称',
     subject_restriction_type_one      tinyint(3) not null default 0 comment '选课要求类型',
     subject_restriction_detail_one    varchar(20)  not null default 0 comment '具体要求了那几科 1;4;5',
     major_code_one                    varchar(10)  not null default '' comment '招生代码',
@@ -55,7 +55,7 @@ CREATE TABLE `tb_volunteer`
 
     lowest_score_two                  int          not null default 0 COMMENT '二段录取最低分',
     lowest_position_two               int          not null default 0 COMMENT '二段录取最低位次',
-    professional_name_two             VARCHAR(255) COMMENT '二段专业名称',
+    professional_name_two             VARCHAR(255) not null default '' COMMENT '二段专业名称',
     subject_restriction_type_two      tinyint(3) not null default 0 comment '选课要求类型',
     subject_restriction_detail_two    varchar(20)  not null default 0 comment '具体要求了那几科 1;4;5',
     major_code_two                    varchar(10)  not null default '' comment '招生代码',
