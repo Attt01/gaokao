@@ -34,6 +34,27 @@ export function updateGood(goodId, params) {
 }
 
 /**
+ * 爬取高校信息
+ */
+export function fetchRemoteData() {
+  return request({
+      url: '/xhr/vl/university/fetch',
+      method: 'get',
+      //params: {}
+  })
+}
+
+/**
+ * 更新数据库
+ */
+export function updateDatabase() {
+  return request({
+      url: '/xhr/vl/university/update',
+      method: 'get',
+  })
+}
+
+/**
  * 下架商品
  */
 export function offGood(goodId) {

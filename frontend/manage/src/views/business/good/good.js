@@ -1,11 +1,10 @@
+import { auxiliaryComment as err } from "babel-core/lib/transformation/file/options/removed";
 import {
-  addGood, getGood, updateGood, offGood, onGood,
-  goodGetCategory, goodGetTag,
-  closeGood, outOfGood, auditUnPassGood, auditPassGood, unCloseGood
-} from "../../../api/business/good"
-import {auxiliaryComment as err} from "babel-core/lib/transformation/file/options/removed";
-import SingleUpload from "../../../components/Upload/singleUpload";
+  addGood, auditPassGood, auditUnPassGood, closeGood, fetchRemoteData, getGood, goodGetCategory, goodGetTag, offGood, onGood, outOfGood, unCloseGood, updateDatabase, updateGood
+} from "../../../api/business/good";
 import MultiUpload from "../../../components/Upload/multiUpload";
+import SingleUpload from "../../../components/Upload/singleUpload";
+import {STATUS_CODE} from "../../../api/statusCode";
 
 export default {
   name: "Good",
@@ -200,6 +199,8 @@ export default {
         originalPrice: undefined,
         salePrice: undefined
       },
+      //文件列表
+      fileList: [],
 
     }
   },
@@ -382,6 +383,25 @@ export default {
       this.title = "添加服务";
       this.edit = false;
       this.dialogFormVisible = true;
+      this.uploadDialogVisible = false;
+    },
+    /** 删除按钮操作 */
+    handleDel() {
+      this.reset();
+      this.form.id = '';
+      this.title = "删除服务";
+      this.edit = false;
+      this.dialogFormVisible = true;
+      this.uploadDialogVisible = false;
+    },
+    /** 修改按钮操作 */
+    handleEdit() {
+      this.reset();
+      this.form.id = '';
+      this.title = "修改服务";
+      this.edit = false;
+      this.dialogFormVisible = true;
+      this.uploadDialogVisible = false;
     },
     beforeHandleCommand(flag, command) {
       return {
@@ -405,9 +425,120 @@ export default {
           break
       }
     },
-     
+
+    /** 爬取按钮操作 */
+    handleFetch() {
+      fetchRemoteData().then((res) => {
+        console.log(res);
+        if(res.code === STATUS_CODE.SUCCESS)
+        {
+          this.$message({
+            type: 'success',
+            message: '爬取成功'
+          });
+          location.href = res.data;
+          //this.$router.push('/')
+        }
+      })
+    },
+
+    /** 更新按钮操作 */
+    /*handleUpdate() {
+      updateDatabase().then((res) => {
+        console.log(res);
+        if(res.code === STATUS_CODE.SUCCESS)
+        {
+          this.$message({
+            type: 'success',
+            message: '更新成功'
+          });
+          //this.$router.push('/')
+        }
+      })
+    },*/
+    
+    handleUpload() {
+      this.$refs.upload.submit();
+      updateDatabase().then((res) => {
+        console.log(res);
+        if(res.code === STATUS_CODE.SUCCESS)
+        {
+          this.$message({
+            type: 'success',
+            message: '更新成功'
+          });
+          //this.$router.push('/')
+        }
+      })
+    },
+
+
+    beforeUpload(file) {
+      if(file.type == '' || file.type == null || file.type== undefined) {
+        const fileExt = file.name.replace(/.+\./,"").toLowerCase();
+        if(fileExt == "xls" || fileExt== "xlsx") {
+          return true;
+        }else{
+          this.$message.error("上传的文件必须是Excel格式！");
+          return false;
+        }
+      }else{
+        return true;
+      }
+    },
+
+    upModel() {
+      this.uploading = false;
+      this.file = [];
+      this.dialogFormVisible = false;
+      this.uploadDialogVisible = true;
+    },
+
+    postFile() {
+      const fileObj = this.file;
+      var fileData = new FormData();
+      fileData.append('file', fileObj);
+      let headers = {
+        "Content-Type": "multipart/form-data"
+      };
+      this.uploading = true;
+      this.$axios({
+        method: 'post',
+        url: '/xhr/vl/university/update',
+        headers: headers,
+        data: fileData
+      }).then((res) => {
+        console.log(res);
+        if(res.code === STATUS_CODE.SUCCESS) {
+          this.$message.success("读取成功");
+          this.uploadDialogVisible = false;
+        }else{
+          this.$message.error("错误！请检查上传文件内容");
+        }
+      });
+    },
+    closeFile() {
+      this.uploadDialogVisible = false;
+    },
+    
+    handleExceed() {
+      this.$message.warning('当前限制选择3个文件，请删除掉多余文件后继续上传');
+    },
+    uploadFile(item) {
+      this.file=item.file;
+    },
+    beforeRemove(file) {
+      return this.$confirm('确定移除 ${ file.name }?');
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+    },
+    handlePreview(file) {
+      console.log(file);
+    },
+
     /** 修改按钮操作 */
-    handleUpdate(row) {
+   /* handleUpdate(row) {
       this.reset();
       this.title = "修改服务";
       this.edit = false;
@@ -429,6 +560,8 @@ export default {
       this.isSubmitButtonShow = '';
       this.isAuditButtonShow = 'none';
     },
+    */
+
     /** 提交按钮*/
     submitForm: function () {
       this.form.categoryId = this.baseForm.categoryId;

@@ -32,7 +32,7 @@
         </el-dropdown>
       </el-col>
       <el-col :span="1.5">
-        <el-dropdown split-button type="danger" @click="handleAdd" @command="changeItem">
+        <el-dropdown split-button @click="handleDel" @command="changeItem">
           删除高校信息
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item icon="el-icon-delete" :command="beforeHandleCommand('guide',formItem)">招生简章</el-dropdown-item>
@@ -42,7 +42,7 @@
         </el-dropdown>
       </el-col>
       <el-col :span="1.5">
-        <el-dropdown split-button type="warning" @click="handleAdd" @command="changeItem">
+        <el-dropdown split-button type="danger" @click="handleEdit" @command="changeItem">
           修改高校信息
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item icon="el-icon-edit" :command="beforeHandleCommand('guide',formItem)">招生简章</el-dropdown-item>
@@ -51,6 +51,13 @@
           </el-dropdown-menu>
         </el-dropdown>
       </el-col>
+      <el-col :span="1.5">
+        <el-button type="success" icon="el-icon-download" @click="handleFetch">爬取</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button type="success" icon="el-icon-upload" @click="upModel">更新</el-button>
+      </el-col>
+
 
       <div class="top-right-btn">
         <el-row>
@@ -193,16 +200,46 @@
       </div>
     </el-dialog>
 
-    <!-- 添加/修改/审核服务对话框 -->
-    <el-dialog title="输入信息" :close-on-click-modal="false" :visible.sync="dialogFormVisible" width="400px">
-      <el-form :model="form">
+    <!-- 添加/删除/修改服务对话框 -->
+    <el-dialog :title="title" :close-on-click-modal="false" :visible.sync="dialogFormVisible" width="350px">
+      <el-form :model="form" :inline="true">
         <el-form-item label="高校名称" :label-width="formLabelWidth">
           <el-input v-model="form.name" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        <el-button type="primary" native-type="submit" @click="dialogFormVisible = false">确 定</el-button>
+      </div>
+    </el-dialog>
+
+    <!--更新数据库服务对话框 -->
+    <el-dialog title="上传文件" :visible.sync="uploadDialogVisible" class="uploadDialog">
+      <el-form ref="uploadForm" class="uploadDialogForm" id="uploadForm">
+        <el-form-item label="请上传文件">
+          <el-upload
+            class="upload-file"
+            ref="upload"
+            action="/xhr/vl/university/update"
+            :http-request="uploadFile"
+            :before-upload="beforeUpload"
+            :on-preview="handlePreview"
+            :on-remove="handleRemove"
+            :before-remove="beforeRemove"
+            :on-exceed="handleExceed"
+            :file-list="fileList"
+            :auto-upload="false"
+            :limit="3"
+            multiple
+          >
+            <el-button slot="trigger" size="small" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传Excel文件，且不超过500kb</div>
+          </el-upload>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="closeFile">取消</el-button>
+        <el-button type="primary" @click="postFile" :disabled="uploading">确定</el-button>
       </div>
     </el-dialog>
 
