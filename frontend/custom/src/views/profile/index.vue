@@ -10,17 +10,23 @@
         <p><span class="title"><i class="el-icon-open"></i>&nbsp;&nbsp;{{ user.status == '1'?'启用' : '禁用' }}</span></p>
         <p><span class="title"><i class="el-icon-location-outline"></i>&nbsp;&nbsp;上海市浦东大道290弄</span></p> -->
         <br>
+
         <el-form class="base-info">
           <el-form-item label="用户名">
-            <span>{{ user.username }}</span>
+            <el-input v-if="edit" v-model="user.username"></el-input>
+            <span v-else>{{ user.username }}</span>
           </el-form-item>
           <el-form-item label="昵称">
-            <span>{{ user.nickname }}</span>
+            <el-input v-if="edit" v-model="user.nickname"></el-input>
+            <span v-else class="form-nickname">{{ user.nickname }}</span>
           </el-form-item>
           <el-form-item label="VIP">
-            <span>{{ user.vipIsOrNot ? "会员用户" : "您还不是会员" }}</span>
+            <span class="form-vip">{{ user.vipIsOrNot ? "会员用户" : "您还不是会员" }}</span>
           </el-form-item>
+          <el-button v-if="edit" class="base-info-button" plain @click="onClickEdit()">保存修改</el-button>
+          <el-button v-else class="base-info-button" plain @click="onClickEdit()">完善信息</el-button>
         </el-form>
+
       </el-col>
 
       <el-col :span="18" style="padding-left:50px;">
@@ -41,7 +47,8 @@
         <el-form class="form2" label-width="80px">
           <h4>额外信息</h4>
           <el-form-item label="手机">
-            <span>{{ user.phone }}</span>
+            <el-input v-if="edit" v-model="user.phone"></el-input>
+            <span v-else>{{ user.phone }}</span>
           </el-form-item>
           <el-form-item label="邮箱">
             <span>{{ user.email }}</span>
@@ -74,6 +81,17 @@
   }
   .base-info{
     margin-left: 40px;
+    width: 150px;
+    line-height: 30px;
+  }
+  .form-nickname{
+    margin-left: 13px;
+  }
+  .form-vip{
+    margin-left: 16px;
+  }
+  .base-info-button{
+    margin-top: 50px;
   }
   .form1{
     margin-bottom: 25px ;
