@@ -1,8 +1,10 @@
 package com.gaokao.controller.user;
 
+import com.gaokao.common.dao.UserMemberDao;
 import com.gaokao.common.enums.VeryCodeType;
 import com.gaokao.common.meta.AjaxResult;
 import com.gaokao.common.meta.bo.JwtUser;
+import com.gaokao.common.meta.po.UserMember;
 import com.gaokao.common.meta.vo.user.MemberUpdateParams;
 import com.gaokao.common.meta.vo.user.RegParams;
 import com.gaokao.common.meta.vo.user.UserMemberVO;
@@ -20,12 +22,16 @@ import javax.validation.Valid;
  * date:  2021/7/20
  * email: 757394026@qq.com
  */
+@ResponseBody
 @Slf4j
 @RestController
 @RequestMapping("/xhr/v1/userMember")
 public class UserMemberController {
     @Autowired
     private UserMemberService userMemberService;
+
+    @Autowired
+    private UserMemberDao userMemberDao;
 
     @GetMapping("/needLogin")
     public AjaxResult<String> needLogin() {
@@ -43,13 +49,13 @@ public class UserMemberController {
     @PostMapping("/update/{id}")
     public AjaxResult<Long> update(@PathVariable Long id,
                                    @Valid @RequestBody MemberUpdateParams params) {
-        Long result=userMemberService.update(id,params);
-        if (result==-1){
+        UserMember userMember=userMemberDao.findUserMemberById(id);
+        if (userMember==null){
             return AjaxResult.FAIL("用户不存在或其他异常");
         }
         else {
             return AjaxResult.SUCCESS(userMemberService.update(id, params));
-        }
+          }
     }
 
     @PostMapping("/reg")
