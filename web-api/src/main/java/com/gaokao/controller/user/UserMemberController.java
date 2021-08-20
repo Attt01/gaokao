@@ -40,12 +40,16 @@ public class UserMemberController {
     /**
      * 更新用户信息 通过Authentication.getPrincipal()可以获取到代表当前用户的信息
      */
-    @PostMapping("/{id}")
-    public AjaxResult<Long> update(Authentication authentication,
-                                   @PathVariable Long id,
+    @PostMapping("/update/{id}")
+    public AjaxResult<Long> update(@PathVariable Long id,
                                    @Valid @RequestBody MemberUpdateParams params) {
-        JwtUser jwtUser = (JwtUser) authentication.getPrincipal();
-        return AjaxResult.SUCCESS(userMemberService.update(id, jwtUser.getId(), params));
+        Long result=userMemberService.update(id,params);
+        if (result==-1){
+            return AjaxResult.FAIL("用户不存在或其他异常");
+        }
+        else {
+            return AjaxResult.SUCCESS(userMemberService.update(id, params));
+        }
     }
 
     @PostMapping("/reg")

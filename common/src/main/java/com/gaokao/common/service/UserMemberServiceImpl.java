@@ -87,8 +87,8 @@ public class UserMemberServiceImpl implements UserMemberService{
     }
 
     @Override
-    public Long update(Long id, Long userId, MemberUpdateParams params) {
-        UserMember userMember = userMemberDao.findById(id).orElse(null);
+    public Long update(Long userId, MemberUpdateParams params) {
+        UserMember userMember = userMemberDao.findById(userId).orElse(null);
         if (userMember == null) {
             throw new BusinessException("记录不存在");
         }

@@ -38,14 +38,14 @@ public interface UserMemberService extends UserDetailsService {
     /**
      * 修改用户信息
      *
-     * @param id     记录Id
+     *
      * @param userId 用户Id
      *
      * @return 记录Id
      */
 
 
-    Long update(Long id, Long userId, MemberUpdateParams params);
+    Long update (Long userId, MemberUpdateParams params);
 
     /**
      * 获取用户信息
