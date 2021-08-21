@@ -4,6 +4,8 @@ import {STATUS_CODE} from "../../api/statusCode";
 // import {setToken, setUserInfo} from "../../utils/auth";
 // import {buildRouter} from "../../permission";
 import { register } from "@/api/register.js";
+import { UserInfoDialog } from './components';
+import store from '@/store';
 
 export default {
   name: 'login',
@@ -24,10 +26,14 @@ export default {
       }
     }
     return {
-      loginForm: {
+      regForm: {
         phone: '',
         password: '',
-        veryCode: ''
+        veryCode: '',
+        nickname: '',
+        score: 0,
+        subject: '',
+        province_rank: 0
       },
       loginRules: {
         username: [{required: true, trigger: 'blur', validator: validateUsername}],
@@ -37,7 +43,17 @@ export default {
       pwdType: 'password'
     }
   },
+  components: {
+    UserInfoDialog
+  },
   methods: {
+    initData() {
+      let userGaokaoInfo = JSON.parse(localStorage.getItem('userGaoKaoInfo'));
+      //console.log(JSON.parse(localStorage.getItem('userGaoKaoInfo')));
+      this.regForm.score = userGaokaoInfo.score;
+      this.regForm.province_rank = userGaokaoInfo.province_rank;
+      this.regForm.subject = userGaokaoInfo.subject;
+    },
     showPwd() {
       if (this.pwdType === 'password') {
         this.pwdType = ''
@@ -45,8 +61,11 @@ export default {
         this.pwdType = 'password'
       }
     },
+    showInfoDialog() {
+      store.commit('SHOW_DIALOG', true);
+    },
     handleRegister() {
-      register(this.loginForm.phone, this.loginForm.password, this.loginForm.veryCode).then((res) => {
+      register(this.regForm).then((res) => {
         console.log(res);
         if (res.code === STATUS_CODE.SUCCESS) {
           this.$message({
@@ -56,7 +75,19 @@ export default {
           this.$router.push('/login');
         }
       })
-      
     }
-  }
+  },
+  computed: {
+    userInfoStr() {
+      if (this.regForm.score) {
+        let subs = this.regForm.subject;
+        return '高考分数: ' + this.regForm.score
+          + ' / 排名: ' + this.regForm.province_rank
+          + ' / 选科: ' + subs[0][0] + ' ' + subs[1][0] + ' ' + subs[2][0];
+      }
+    }
+  },
+  mounted() {
+    this.initData();
+  },
 }

@@ -3,7 +3,11 @@ import {provinceAndCityDataPlus} from "element-china-area-data";
 export default {
   data() {
     return {
-      userInfo: {},
+      userInfo: {
+        score: 0,
+        subject: [],
+        province_rank: 0
+      },
       major: {
         props: { multiple: true },
         options: [{
@@ -93,9 +97,9 @@ export default {
   computed: {
     userInfoStr() {
       if (this.userInfo.score) {
-        let subs = this.userInfo.subjects;
+        let subs = this.userInfo.subject;
         return '高考分数: ' + this.userInfo.score
-          + ' / 排名: ' + this.userInfo.rank
+          + ' / 排名: ' + this.userInfo.province_rank
           + ' / 选科: ' + subs[0][0] + ' ' + subs[1][0] + ' ' + subs[2][0];
       }
     }

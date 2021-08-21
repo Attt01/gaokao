@@ -20,7 +20,8 @@
 </template>
 
 <script>
-import { Navbar, AppMain, UserInfoDialog } from './components'
+import { Navbar, AppMain, UserInfoDialog} from './components'
+//import {  } from '@/components/UserInfoDialog/UserInfoDialog.vue'
 import ResizeMixin from './mixin/ResizeHandler'
 
 export default {

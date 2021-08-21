@@ -6,5 +6,6 @@ const getters = {
   perm_routes: state => state.permission.perm_routes,
   addRouters: state => state.permission.addRouters,
   permCodes: state => state.permission.permCodes,
+  dialogVisible: state => state.app.dialogVisible
 }
 export default getters
