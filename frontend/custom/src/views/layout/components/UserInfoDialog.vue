@@ -19,9 +19,9 @@
             >
             </el-input>
           </el-form-item>
-          <el-form-item label="高考排名" prop="rank">
+          <el-form-item label="高考排名" prop="province_rank">
             <el-input
-              v-model.number="userInfo.rank"
+              v-model.number="userInfo.province_rank"
               type="text"
               maxlength="7"
               placeholder="请输入高考排名"
@@ -33,9 +33,9 @@
               </i>
             </el-input>
           </el-form-item>
-          <el-form-item label="选考科目" prop="subjects">
+          <el-form-item label="选考科目" prop="subject">
             <el-checkbox-group
-              v-model="userInfo.subjects"
+              v-model="userInfo.subject"
               :max="3"
             >
               <el-checkbox label="物理"></el-checkbox>
@@ -67,18 +67,18 @@ export default {
       dialogVisible: true,
       userInfo: {
         score: null,
-        subjects: [],
-        rank: null
+        subject: [],
+        province_rank: null
       },
       rules: {
         score: [
           { required: true, message: '请输入高考分数', trigger: 'blur' },
           { type: 'number', min: 100, max: 750, message: '必须是100~750的整数', trigger: 'blur'}
         ],
-        rank: [
+        province_rank: [
           { type: 'number', message: '必须是整数', trigger: 'blur'}
         ],
-        subjects: [
+        subject: [
           { required: true, message: '请选择科目' },
           { type: 'array', len: 3, message: '选择三项', trigger: 'blur'}
         ]
@@ -112,7 +112,7 @@ export default {
         if (isValid) {
           getRank(this.userInfo.score).then((res) => {
             if (res.code === STATUS_CODE.SUCCESS) {
-              this.userInfo.rank = res.data;
+              this.userInfo.province_rank = res.data;
             }
           });
         }
