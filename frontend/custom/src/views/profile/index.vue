@@ -13,7 +13,7 @@
 
         <el-form class="base-info">
           <el-form-item label="用户名">
-            <el-input v-if="edit" v-model="user.username"></el-input>
+            <el-input v-if="edit" v-model="user.username" ref="username"></el-input>
             <span v-else>{{ user.username }}</span>
           </el-form-item>
           <el-form-item label="昵称">
@@ -47,7 +47,7 @@
         <el-form class="form2" label-width="80px">
           <h4>额外信息</h4>
           <el-form-item label="手机">
-            <el-input v-if="edit" v-model="user.phone"></el-input>
+            <el-input v-if="edit" v-model="user.phone" ref="phone"></el-input>
             <span v-else>{{ user.phone }}</span>
           </el-form-item>
           <el-form-item label="邮箱">

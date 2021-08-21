@@ -39,11 +39,10 @@ export function updatePwd(params) {
 
 export function updateUserInfo(params) {
   return request({
-    url: '/xhr/v1/userMember/' + params.id,
+    url: '/xhr/v1/userMember/update/' + params.id,
     method: 'post',
     data: {
       nickname: params.nickname,
-      password: params.password,
       phone: params.phone,
       username: params.username
     }

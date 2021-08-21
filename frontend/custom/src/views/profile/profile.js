@@ -35,7 +35,6 @@ export default {
         this.user.subject = res.data.subject
         this.user.phone = res.data.phone
         this.user.email = res.data.email
-        this.user.password = res.data.password
       })
       console.log(this.user)
     },
@@ -48,11 +47,25 @@ export default {
         this.edit = !this.edit
       } else {
         // 保存修改结果
+        if (this.user.username === '') {
+          this.$message({
+            message: '用户名不能为空',
+            type: 'error'
+          })
+          this.$refs.username.focus()
+          return
+        } else if (this.user.phone === '') {
+          this.$message({
+            message: '手机号码不能为空',
+            type: 'error'
+          })
+          this.$refs.phone.focus()
+          return
+        }
         this.edit = !this.edit
         const params = {
           id: this.user.id,
           nickname: this.user.nickname,
-          password: this.user.password,
           phone: this.user.phone,
           username: this.user.username
         }
