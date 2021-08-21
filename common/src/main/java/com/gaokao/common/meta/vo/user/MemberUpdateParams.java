@@ -7,8 +7,23 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class MemberUpdateParams extends MemberCreateParams {
+public class MemberUpdateParams {
+    /**
+     * 手机号
+     */
+    @NotBlank(message = "手机号不能空")
+    private String phone;
 
+    /**
+     * 用户名
+     */
+    @NotBlank(message = "用户名不能空")
+    private String username;
+
+    /**
+     * 昵称
+     */
+    private String nickname;
 
 
 }
