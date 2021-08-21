@@ -44,7 +44,7 @@ import {logOut, getUserInfo, getToken} from '@/utils/auth';
 export default {
   data() {
     return {
-      userName: null,
+      userName: "",
       isLogin: false
     }
   },
@@ -66,9 +66,10 @@ export default {
         return;
       }
       this.isLogin = true;
-      //nickName?
-      const { nickname, phone } = JSON.parse(getUserInfo());
-      this.userName = nickname === "" ? phone : nickname;
+      //util里的sessionStorage不好使qwq?(也许可以考虑删掉owo
+      let userInfo = JSON.parse(localStorage.getItem('userGaoKaoInfo'));
+      console.log("qwq", userInfo);
+      this.userName = userInfo.nickname === "" ? userInfo.phone : userInfo.nickname;
     },
     toggleSideBar() {
       this.$store.dispatch('ToggleSideBar')

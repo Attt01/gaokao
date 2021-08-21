@@ -4,6 +4,8 @@ import {STATUS_CODE} from "../../api/statusCode";
 // import {setToken, setUserInfo} from "../../utils/auth";
 // import {buildRouter} from "../../permission";
 import { register } from "@/api/register.js";
+import { UserInfoDialog } from './components';
+import store from '@/store';
 
 export default {
   name: 'login',
@@ -41,6 +43,9 @@ export default {
       pwdType: 'password'
     }
   },
+  components: {
+    UserInfoDialog
+  },
   methods: {
     initData() {
       let userGaokaoInfo = JSON.parse(localStorage.getItem('userGaoKaoInfo'));
@@ -57,7 +62,7 @@ export default {
       }
     },
     showInfoDialog() {
-      alert("qwq");
+      store.commit('SHOW_DIALOG', true);
     },
     handleRegister() {
       register(this.regForm).then((res) => {

@@ -60,11 +60,11 @@
 <script>
 import { getRank } from '@/api/recommand.js';
 import {STATUS_CODE} from "@/api/statusCode";
+import store from '@/store';
 
 export default {
   data() {
     return {
-      dialogVisible: true,
       userInfo: {
         score: null,
         subject: [],
@@ -86,6 +86,11 @@ export default {
     };
   },
   methods: {
+    initData() {
+      if (this.$route.path === '/register') {
+        this.userInfo = JSON.parse(localStorage.getItem('userGaoKaoInfo'));
+      }
+    },
     submitForm(userInfo) {
       this.$refs.userInfo.validate((isValid) => {
         if (isValid) {
@@ -93,14 +98,13 @@ export default {
           //console.log(userInfo);
           localStorage.setItem('userGaoKaoInfo', JSON.stringify(userInfo));
           //console.log(localStorage.getItem('userGaoKaoInfo'));
-          this.dialogVisible = false;
+          store.commit('SHOW_DIALOG', false);
           this.$router.replace({
             path: '/refresh',
             query: {
-              path: '/recommand'
+              path: this.$route.path
             }
           });
-
         } else {
           //console.log('error submit!!');
           return false;
@@ -119,11 +123,17 @@ export default {
       })
     }
   },
+  computed: {
+    dialogVisible() {
+      return store.getters.dialogVisible;
+    }
+  },
   //mounted的话可能会出现一点闪动
   beforeMount() {
     if (localStorage.getItem('userGaoKaoInfo')) {
-      this.dialogVisible = false;
+      store.commit('SHOW_DIALOG', false);
     }
+    this.initData();
   }
 };
 </script>

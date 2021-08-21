@@ -8,7 +8,8 @@ const app = {
     },
     device: 'desktop',
     language: Cookies.get('language') || 'zh',
-    size: Cookies.get('size') || 'medium'
+    size: Cookies.get('size') || 'medium',
+    dialogVisible: true
   },
   mutations: {
     TOGGLE_SIDEBAR: state => {
@@ -31,6 +32,9 @@ const app = {
     SET_LANGUAGE: (state, language) => {
       state.language = language
       Cookies.set('language', language)
+    },
+    SHOW_DIALOG: (state, dialogVisible) => {
+      state.dialogVisible = dialogVisible
     }
   },
   actions: {

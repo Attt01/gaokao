@@ -1,5 +1,6 @@
 <template>
   <div class="login-container">
+    <user-info-dialog></user-info-dialog>
     <el-row type="flex" justify="space-around">
     <el-col :span="12">
       <el-card>
@@ -62,7 +63,6 @@
       <el-form-item prop="veryCode" label="成绩信息">
         <el-input
           v-model="userInfoStr"
-          disabled
         >
         <template slot="append">
           <el-button type="primary" @click="showInfoDialog">点击修改</el-button>
