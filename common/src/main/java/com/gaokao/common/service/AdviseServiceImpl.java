@@ -4,7 +4,9 @@ import com.gaokao.common.dao.AdviseDao;
 import com.gaokao.common.dao.ScoreRankDao;
 import com.gaokao.common.meta.po.GuessRank;
 import com.gaokao.common.meta.po.ScoreRank;
+import com.gaokao.common.meta.po.VolunteerForm;
 import com.gaokao.common.meta.vo.advise.AdviseVO;
+import com.gaokao.common.meta.vo.volunteer.VolunteerFormVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -39,11 +41,10 @@ public class AdviseServiceImpl implements AdviseService{
             score = l;
         ScoreRank scoreRank = scoreRankDao.findAllByScore(score);
         return scoreRank.getTotalNums();
-
     }
 
     @Override
-    public Page<AdviseVO> list(Integer score, Integer page, Integer size){
+    public List<AdviseVO> getRates(Integer score){
         List<GuessRank> guessRankList = adviseDao.findGuessRankS();
         //接下来构造VO对象
         List<AdviseVO> adviseVOS = new ArrayList<>(guessRankList.size());
@@ -82,6 +83,26 @@ public class AdviseServiceImpl implements AdviseService{
             adviseVO.setRate(rate);
             adviseVOS.add(adviseVO);
         });
+        return adviseVOS;
+    }
+
+    @Override
+    public Page<AdviseVO> list(Integer score, Integer page, Integer size){
+        List<AdviseVO> adviseVOS = getRates(score);
         return new PageImpl<>(adviseVOS, PageRequest.of(page - 1, size), adviseVOS.size());
     }
+
+/*    @Override
+    public VolunteerFormVO generateVoluntForm(Long userId, Integer score, List<Long> subject, Integer chongRate, Integer baoRate, Integer wenRate){
+        VolunteerFormVO vfo = new VolunteerFormVO();
+        int rank = getUserRank(score);
+        List<AdviseVO> adviseVOS = getRates(score);//获得所有专业的录取概率
+        vfo.setId(adviseDao.getCount());
+        vfo.setUserId(userId);
+        vfo.setName(score + "分-新建志愿表");
+        vfo.setScore(score);
+        vfo.setSubject(subject);
+
+        return vfo;
+    }*/
 }

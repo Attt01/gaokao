@@ -1,6 +1,7 @@
 package com.gaokao.common.dao;
 
 import com.gaokao.common.meta.po.GuessRank;
+import lombok.Data;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
@@ -14,7 +15,7 @@ import java.util.List;
 @Repository
 public interface AdviseDao extends PagingAndSortingRepository<GuessRank, Long> {
 
-    @Query(value = "select * from tb_guess_rank;", nativeQuery = true)
+    @Query(value = "select * from tb_guess_rank order by guess_rank desc;", nativeQuery = true)
     List<GuessRank> findGuessRankS();
 
     @Query(value = "select name from tb_university where id = ? ;", nativeQuery = true)
@@ -25,4 +26,7 @@ public interface AdviseDao extends PagingAndSortingRepository<GuessRank, Long> {
 
     @Query(value = "select DISTINCT major_name from tb_recruit_plan where university_id = ?1 and major_code = ?2 ;", nativeQuery = true)
     String findMajorNameByID(Long id, String majorCode);
+
+    @Query(value = "select MAX(id) from tb_volunteer_form;", nativeQuery = true)
+    Long getCount();
 }
