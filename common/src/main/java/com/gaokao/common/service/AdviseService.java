@@ -2,6 +2,7 @@ package com.gaokao.common.service;
 
 import com.gaokao.common.meta.po.GuessRank;
 import com.gaokao.common.meta.vo.advise.AdviseVO;
+import com.gaokao.common.meta.vo.volunteer.VolunteerFormVO;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -18,4 +19,10 @@ public interface AdviseService {
 
     //根据分数获得用户报考各学校专业的成功率
     Page<AdviseVO> list(Integer score, Integer page, Integer size);
+
+    //获得各学校各专业的录取概率
+    List<AdviseVO> getRates(Integer score);
+
+    //生成志愿表
+    //VolunteerFormVO generateVoluntForm(Long userId, Integer score,Integer chongRate, Integer baoRate, Integer wenRate);
 }
