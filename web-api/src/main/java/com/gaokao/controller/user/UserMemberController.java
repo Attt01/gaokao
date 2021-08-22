@@ -30,6 +30,8 @@ public class UserMemberController {
     @Autowired
     private UserMemberService userMemberService;
 
+
+
     @GetMapping("/needLogin")
     public AjaxResult<String> needLogin() {
         return AjaxResult.UNAUTHORIZED("请登陆或者注册");
