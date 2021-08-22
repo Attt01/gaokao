@@ -18,3 +18,10 @@ export function register(formdata) {
     // }
   });
 }
+
+export function sendVeryCode() {
+  return request({
+    url: '/xhr/v1/userMember/sendVerifyCode',
+    method: 'get'
+  });
+}
