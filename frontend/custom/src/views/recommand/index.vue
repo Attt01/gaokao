@@ -16,7 +16,6 @@
                 <el-form-item label="成绩信息">
                   <el-input
                     v-model="userInfoStr"
-                    disabled
                   >
                   </el-input>
                 </el-form-item>
@@ -25,6 +24,18 @@
                     <el-cascader
                       :options="major.options"
                       :props="major.props"
+                      v-model="major.selected"
+                      collapse-tags
+                      clearable
+                    >
+                    </el-cascader>
+                </el-form-item>
+
+                <el-form-item label="大学类型">
+                    <el-cascader
+                      :options="school.options"
+                      :props="school.props"
+                      v-model="school.selected"
                       collapse-tags
                       clearable
                     >
@@ -32,59 +43,26 @@
                 </el-form-item>
 
                 <el-form-item label="意向地区">
-                  <!--按钮待替换-->
-                  <!-- <el-button type="primary" @click="area.isShowDialog=true;area.tmpSelected=area.selected;">点击选择</el-button>
-                  <el-dialog
-                    title="选择意向地区"
-                    :visible.sync="area.isShowDialog"
-                  >
-                    <el-form :rules="areaRules" :model="area" ref="areaSelect">
-                      <el-form-item prop="tmpSelected">
-                        <el-checkbox-group v-model="area.tmpSelected">
-                          <el-checkbox v-for="availableArea in area.areas" :key="availableArea" :label="availableArea"></el-checkbox>
-                        </el-checkbox-group>
-                      </el-form-item>
-                      <el-form-item>
-                        <el-row type="flex" justify="end">
-                          <el-col :span="3">
-                            <el-button type="primary" @click="onConfirmArea">确 定</el-button>
-                          </el-col>
-                        </el-row>
-                      </el-form-item>
-                    </el-form>
-                  </el-dialog> -->
                   <el-cascader
                     :options="area.options"
                     :props="area.props"
+                    v-model="area.selected"
                     clearable
                     collapse-tags
                   >
                   </el-cascader>
                 </el-form-item>
 
-                <el-form-item label="填报方案">
-                  <!--按钮待替换-->
-                  <el-button type="primary" @click="plan.isShowDialog=true; plan.tmpnum=plan.num.slice(0);">点击选择</el-button>
-                  <el-dialog
-                    title="选择填报方案"
-                    :visible.sync="plan.isShowDialog"
-                    width="50%"
-                  >
-                    <el-form>
-                      <el-form-item label="冲击">
-                        <el-input v-model="plan.tmpnum[0]" type="number" placeholder="请输入冲击数"></el-input>
-                      </el-form-item>
-                      <el-form-item label="稳妥">
-                        <el-input v-model="plan.tmpnum[1]" type="number" placeholder="请输入稳妥数"></el-input>
-                      </el-form-item>
-                      <el-form-item label="保底">
-                        <el-input v-model="plan.tmpnum[2]" type="number" placeholder="请输入保底数"></el-input>
-                      </el-form-item>
-                    </el-form>
-                    <span slot="footer" class="dialog-footer">
-                      <el-button type="primary" @click="onConfirmPlan">确 定</el-button>
-                    </span>
-                  </el-dialog>
+                <el-form-item label="填报方案" prop="plan">
+                  <el-form-item label="冲击">
+                    <el-input v-model="plan.num[0]" type="number" placeholder="请输入冲击数"></el-input>
+                  </el-form-item>
+                  <el-form-item label="稳妥">
+                    <el-input v-model="plan.num[1]" type="number" placeholder="请输入稳妥数"></el-input>
+                  </el-form-item>
+                  <el-form-item label="保底">
+                    <el-input v-model="plan.num[2]" type="number" placeholder="请输入保底数"></el-input>
+                  </el-form-item>
                 </el-form-item>
                 
                 <el-form-item label="填报批次">
