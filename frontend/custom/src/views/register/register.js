@@ -3,41 +3,61 @@ import {isvalidUsername} from '@/utils/validate'
 import {STATUS_CODE} from "../../api/statusCode";
 // import {setToken, setUserInfo} from "../../utils/auth";
 // import {buildRouter} from "../../permission";
-import { register } from "@/api/register.js";
+import { register, sendVeryCode } from "@/api/register.js";
 import { UserInfoDialog } from './components';
 import store from '@/store';
 
 export default {
   name: 'login',
-  // components: {LangSelect},
   data() {
-    const validateUsername = (rule, value, callback) => {
-      if (!isvalidUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
+    const validateConfirmPwd = (rule, value, callback) => {
+      //return callback(new Error('请输入确认密码'));
+      if (value === '') {
+        callback(new Error('请输入确认密码'));
+      } else if (value != this.regForm.password) {
+        callback(new Error('两次密码不一致'));
       } else {
-        callback()
+        callback();
       }
     }
-    const validatePassword = (rule, value, callback) => {
-      if (value.length < 5) {
-        callback(new Error('The password can not be less than 5 digits'))
+    const validatePhone = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('手机号不能为空'));
+      } else if (value.length !== 11) {
+        //是不是要拿正则验证手机号qwq?
+        callback(new Error('请输入正确的手机号'));
       } else {
-        callback()
+        callback();
       }
     }
     return {
       regForm: {
         phone: '',
         password: '',
+        confirmpwd: '',
         veryCode: '',
         nickname: '',
         score: 0,
         subject: '',
         province_rank: 0
       },
-      loginRules: {
-        username: [{required: true, trigger: 'blur', validator: validateUsername}],
-        password: [{required: true, trigger: 'blur', validator: validatePassword}]
+      regRules: {
+        nickname: [
+          { required: true, message: '请输入昵称', trigger: 'blur' },
+          { min: 1, max: 14, message: '长度不允许超过14个字符', trigger: 'blur'}
+        ],
+        phone: [{ required: true, trigger: 'blur', validator: validatePhone }],
+        //username: [{required: true, trigger: 'blur', validator: validateUsername}],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 6, message: '密码长度不能少于6位', trigger: 'blur'},
+          { max: 14, message: '密码长度不能少于14位', trigger: 'blur'}
+        ],
+        confirmpwd: [{ required: true, trigger: 'blur', validator: validateConfirmPwd }],
+        veryCode: [
+          { required: true, message: '请输入验证码', trigger: 'blur' },
+          { min: 4, max: 4, message: '验证码应该是4位', trigger: 'blur' }
+        ]
       },
       loading: false,
       pwdType: 'password'
@@ -64,17 +84,33 @@ export default {
     showInfoDialog() {
       store.commit('SHOW_DIALOG', true);
     },
-    handleRegister() {
-      register(this.regForm).then((res) => {
-        console.log(res);
+    getVeryCode() {
+      sendVeryCode().then((res) => {
         if (res.code === STATUS_CODE.SUCCESS) {
-          this.$message({
-            type: 'success',
-            message: '注册成功'
-          });
-          this.$router.push('/login');
+          alert("验证码是" + res.msg);
+        } else {
+          //alert("出现错误，可能是没启动redis（顺带一提验证码现在可以乱写）");
         }
       })
+    },
+    handleRegister() {
+      this.$refs['regForm'].validate((valid) => {
+        if (valid) {
+          register(this.regForm).then((res) => {
+            console.log(res);
+            if (res.code === STATUS_CODE.SUCCESS) {
+              this.$message({
+                type: 'success',
+                message: '注册成功'
+              });
+              this.$router.push('/login');
+            }
+          })
+        } else {
+          return false;
+        }
+      })
+      
     }
   },
   computed: {
