@@ -1,5 +1,8 @@
 package com.gaokao.common.service;
 
+import com.gaokao.common.meta.vo.frontdata.BatchVO;
+import com.gaokao.common.meta.vo.frontdata.FrontDataVO;
+
 import java.util.List;
 
 /**
@@ -7,6 +10,7 @@ import java.util.List;
  * date 2021-08-21
  */
 public interface FrontDataService {
-    List<String> getProvinces();
-    List<String> getCities(String provinceName);
+    List<BatchVO> getBatches();
+
+    List<FrontDataVO> getFrontData(Integer flag);
 }

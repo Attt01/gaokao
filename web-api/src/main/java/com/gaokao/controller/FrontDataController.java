@@ -1,14 +1,14 @@
 package com.gaokao.controller;
 
 import com.gaokao.common.meta.AjaxResult;
-import com.gaokao.common.meta.vo.frontdata.RegionVO;
+import com.gaokao.common.meta.vo.frontdata.BatchVO;
+import com.gaokao.common.meta.vo.frontdata.FrontDataVO;
 import com.gaokao.common.service.FrontDataService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,19 +22,24 @@ public class FrontDataController {
     @Autowired
     private FrontDataService frontDataService;
 
-    @RequestMapping("/regions")
-    public AjaxResult<List<RegionVO>> getRegions(){
-        List<String> provincesList = frontDataService.getProvinces();
-        List<RegionVO> regionVOS = new ArrayList<>();
-        List<String> citiesList = new ArrayList<>();
-        for (String provinceName:provincesList) {
-            RegionVO regionVO = new RegionVO();
-            citiesList = frontDataService.getCities(provinceName);
-            regionVO.setProvince(provinceName);
-            regionVO.setCities(citiesList);
-            regionVOS.add(regionVO);
-        }
-        return AjaxResult.SUCCESS(regionVOS);
+    @RequestMapping("/batch")
+    public AjaxResult<List<BatchVO>> getBatches(){
+        return AjaxResult.SUCCESS(frontDataService.getBatches());
+    }
+
+    @RequestMapping("/region")
+    public AjaxResult<List<FrontDataVO>> getRegion(){
+        return AjaxResult.SUCCESS(frontDataService.getFrontData(2));
+    }
+
+    @RequestMapping("/schooltype")
+    public AjaxResult<List<FrontDataVO>> getSchoolType(){
+        return AjaxResult.SUCCESS(frontDataService.getFrontData(3));
+    }
+
+    @RequestMapping("/majortype")
+    public AjaxResult<List<FrontDataVO>> getMajorType(){
+        return AjaxResult.SUCCESS(frontDataService.getFrontData(4));
     }
 
 }
