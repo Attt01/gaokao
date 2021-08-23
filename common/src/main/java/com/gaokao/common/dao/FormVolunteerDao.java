@@ -4,6 +4,7 @@ import com.gaokao.common.meta.po.FormVolunteer;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -17,5 +18,8 @@ public interface FormVolunteerDao extends PagingAndSortingRepository<FormVolunte
     FormVolunteer findByFormIdAndVolunteerSectionAndVolunteerPosition(Long formId, Boolean volunteerSection, Integer volunteerPosition);
 
     List<FormVolunteer> findAllByFormId(Long formId);
+
+    @Transactional
+    Long deleteAllByFormId(Long formId);
 
 }

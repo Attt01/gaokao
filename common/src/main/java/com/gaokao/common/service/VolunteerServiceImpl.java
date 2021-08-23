@@ -70,6 +70,16 @@ public class VolunteerServiceImpl implements VolunteerService{
     }
 
     @Override
+    public Long deleteForm(Long formId) {
+
+        userFormDao.deleteById(formId);
+        return formVolunteerDao.deleteAllByFormId(formId);
+
+
+
+    }
+
+    @Override
     public Long setVolunteer(Long userId, Long formId, Boolean section, Integer position, Long volunteerId) {
 
         FormVolunteer formVolunteer = formVolunteerDao.findByFormIdAndVolunteerSectionAndVolunteerPosition(formId, section, position);

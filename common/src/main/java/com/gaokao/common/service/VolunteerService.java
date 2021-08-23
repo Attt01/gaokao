@@ -24,4 +24,6 @@ public interface VolunteerService {
 
     Long changeCurrentForm(Long userId, Long preFormId, Long newFormId);
 
+    Long deleteForm(Long formId);
+
 }

@@ -43,6 +43,11 @@ public class VolunteerController {
         return AjaxResult.SUCCESS(volunteerService.listAll(id));
     }
 
+    @GetMapping("/delete/{id}")
+    public AjaxResult<Long> deleteForm(@PathVariable Long id) {
+        return AjaxResult.SUCCESS(volunteerService.deleteForm(id));
+    }
+
     @PostMapping("/changeCurrentForm")
     public AjaxResult<Long> changeCurrentForm(ChangeCurrentFormParams changeCurrentFormParams) {
         return AjaxResult.SUCCESS(volunteerService.changeCurrentForm(changeCurrentFormParams.getUserId(),
