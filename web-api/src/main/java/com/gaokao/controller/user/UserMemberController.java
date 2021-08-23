@@ -30,8 +30,7 @@ public class UserMemberController {
     @Autowired
     private UserMemberService userMemberService;
 
-    @Autowired
-    private UserMemberDao userMemberDao;
+
 
     @GetMapping("/needLogin")
     public AjaxResult<String> needLogin() {
@@ -49,13 +48,8 @@ public class UserMemberController {
     @PostMapping("/update/{id}")
     public AjaxResult<Long> update(@PathVariable Long id,
                                    @Valid @RequestBody MemberUpdateParams params) {
-        UserMember userMember=userMemberDao.findUserMemberById(id);
-        if (userMember==null){
-            return AjaxResult.FAIL("用户不存在或其他异常");
-        }
-        else {
             return AjaxResult.SUCCESS(userMemberService.update(id, params));
-          }
+
     }
 
     @PostMapping("/reg")
