@@ -18,6 +18,11 @@ public class VolunteerCreateParams {
     private Long userId;
 
     /**
+     * 志愿表名称
+     */
+    private String name;
+
+    /**
      * 选考科目
      */
     private List<Long> subject;
@@ -26,5 +31,10 @@ public class VolunteerCreateParams {
      * 分数
      */
     private Long score;
+
+    /**
+     * 创建类型
+     */
+    private Boolean generatedType;
 
 }

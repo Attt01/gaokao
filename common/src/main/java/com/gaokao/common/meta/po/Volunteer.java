@@ -30,77 +30,54 @@ public class Volunteer {
     private String address;
 
     @Column(name = "is_undergraduate_school")
-    private Long undergraduateSchoolIsOrNot;
+    private Boolean undergraduateSchoolIsOrNot;
 
     @Column(name = "is_junior_school")
-    private Long juniorSchoolIsOrNot;
+    private Boolean juniorSchoolIsOrNot;
 
     @Column(name = "is_985")
-    private Long is985;
+    private Boolean is985;
 
     @Column(name = "is_211")
-    private Long is211;
+    private Boolean is211;
 
     @Column(name = "is_public")
-    private Long PublicIsOrNot;
+    private Boolean PublicIsOrNot;
 
     @Column(name = "is_private")
-    private Long PrivateIsOrNot;
+    private Boolean PrivateIsOrNot;
 
     private String category;
 
     private String picLink;
 
-    private String employmentRate;
+    private Integer employmentRate;
 
-    private String abroadRate;
+    private Integer abroadRate;
 
-    private String furtherRate;
+    private Integer furtherRate;
 
-    private Integer lowestScoreOne;
+    private Integer volunteerSection;
 
-    private Integer lowestPositionOne;
+    private Integer lowestScore;
 
-    private String professionalNameOne;
+    private Integer lowestPosition;
 
-    private Integer subjectRestrictionTypeOne;
+    private String professionalName;
 
-    private String subjectRestrictionDetailOne;
+    private Integer subjectRestrictionType;
 
-    private String majorCodeOne;
+    private String subjectRestrictionDetail;
 
-    private Integer scoreOne;
+    private Integer score;
 
-    private Integer positionOne;
+    private Integer position;
 
-    private Integer enrollmentOne;
+    private Integer enrollment;
 
-    private Integer timeOne;
+    private Integer time;
 
-    private Integer feeOne;
-
-
-    private Integer lowestScoreTwo;
-
-    private Integer lowestPositionTwo;
-
-    private String professionalNameTwo;
-
-    private Integer subjectRestrictionTypeTwo;
-
-    private String subjectRestrictionDetailTwo;
-
-    private String majorCodeTwo;
-
-    private Integer scoreTwo;
-
-    private Integer positionTwo;
-
-    private Integer enrollmentTwo;
-
-    private Integer timeTwo;
-
-    private Integer feeTwo;
+    private Integer fee;
 
     private Integer doubleFirstClassSubjectNumber;
 

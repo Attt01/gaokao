@@ -14,10 +14,12 @@ public class DownVolunteerParams {
 
     private Long formId;
 
+    private Boolean section;
+
     /**
      * 需要上移的志愿
      */
-    private Long volunteerPosition;
+    private Integer volunteerPosition;
 
     /**
      * 需要下移的志愿的id

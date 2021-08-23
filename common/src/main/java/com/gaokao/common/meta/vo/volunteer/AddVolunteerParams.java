@@ -14,10 +14,12 @@ public class AddVolunteerParams {
 
     private Long formId;
 
+    private Boolean section;
+
     /**
      * 第几志愿
      */
-    private Long volunteerPosition;
+    private Integer volunteerPosition;
 
     /**
      * 志愿id

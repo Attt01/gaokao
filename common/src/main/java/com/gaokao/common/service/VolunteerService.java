@@ -1,6 +1,7 @@
 package com.gaokao.common.service;
 
-import com.gaokao.common.meta.vo.volunteer.VolunteerFormVO;
+import com.gaokao.common.meta.vo.volunteer.UserFormAllVO;
+import com.gaokao.common.meta.vo.volunteer.UserFormDetailVO;
 
 import java.util.List;
 
@@ -11,12 +12,16 @@ import java.util.List;
  */
 public interface VolunteerService {
 
-    Long create(Long userId, List<Long> subject, Long score);
+    Long create(Long userId, List<Long> subject, Long score, Boolean generatedType, String name);
 
-    Long setVolunteer(Long userId, Long formId, Long position, Long volunteerId);
+    Long setVolunteer(Long userId, Long formId, Boolean section,Integer position, Long volunteerId);
 
-    Long updateVolunteerFormName(Long userId, Long formId, String newName);
+    Long updateUserFormName(Long userId, Long formId, String newName);
 
-    List<VolunteerFormVO> list(Long userId);
+    List<UserFormAllVO> listAll(Long userId);
+
+    UserFormDetailVO listCurrentForm(Long userId);
+
+    Long changeCurrentForm(Long userId, Long preFormId, Long newFormId);
 
 }

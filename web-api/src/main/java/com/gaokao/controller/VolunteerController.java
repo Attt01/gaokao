@@ -2,13 +2,10 @@ package com.gaokao.controller;
 
 import com.gaokao.common.constants.VolunteerConstant;
 import com.gaokao.common.meta.AjaxResult;
-import com.gaokao.common.meta.po.VolunteerForm;
 import com.gaokao.common.meta.vo.volunteer.*;
 import com.gaokao.common.service.VolunteerService;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,12 +24,30 @@ public class VolunteerController {
     private VolunteerService volunteerService;
 
     /**
-     * 查询某一用户的志愿表
+     * 查询某一用户当前的志愿表
      * 这个类型不是null，后期会改
      */
-    @GetMapping("/{id}")
-    public AjaxResult<List<VolunteerFormVO>> list(@PathVariable Long id) {
-        return AjaxResult.SUCCESS(volunteerService.list(id));
+    @GetMapping("/getCurrent/{id}")
+    public AjaxResult<UserFormDetailVO> listCurrent(@PathVariable Long id) {
+        return AjaxResult.SUCCESS(volunteerService.listCurrentForm(id));
+    }
+
+    /**
+     * 查询某一用户所有的志愿表
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/getAll/{id}")
+    public AjaxResult<List<UserFormAllVO>> listAllForm(@PathVariable Long id) {
+        return AjaxResult.SUCCESS(volunteerService.listAll(id));
+    }
+
+    @PostMapping("/changeCurrentForm")
+    public AjaxResult<Long> changeCurrentForm(ChangeCurrentFormParams changeCurrentFormParams) {
+        return AjaxResult.SUCCESS(volunteerService.changeCurrentForm(changeCurrentFormParams.getUserId(),
+                changeCurrentFormParams.getPreFormId(),
+                changeCurrentFormParams.getNewFormId()));
     }
 
     /**
@@ -45,7 +60,9 @@ public class VolunteerController {
 
         Long result = volunteerService.create(volunteerCreateParams.getUserId(),
                 volunteerCreateParams.getSubject(),
-                volunteerCreateParams.getScore());
+                volunteerCreateParams.getScore(),
+                volunteerCreateParams.getGeneratedType(),
+                volunteerCreateParams.getName());
 
         if (result == -1L)
             return AjaxResult.FAIL("创建失败");
@@ -60,7 +77,7 @@ public class VolunteerController {
     @PostMapping("/updateName")
     public AjaxResult<Long> updateName(VolunteerUpdateParams volunteerUpdateParams) {
 
-        Long result = volunteerService.updateVolunteerFormName(volunteerUpdateParams.getUserId(),
+        Long result = volunteerService.updateUserFormName(volunteerUpdateParams.getUserId(),
                 volunteerUpdateParams.getFormId(),
                 volunteerUpdateParams.getName());
 
@@ -78,6 +95,7 @@ public class VolunteerController {
     public AjaxResult<Long> addVolunteer(AddVolunteerParams addVolunteerParams) {
         Long result = volunteerService.setVolunteer(addVolunteerParams.getUserId(),
                 addVolunteerParams.getFormId(),
+                addVolunteerParams.getSection(),
                 addVolunteerParams.getVolunteerPosition(),
                 addVolunteerParams.getVolunteerId());
 
@@ -94,6 +112,7 @@ public class VolunteerController {
     public AjaxResult<Long> deleteVolunteer(DeleteVolunteerParams deleteVolunteerParams) {
         Long result = volunteerService.setVolunteer(deleteVolunteerParams.getUserId(),
                 deleteVolunteerParams.getFormId(),
+                deleteVolunteerParams.getSection(),
                 deleteVolunteerParams.getVolunteerPosition(),
                 VolunteerConstant.EMPTY_VOLUNTEER);
         if (result == -1L)
@@ -109,10 +128,12 @@ public class VolunteerController {
     public AjaxResult<Long> swapVolunteer(SwapVolunteerParams swapVolunteerParams) {
         volunteerService.setVolunteer(swapVolunteerParams.getUserId(),
                 swapVolunteerParams.getFormId(),
+                swapVolunteerParams.getSection(),
                 swapVolunteerParams.getFirstVolunteerPosition(),
                 swapVolunteerParams.getSecondVolunteerId());
         Long result = volunteerService.setVolunteer(swapVolunteerParams.getUserId(),
                 swapVolunteerParams.getFormId(),
+                swapVolunteerParams.getSection(),
                 swapVolunteerParams.getSecondVolunteerPosition(),
                 swapVolunteerParams.getFirstVolunteerId());
 
@@ -131,10 +152,12 @@ public class VolunteerController {
     public AjaxResult<Long> upVolunteer(UpVolunteerParams upVolunteerParams) {
         volunteerService.setVolunteer(upVolunteerParams.getUserId(),
                 upVolunteerParams.getFormId(),
+                upVolunteerParams.getSection(),
                 upVolunteerParams.getVolunteerPosition(),
                 VolunteerConstant.EMPTY_VOLUNTEER);
         Long result = volunteerService.setVolunteer(upVolunteerParams.getUserId(),
                 upVolunteerParams.getFormId(),
+                upVolunteerParams.getSection(),
                 upVolunteerParams.getVolunteerPosition() - 1,
                 upVolunteerParams.getVolunteerId());
 
@@ -153,10 +176,12 @@ public class VolunteerController {
     public AjaxResult<Long> downVolunteer(DownVolunteerParams downVolunteerParams) {
         volunteerService.setVolunteer(downVolunteerParams.getUserId(),
                 downVolunteerParams.getFormId(),
+                downVolunteerParams.getSection(),
                 downVolunteerParams.getVolunteerPosition(),
                 VolunteerConstant.EMPTY_VOLUNTEER);
         Long result = volunteerService.setVolunteer(downVolunteerParams.getVolunteerId(),
                 downVolunteerParams.getFormId(),
+                downVolunteerParams.getSection(),
                 downVolunteerParams.getVolunteerPosition() + 1,
                 downVolunteerParams.getVolunteerId());
 

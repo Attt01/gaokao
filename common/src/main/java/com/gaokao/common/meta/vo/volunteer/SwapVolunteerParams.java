@@ -15,9 +15,15 @@ public class SwapVolunteerParams {
     private Long formId;
 
     /**
+     * 是在哪一段进行交换
+     */
+
+    private Boolean section;
+
+    /**
      * 需要交换的志愿的位置
      */
-    private Long firstVolunteerPosition;
+    private Integer firstVolunteerPosition;
 
     /**
      * 需要交换的志愿的id
@@ -28,7 +34,7 @@ public class SwapVolunteerParams {
     /**
      * 目标志愿的位置
      */
-    private Long secondVolunteerPosition;
+    private Integer secondVolunteerPosition;
 
     /**
      * 目标志愿的id

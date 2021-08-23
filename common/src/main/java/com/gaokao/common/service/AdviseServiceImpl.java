@@ -4,9 +4,7 @@ import com.gaokao.common.dao.AdviseDao;
 import com.gaokao.common.dao.ScoreRankDao;
 import com.gaokao.common.meta.po.GuessRank;
 import com.gaokao.common.meta.po.ScoreRank;
-import com.gaokao.common.meta.po.VolunteerForm;
 import com.gaokao.common.meta.vo.advise.AdviseVO;
-import com.gaokao.common.meta.vo.volunteer.VolunteerFormVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -93,8 +91,8 @@ public class AdviseServiceImpl implements AdviseService{
     }
 
 /*    @Override
-    public VolunteerFormVO generateVoluntForm(Long userId, Integer score, List<Long> subject, Integer chongRate, Integer baoRate, Integer wenRate){
-        VolunteerFormVO vfo = new VolunteerFormVO();
+    public UserFormDetailVO generateVoluntForm(Long userId, Integer score, List<Long> subject, Integer chongRate, Integer baoRate, Integer wenRate){
+        UserFormDetailVO vfo = new UserFormDetailVO();
         int rank = getUserRank(score);
         List<AdviseVO> adviseVOS = getRates(score);//获得所有专业的录取概率
         vfo.setId(adviseDao.getCount());
