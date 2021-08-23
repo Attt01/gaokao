@@ -1,13 +1,14 @@
-package com.gaokao.common.meta.vo.frontdata;
+package com.gaokao.common.meta.vo.filterdata;
 
 import lombok.Data;
 
 /**
  * @author MaeYon-Z
- * date 2021-08-21
+ * date 2021-08-22
  */
 @Data
-public class ThirdDataVO {
+public class FilterDataParams {
+
     private Integer value;
 
     private String label;
