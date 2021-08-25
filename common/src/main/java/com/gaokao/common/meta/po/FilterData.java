@@ -10,18 +10,22 @@ import javax.persistence.Table;
 
 /**
  * @author MaeYon-Z
- * date 2021-08-21
+ * date 2021-08-22
  */
 @Data
 @Entity
 @DynamicInsert
 @DynamicUpdate
-@Table(name = "tb_dict_three")
-public class ThirdData {
+@Table(name = "tb_filter_conditions")
+public class FilterData {
+
     @Id
     private Integer id;
 
-    private Integer upid;
+    private Integer level;
 
-    private String value;
+    private Integer father_id;
+
+    private String label;
+
 }
