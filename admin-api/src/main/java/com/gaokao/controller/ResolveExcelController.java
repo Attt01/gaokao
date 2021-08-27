@@ -27,7 +27,6 @@ public class ResolveExcelController {
     public List<String> resolveExcel(@RequestBody ExcelFileAndSheetParams excelFileAndSheetParams) throws IOException, BiffException {
         String filePath = excelFileAndSheetParams.getFilePath();
         String sheetName = excelFileAndSheetParams.getSheetName();
-        System.out.println(filePath + "===" + sheetName);
         List<int[]> records = resolveExcelService.resolveExcel(filePath, sheetName);
         List<String> insertOrders = resolveExcelService.importExcel(records);
 
