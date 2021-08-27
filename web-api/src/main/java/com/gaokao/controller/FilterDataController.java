@@ -6,12 +6,11 @@ import com.gaokao.common.meta.vo.filterdata.FilterDataVO;
 import com.gaokao.common.service.FilterDataService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.ListIterator;
 
 /**
  * @author MaeYon-Z
@@ -25,22 +24,22 @@ public class FilterDataController {
     @Autowired
     private FilterDataService filterDataService;
 
-    @RequestMapping("/batch")
+    @GetMapping("/batch")
     public AjaxResult<List<FilterDataParams>> getBatch(){
         return AjaxResult.SUCCESS(filterDataService.getTwoLayersData(1));
     }
 
-    @RequestMapping("/region")
+    @GetMapping("/region")
     public AjaxResult<List<FilterDataVO>> getRegion(){
         return AjaxResult.SUCCESS(filterDataService.getThreeLayersData(2));
     }
 
-    @RequestMapping("/schooltype")
+    @GetMapping("/schooltype")
     public AjaxResult<List<FilterDataVO>> getSchoolType(){
         return AjaxResult.SUCCESS(filterDataService.getThreeLayersData(3));
     }
 
-    @RequestMapping("/majortype")
+    @GetMapping("/majortype")
     public AjaxResult<List<FilterDataVO>> getMajorType(){
         return AjaxResult.SUCCESS(filterDataService.getThreeLayersData(4));
     }
