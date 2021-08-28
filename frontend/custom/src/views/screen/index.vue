@@ -23,6 +23,8 @@
           clearable
           filterable
           :options="locationOptions"
+          :props="multiProps"
+          collapse-tags
           @change="changeLocation">
         </el-cascader>
       </el-form-item>
@@ -31,9 +33,19 @@
           v-model="listQuery.classification"
           style="width: 240px"
           :options="classifyOptions"
+          :props="multiProps"
           clearable
           filterable
-          :props="{ expandTrigger: 'hover' }"
+          @change="changeClassify"></el-cascader>
+      </el-form-item>
+      <el-form-item label="专业类型" prop="majorType">
+        <el-cascader
+          v-model="listQuery.majorType"
+          style="width: 240px"
+          :options="majorOptions"
+          :props="multiProps"
+          clearable
+          filterable
           @change="changeClassify"></el-cascader>
       </el-form-item>
       <el-form-item label="搜索大学" prop="universityName">
@@ -59,31 +71,43 @@
     </el-form>
 
     <!--列表部分-->
-    <el-table :data="volunteerList" v-loading="loading"  border highlight-current-row>
+    <el-button-group>
+      <el-button type="primary" plain>全部</el-button>
+      <el-tooltip class="item" effect="light" content="依据成绩信息结合招生计划、历史录取和填报规则推荐可以填报的冲一冲大学，这类大学一般填在志愿表中的前段。"
+                  placement="top">
+        <el-button type="primary" plain @click.native="handleQuery">冲刺</el-button>
+      </el-tooltip>
+      <el-tooltip class="item" effect="light" content="依据成绩信息结合招生计划、历史录取和填报规则推荐可以填报的稳一稳大学，这类大学一般填在志愿表中的中间段。"
+                  placement="top">
+        <el-button type="primary" plain>稳妥</el-button>
+      </el-tooltip>
+      <el-tooltip class="item" effect="light" content="依据成绩信息结合招生计划、历史录取和填报规则推荐可以填报的保一保大学，这类大学一般填在志愿表中的后段。"
+                  placement="top">
+        <el-button type="primary" plain>保底</el-button>
+      </el-tooltip>
+    </el-button-group>
+    <!--<el-button
+      size="mini"
+      type="text"
+      icon="el-icon-edit"
+      @click="handleFill()"
+    >填报
+    </el-button>-->
+    <el-table :data="volunteerList" v-loading="loading" border highlight-current-row>
       <el-table-column label="录取概率" prop="percent" align="center">
         <template slot-scope="scope">
           {{ scope.row.percent }}
         </template>
       </el-table-column>
-      <el-table-column label="招生院校" prop="universityName" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.universityName }}
-        </template>
-      </el-table-column>
       <el-table-column label="2021招生计划" align="center">
-        <el-table-column label="招生代码" align="center" prop="majorCode">
+        <el-table-column label="招生院校" prop="universityName" align="center">
           <template slot-scope="scope">
-            {{ scope.row.majorCode }}
+            {{ scope.row.universityName }}
           </template>
         </el-table-column>
-        <el-table-column label="招生人数" align="center" prop="recruitNumber">
+        <el-table-column label="招生专业" align="center" prop="majorName">
           <template slot-scope="scope">
-            {{ scope.row.recruitNumber }}
-          </template>
-        </el-table-column>
-        <el-table-column label="减扩人数" align="center" prop="changedNumber">
-          <template slot-scope="scope">
-            {{ scope.row.changedNumber }}
+            {{ scope.row.majorName }}
           </template>
         </el-table-column>
       </el-table-column>
@@ -118,14 +142,22 @@
       </el-table-column>
     </el-table>
     <br>
-
-    <!--工具条-->
     <el-col :span="24" class="toolbar">
       <el-pagination layout="prev, pager, next" @current-change="fetchPage" :page-size="listQuery.limit"
                      :page-count="listQuery.total" style="text-align:center;margin:10px">
       </el-pagination>
     </el-col>
-
+    <el-dialog :title="title" :close-on-click-modal="false" :visible.sync="dialogFormVisible" width="500px">
+      <el-form ref="form" :model="form" label-width="100px" :rules="rules">
+        <el-form-item label="志愿序号" prop="num">
+          <el-input-number v-model="form.name" placeholder="请输入志愿顺序号(1~96)" :min="1" :max="96" style="width: 360px"/>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click.native="cancel">取消</el-button>
+        <el-button type="primary" @click.native="submitForm">提交</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -136,18 +168,21 @@
 .app-container {
 
 }
-.niceButton{
+
+.niceButton {
   position: relative;
   left: 20px;
   border-radius: 4px;
   bottom: 0;
 }
-.niceButton:hover{
+
+.niceButton:hover {
   background-color: #1795bb;
 }
-.niceButton:active{
+
+.niceButton:active {
   background-color: #1795bb;
   box-shadow: 0 5px #666;
-  transform:translateY(4px);
+  transform: translateY(4px);
 }
 </style>
