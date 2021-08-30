@@ -156,11 +156,14 @@ public class UserMemberServiceImpl implements UserMemberService{
         UserMember userMember = userMemberDao.findById(id).orElse(null);
 
         UserMemberVO userMemberVO = new UserMemberVO();
-
-        BeanUtils.copyProperties(userMember, userMemberVO);
-
+        if (userMember == null) {
+            throw new BusinessException("用户不存在");
+        }
+       else {
+            BeanUtils.copyProperties(userMember, userMemberVO);
+        }
         return userMemberVO;
 
-
     }
+
 }
