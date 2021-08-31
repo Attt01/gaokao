@@ -1,4 +1,4 @@
-import {provinceAndCityDataPlus} from "element-china-area-data";
+import {getBatch, getMajorType, getRegion, getSchoolType} from "../../api/screen";
 
 export default {
   data() {
@@ -16,96 +16,21 @@ export default {
         subject: [],
         province_rank: 0
       },
-      major: {
-        props: { multiple: true },
-        options: [{
-          value: 1,
-          label: '计算机类',
-          children: [{
-            value: 2,
-            label: '计算机科学与技术'
-          }, {
-            value: 3,
-            label: '软件工程'
-          }]
-        }],
-        selected: []
+      form: {
+        userInfoStr: undefined,
+        major: [],
+        school: [],
+        batch: undefined,
+        area: undefined,
       },
-      school: {
-        props: { multiple: true },
-        options: [{
-          value: 'daxuetese',
-          label: '大学特色',
-          children: [
-            {
-              value: 'jiubawu',
-              label: '985',
-            },
-            {
-              value: 'eryaoyao',
-              label: '211',
-            },
-            {
-              value: 'yiben',
-              label: '一本',
-            }
-          ]
-        },
-        {
-          value: 'banxuexingzhi',
-          label: '办学性质',
-          children: [
-            {
-              value: '1',
-              label: '普通批',
-            },
-            {
-              value: '2',
-              label: '中外合办',
-            },
-            {
-              value: '3',
-              label: '校企合办',
-            }
-          ]
-        },
-        {
-          value: 'daxueleixing',
-          label: '大学类型',
-          children: [
-            {
-              value: '1',
-              label: '综合',
-            },
-            {
-              value: '2',
-              label: '理工',
-            },
-            {
-              value: '3',
-              label: '师范',
-            }
-          ]
-        }],
-        selected: []
-      },
-      area: {
-        props: { multiple: true },
-        options: provinceAndCityDataPlus,
-        selected: []
-      },
+      //多选参数
+      multiProps: {multiple: true},
+      levelOptions: [],
+      majorOptions: [],
+      locationOptions: [],
+      classifyOptions: [],
       plan: {
         num: []
-      },
-      batch: {
-        options: [{
-          value: '选项1',
-          label: '普通一段'
-        }, {
-          value: '选项2',
-          label: '普通二段'
-        }],
-        selected: ''
       },
       isAutoRecommand: true,
       // valiRules: {
@@ -118,6 +43,10 @@ export default {
       //if (getToken())
       this.userInfo = JSON.parse(localStorage.getItem('userGaoKaoInfo'));
       //console.log(this.userInfo);
+      this.selectBatch();
+      this.selectRegion();
+      this.selectSchoolType();
+      this.selectMajorType();
     },
     onSubmit() {
       // this.$refs['favorite'].validate((valid) => {
@@ -127,6 +56,40 @@ export default {
       //     return false;
       //   }
       // })
+    },
+    selectBatch() {
+      getBatch().then(response => {
+        if (response) {
+          this.levelOptions = response.data;
+        }
+      })
+    },
+    selectRegion() {
+      getRegion().then(response => {
+        if (response) {
+          this.locationOptions = response.data;
+        }
+      })
+    },
+    selectSchoolType() {
+      getSchoolType().then(response => {
+        if (response) {
+          this.classifyOptions = response.data;
+        }
+      })
+    },
+    selectMajorType() {
+      getMajorType().then(response => {
+        if (response) {
+          this.majorOptions = response.data;
+        }
+      })
+    },
+    changeClassify(value) {
+      console.log(value)
+    },
+    changeLocation(value) {
+      console.log(value)
     },
   },
   computed: {
