@@ -38,13 +38,19 @@ export default {
   },
   methods: {
     onTabClick(tab, event) {
-      console.log(tab, event, tab.name);
-      this.$router.push(tab.name);
+      console.log(tab, event, tab.name)
+      sessionStorage.setItem('accountActiveTab', this.activeTabName)
+      this.$router.push(tab.name)
     }
   },
   mounted() {
-    console.log(this.activeTabName);
-  }
+    if (sessionStorage.getItem('accountActiveTab') === null) {
+      sessionStorage.setItem('accountActiveTab', 'profile')
+    } else {
+      this.activeTabName = sessionStorage.getItem('accountActiveTab')
+    }
+    console.log(this.activeTabName)
+  },
 }
 </script>
 
