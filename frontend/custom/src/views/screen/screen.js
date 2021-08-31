@@ -53,12 +53,53 @@ export default {
     //请求列表数据
     fetchData() {
       // this.loading = true;
-      getVOList(this.listQuery).then(response => {
-        this.volunteerList = response.data.content;
-        this.loading = false;
-        this.total = response.data.totalElements;
-        this.listQuery.total = response.data.totalPages;
-      })
+      /* getVOList(this.listQuery).then(response => {
+         this.volunteerList = response.data.content;*/
+      this.volunteerList = [{
+        "percent": "45",
+        "universityName": "A大学",
+        "majorName": "计科",
+        "lowestScore": "657",
+        "lowestPosition": "90",
+        "enrollment": "95"
+      },
+        {
+          "percent": "53",
+          "universityName": "B大学",
+          "majorName": "软工",
+          "lowestScore": "100",
+          "lowestPosition": "568",
+          "enrollment": "95"
+        },
+        {
+          "percent": "78",
+          "universityName": "D大学",
+          "majorName": "大数据",
+          "lowestScore": "36",
+          "lowestPosition": "590",
+          "enrollment": "89"
+        },
+        {
+          "percent": "85",
+          "universityName": "Q大学",
+          "majorName": "物联网",
+          "lowestScore": "100",
+          "lowestPosition": "578",
+          "enrollment": "43"
+        },
+        {
+          "percent": "99",
+          "universityName": "K大学",
+          "majorName": "电信",
+          "lowestScore": "12",
+          "lowestPosition": "590",
+          "enrollment": "68"
+        },
+      ];
+      this.loading = false;
+      /*this.total = response.data.totalElements;
+      this.listQuery.total = response.data.totalPages;*/
+      // })
     },
     reset() {
       this.form = {
@@ -97,9 +138,6 @@ export default {
     },
     changeClassify(value) {
       console.log(value)
-    },
-    handleSelect(key, keyPath) {
-      console.log(key, keyPath);
     },
     selectBatch() {
       getBatch().then(response => {
