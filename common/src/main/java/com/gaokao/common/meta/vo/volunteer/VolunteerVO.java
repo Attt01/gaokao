@@ -36,7 +36,7 @@ public class VolunteerVO {
 
     private Boolean PrivateIsOrNot;
 
-    private List<String> category;
+    private String category;
 
     private String picLink;
 
@@ -46,7 +46,7 @@ public class VolunteerVO {
 
     private Integer furtherRate;
 
-    private Boolean volunteerSection;
+    private Integer volunteerSection;
 
     private Integer lowestScore;
 

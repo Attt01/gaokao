@@ -1,6 +1,7 @@
 package com.gaokao.common.dao;
 
 import com.gaokao.common.meta.po.UserForm;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
@@ -17,5 +18,8 @@ public interface UserFormDao extends PagingAndSortingRepository<UserForm, Long> 
     List<UserForm> findAllByUserId(Long userId);
 
     UserForm findUserFormByUserIdAndCurrent(Long userId, Boolean current);
+
+    @Query(value = "select * from tb_user_form where user_id = ?1 and generated_time = ?2 ;", nativeQuery = true)
+    UserForm findForm(Long userId, Long time);
 
 }

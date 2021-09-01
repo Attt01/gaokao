@@ -18,6 +18,7 @@ CREATE TABLE `tb_form_volunteer`
 (
     id             bigint auto_increment not null comment '主键',
     form_id       bigint not null default 0 comment '对应志愿表id',
+    volunteer_section tinyint(3) not null default 0 comment '批次',
     volunteer_position          tinyint not null default 0 comment '第几条志愿, 取值为1-96',
     volunteer_id  bigint not null default 0 comment '对应的志愿id',
     PRIMARY KEY (`id`)

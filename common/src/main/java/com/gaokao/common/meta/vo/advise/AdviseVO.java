@@ -1,5 +1,6 @@
 package com.gaokao.common.meta.vo.advise;
 
+import com.gaokao.common.meta.vo.volunteer.VolunteerVO;
 import lombok.Data;
 
 /**
@@ -9,32 +10,15 @@ import lombok.Data;
 @Data
 public class AdviseVO {
     /*
-    * 学校名
-    * */
-    private String universityName;
-
-    /*
-    * 学校代码
-    * */
-    private String universityCode;
-
-    /*
-    * 专业名
-    * */
-    private String majorName;
-
-    /*
-    * 专业代码
-    * */
-    private String majorCode;
-
-    /*
-    * 预估最低位次
-    * */
-    private int guessRank;
-
-    /*
     * 录取几率
     * */
     private int rate;
+
+    /*
+    * 录取概率描述，可冲击、较稳妥、可保底
+    * */
+    private String rateDesc;
+
+
+    private VolunteerVO volunteerVO;
 }

@@ -176,7 +176,7 @@ public class VolunteerServiceImpl implements VolunteerService{
             VolunteerVO volunteerVO = new VolunteerVO();
             Volunteer volunteer = volunteerDao.findById(item.getVolunteerId()).orElse(null);
             BeanUtils.copyProperties(volunteer, volunteerVO);
-            volunteerVO.setCategory(JSON.parseArray(volunteer.getCategory(), String.class));
+            //volunteerVO.setCategory(JSON.parseArray(volunteer.getCategory(), String.class));
             volunteerVO.setSubjectRestrictionDetail(JSON.parseArray(volunteer.getSubjectRestrictionDetail(), Integer.class));
             volunteerVOS.add(volunteerVO);
         });

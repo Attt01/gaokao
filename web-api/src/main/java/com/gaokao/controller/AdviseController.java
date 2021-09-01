@@ -1,9 +1,11 @@
 package com.gaokao.controller;
 
 import com.gaokao.common.meta.AjaxResult;
+import com.gaokao.common.meta.vo.advise.AutoGenerateFormParams;
+import com.gaokao.common.meta.vo.advise.FilterParams;
 import com.gaokao.common.meta.vo.advise.AdviseVO;
+import com.gaokao.common.meta.vo.volunteer.UserFormDetailVO;
 import com.gaokao.common.service.AdviseService;
-import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,11 +28,18 @@ public class AdviseController {
         return AjaxResult.SUCCESS(adviseService.getUserRank(score));
     }
 
-    @GetMapping("/{score}")
-    public AjaxResult<Page<AdviseVO>> advise(@PathVariable Integer score,
+    @GetMapping("/listall")
+    public AjaxResult<Page<AdviseVO>> advise(@RequestBody FilterParams filterParams,
+                                             @RequestParam(required = false, defaultValue = "0") Integer type,
                                              @RequestParam(required = false, defaultValue = "1") Integer page,
                                              @RequestParam(required = false, defaultValue = "10") Integer size){
-       return AjaxResult.SUCCESS(adviseService.list(score, page, size));
+       return AjaxResult.SUCCESS(adviseService.list(filterParams, type, page, size));
+    }
+
+    @GetMapping("autoGenerateForm")
+    public AjaxResult<UserFormDetailVO> autoGenerateVolunteerForm(@RequestBody AutoGenerateFormParams autoGenerateFormParams,
+                                                                  @RequestParam Long userId){
+        return AjaxResult.SUCCESS(adviseService.generateVoluntForm(userId, autoGenerateFormParams));
     }
 
 
