@@ -6,6 +6,7 @@ import com.gaokao.common.service.UserMemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,22 +38,26 @@ public class UserMemberManageController {
         return AjaxResult.SUCCESS(userMemberService.list(keyword, page, size));
     }
 
-    /**
-     * 锁定用户
-     * @param id
-     * @return
-     */
-    @GetMapping("/lock/{id}")
+    @PostMapping("/lock/{id}")
+    @PreAuthorize("hasPermission('usermember','update')")
     public AjaxResult<Long> lock(@PathVariable Long id) {
-        return null;
+        Long result = userMemberService.lock(id);
+        if(result == -1) {
+            return AjaxResult.FAIL("用户不存在或其他异常");
+        } else {
+            return AjaxResult.SUCCESS(result);
+        }
     }
 
-    /**
-     * 解锁用户
-     */
-    @GetMapping("/unlock/{id}")
+    @PostMapping("/unlock/{id}")
+    @PreAuthorize("hasPermission('usermember','update')")
     public AjaxResult<Long> unlock(@PathVariable Long id) {
-        return null;
+        Long result = userMemberService.unlock(id);
+        if(result == -1) {
+            return AjaxResult.FAIL("用户不存在或其他异常");
+        } else {
+            return AjaxResult.SUCCESS(result);
+        }
     }
 
 }
