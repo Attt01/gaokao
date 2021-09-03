@@ -54,7 +54,6 @@ public interface UserMemberService extends UserDetailsService {
      */
     UserMemberVO getInfo(Long id);
 
-
     /**
      * 修改密码
      * @param id     记录Id
@@ -77,4 +76,5 @@ public interface UserMemberService extends UserDetailsService {
      * @return 成功则返回被解锁的用户id，否则返回-1
      */
     Long unlock(Long userId);
+
 }
