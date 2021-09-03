@@ -38,7 +38,7 @@ export default {
         veryCode: '',
         nickname: '',
         score: 0,
-        subject: '',
+        subject: [],
         province_rank: 0
       },
       regRules: {
@@ -89,7 +89,7 @@ export default {
         if (res.code === STATUS_CODE.SUCCESS) {
           alert("验证码是" + res.msg);
         } else {
-          //alert("出现错误，可能是没启动redis（顺带一提验证码现在可以乱写）");
+          //出现错误可能是没启动redis服务(顺带一提验证码现在可以乱写);
         }
       })
     },
