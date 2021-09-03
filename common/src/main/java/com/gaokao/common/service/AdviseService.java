@@ -35,8 +35,9 @@ public interface AdviseService {
     *   2：较稳妥
     *   3：可保底
     * */
-    Page<AdviseVO> list(FilterParams filterParams, Integer type, Integer page, Integer size);
+    Page<AdviseVO> list(FilterParams filterParams);
 
     //生成志愿表
-    UserFormDetailVO generateVoluntForm(Long userId, AutoGenerateFormParams autoGenerateFormParams);
+    UserFormDetailVO generateVoluntForm(AutoGenerateFormParams autoGenerateFormParams);
+
 }

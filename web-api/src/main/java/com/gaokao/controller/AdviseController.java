@@ -29,18 +29,13 @@ public class AdviseController {
     }
 
     @GetMapping("/listall")
-    public AjaxResult<Page<AdviseVO>> advise(@RequestBody FilterParams filterParams,
-                                             @RequestParam(required = false, defaultValue = "0") Integer type,
-                                             @RequestParam(required = false, defaultValue = "1") Integer page,
-                                             @RequestParam(required = false, defaultValue = "10") Integer size){
-       return AjaxResult.SUCCESS(adviseService.list(filterParams, type, page, size));
+    public AjaxResult<Page<AdviseVO>> advise(@RequestBody FilterParams filterParams){
+       return AjaxResult.SUCCESS(adviseService.list(filterParams));
     }
 
     @GetMapping("autoGenerateForm")
-    public AjaxResult<UserFormDetailVO> autoGenerateVolunteerForm(@RequestBody AutoGenerateFormParams autoGenerateFormParams,
-                                                                  @RequestParam Long userId){
-        return AjaxResult.SUCCESS(adviseService.generateVoluntForm(userId, autoGenerateFormParams));
+    public AjaxResult<UserFormDetailVO> autoGenerateVolunteerForm(@RequestBody AutoGenerateFormParams autoGenerateFormParams){
+        return AjaxResult.SUCCESS(adviseService.generateVoluntForm(autoGenerateFormParams));
     }
-
 
 }

@@ -123,15 +123,15 @@ public class AdviseServiceImpl implements AdviseService{
     }
 
     @Override
-    public Page<AdviseVO> list(FilterParams filterParams, Integer type, Integer page, Integer size){
+    public Page<AdviseVO> list(FilterParams filterParams){
         List<AdviseVO> adviseVOS = listAll(filterParams);
-        if(type == 0)
-            return new PageImpl<>(adviseVOS, PageRequest.of(page - 1, size), adviseVOS.size());
+        if(filterParams.getType() == 0)
+            return new PageImpl<>(adviseVOS, PageRequest.of(filterParams.getPage() - 1, filterParams.getLimit()), adviseVOS.size());
         Map<String, List<AdviseVO>> map = new HashMap<>();
         List<AdviseVO> adviseVOList = new ArrayList<>();
         adviseVOS.stream().collect(Collectors.groupingBy(AdviseVO::getRateDesc,Collectors.toList()))
                 .forEach(map::put);
-        switch (type){
+        switch (filterParams.getType()){
             case 1:
                 adviseVOList = map.get("可冲击");
                 break;
@@ -145,16 +145,16 @@ public class AdviseServiceImpl implements AdviseService{
                 adviseVOList = adviseVOS;
             }
             adviseVOList.sort(Comparator.comparing(AdviseVO::getRate).reversed());
-            return new PageImpl<>(adviseVOList, PageRequest.of(page - 1, size), adviseVOList.size());
+            return new PageImpl<>(adviseVOList, PageRequest.of(filterParams.getPage() - 1, filterParams.getLimit()), adviseVOList.size());
     }
 
     @Override
-    public UserFormDetailVO generateVoluntForm(Long userId, AutoGenerateFormParams autoGenerateFormParams){
+    public UserFormDetailVO generateVoluntForm(AutoGenerateFormParams autoGenerateFormParams){
         //首先向tb_user_form中添加一条数据，表示生成一张表
         Date date = new Date();
         Long timestamp = date.getTime();
         UserForm userForm = new UserForm();
-        userForm.setUserId(userId);
+        userForm.setUserId(autoGenerateFormParams.getUserId());
         userForm.setName(autoGenerateFormParams.getScore() + "-新建志愿表");
         userForm.setScore(autoGenerateFormParams.getScore().longValue());
         userForm.setSubject(autoGenerateFormParams.getSubject());
@@ -162,16 +162,16 @@ public class AdviseServiceImpl implements AdviseService{
         userForm.setCurrent(true);
         userForm.setGeneratedTime(timestamp);
         userFormDao.save(userForm);
-        UserForm userForm1 = userFormDao.findForm(userId, timestamp);  //获取刚生成的表的信息
+        UserForm userForm1 = userFormDao.findForm(autoGenerateFormParams.getUserId(), timestamp);  //获取刚生成的表的信息
 
         //接下来向tb_form_volunteer表中插入新自动生成的表的志愿
-        FilterParams filterParams = new FilterParams();
-        filterParams.setScore(autoGenerateFormParams.getScore());
-        filterParams.setSubject(autoGenerateFormParams.getSubject());
-        filterParams.setOther(autoGenerateFormParams.getOther());
-        List<AdviseVO> chongList = list(filterParams, 1, 1, 10).getContent();
-        List<AdviseVO> wenList = list(filterParams, 2, 1, 10).getContent();
-        List<AdviseVO> baoList = list(filterParams, 3, 1, 10).getContent();
+        List<AdviseVO> adviseVOList = listAll(autoGenerateFormParams);
+        Map<String, List<AdviseVO>> map = new HashMap<>();
+        adviseVOList.stream().collect(Collectors.groupingBy(AdviseVO::getRateDesc,Collectors.toList()))
+                .forEach(map::put);
+        List<AdviseVO> chongList = map.get("可冲击");
+        List<AdviseVO> wenList = map.get("较稳妥");
+        List<AdviseVO> baoList = map.get("可保底");
         List<VolunteerVO> volunteerVOList = new ArrayList<>();
         if(chongList.size() > autoGenerateFormParams.getChongRate() && baoList.size() > autoGenerateFormParams.getBaoRate()
             && wenList.size() > autoGenerateFormParams.getWenRate()){
@@ -199,6 +199,7 @@ public class AdviseServiceImpl implements AdviseService{
         UserFormDetailVO userFormDetailVO = new UserFormDetailVO();
         BeanUtils.copyProperties(userForm, userFormDetailVO);
         userFormDetailVO.setVolunteerList(volunteerVOList);
+        userFormDetailVO.setScore(autoGenerateFormParams.getScore());
         List<String> subject = new ArrayList<>();
         for(int i = 0; i < userForm.getSubject().length(); i += 2){
             subject.add(Subject.getDescByCode(Integer.parseInt(userForm.getSubject().substring(i, i + 1))));
