@@ -44,6 +44,7 @@
           style="width: 240px"
           :options="majorOptions"
           :props="multiProps"
+          collapse-tags
           clearable
           filterable
           @change="changeClassify"></el-cascader>
@@ -86,17 +87,18 @@
         <el-button type="primary" plain>保底</el-button>
       </el-tooltip>
     </el-button-group>
-    <!--<el-button
-      size="mini"
-      type="text"
-      icon="el-icon-edit"
-      @click="handleFill()"
-    >填报
-    </el-button>-->
     <el-table :data="volunteerList" v-loading="loading" border highlight-current-row>
       <el-table-column label="录取概率" prop="percent" align="center">
         <template slot-scope="scope">
-          {{ scope.row.percent }}
+          <el-tag type="danger" v-if="scope.row.percent<=50"><50% 难录取</el-tag>
+          <el-tag type="warning" v-if="scope.row.percent>50 && scope.row.percent<=60">{{ scope.row.percent}}%
+            可冲击
+          </el-tag>
+          <el-tag type="success" v-if="scope.row.percent>60 && scope.row.percent<=80">{{ scope.row.percent}}%
+            较稳妥
+          </el-tag>
+          <el-tag v-if="scope.row.percent>80 && scope.row.percent<=95">{{ scope.row.percent}}% 可保底</el-tag>
+          <el-tag type="info" v-if="scope.row.percent>95">>95% 浪费分</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="2021招生计划" align="center">
@@ -111,21 +113,20 @@
           </template>
         </el-table-column>
       </el-table-column>
-      <el-table-column label="历史录取" align="center" class-name="small-padding fixed-width">
-        //后续改为当前年份的前三年
-        <el-table-column label="2020" align="center" prop="lastYear">
+      <el-table-column label="2020历史录取" align="center" class-name="small-padding fixed-width">
+        <el-table-column label="最低分" align="center" prop="lowestScore">
           <template slot-scope="scope">
-            {{ scope.row.lastYear }}
+            {{ scope.row.lowestScore }}
           </template>
         </el-table-column>
-        <el-table-column label="2019" align="center" prop="theYearBeforeLast">
+        <el-table-column label="最低位次" align="center" prop="lowestPosition">
           <template slot-scope="scope">
-            {{ scope.row.theYearBeforeLast }}
+            {{ scope.row.lowestPosition }}
           </template>
         </el-table-column>
-        <el-table-column label="2018" align="center" prop="threeYearsAgo">
+        <el-table-column label="录取人数" align="center" prop="enrollment">
           <template slot-scope="scope">
-            {{ scope.row.threeYearsAgo }}
+            {{ scope.row.enrollment }}
           </template>
         </el-table-column>
       </el-table-column>
@@ -142,11 +143,6 @@
       </el-table-column>
     </el-table>
     <br>
-    <el-col :span="24" class="toolbar">
-      <el-pagination layout="prev, pager, next" @current-change="fetchPage" :page-size="listQuery.limit"
-                     :page-count="listQuery.total" style="text-align:center;margin:10px">
-      </el-pagination>
-    </el-col>
     <el-dialog :title="title" :close-on-click-modal="false" :visible.sync="dialogFormVisible" width="500px">
       <el-form ref="form" :model="form" label-width="100px" :rules="rules">
         <el-form-item label="志愿序号" prop="num">
