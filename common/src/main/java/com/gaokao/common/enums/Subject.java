@@ -35,4 +35,13 @@ public enum Subject {
     public String getDesc() {
         return desc;
     }
+
+    public static String getDescByCode(int code){
+        Subject[] subjects = values();
+        for(Subject subject : subjects){
+            if(subject.getCode() == code)
+                return subject.getDesc();
+        }
+        return null;
+    }
 }
