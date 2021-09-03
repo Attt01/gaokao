@@ -38,12 +38,12 @@
               v-model="userInfo.subject"
               :max="3"
             >
-              <el-checkbox label="物理"></el-checkbox>
-              <el-checkbox label="化学"></el-checkbox>
-              <el-checkbox label="生物"></el-checkbox>
-              <el-checkbox label="政治"></el-checkbox>
-              <el-checkbox label="历史"></el-checkbox>
-              <el-checkbox label="地理"></el-checkbox>
+              <el-checkbox label="1">物理</el-checkbox>
+              <el-checkbox label="2">化学</el-checkbox>
+              <el-checkbox label="3">生物</el-checkbox>
+              <el-checkbox label="4">历史</el-checkbox>
+              <el-checkbox label="5">地理</el-checkbox>
+              <el-checkbox label="6">政治</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
           <el-form-item>
@@ -97,7 +97,7 @@ export default {
           //console.log('submit!');
           //console.log(userInfo);
           localStorage.setItem('userGaoKaoInfo', JSON.stringify(userInfo));
-          //console.log(localStorage.getItem('userGaoKaoInfo'));
+          console.log(localStorage.getItem('userGaoKaoInfo'));
           store.commit('SHOW_DIALOG', false);
           this.$router.replace({
             path: '/refresh',
@@ -112,6 +112,7 @@ export default {
       });
     },
     getPredictedRank() {
+      //这里按理说不选科目也能获取排名，似乎要把表单拆成两个然后只验证前一个?
       this.$refs.userInfo.validate((isValid) => {
         if (isValid) {
           getRank(this.userInfo.score).then((res) => {
