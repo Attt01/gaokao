@@ -10,10 +10,6 @@ import lombok.Data;
 @Data
 public class VolunteerUpdateParams {
 
-    /**
-     * 用户id
-     */
-    private Long userId;
 
     /**
      * 志愿表id

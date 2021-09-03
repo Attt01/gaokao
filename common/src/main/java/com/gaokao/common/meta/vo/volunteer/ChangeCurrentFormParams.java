@@ -10,8 +10,6 @@ import lombok.Data;
 @Data
 public class ChangeCurrentFormParams {
 
-    private Long userId;
-
     /**
      * 之前的志愿表id
      */

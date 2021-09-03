@@ -1,3 +1,6 @@
+-- 此处的sql暂时废弃
+
+
 drop table if exists `tb_minimum_score`;
 CREATE TABLE `tb_minimum_score`
 (

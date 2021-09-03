@@ -13,11 +13,6 @@ import java.util.List;
 public class VolunteerCreateParams {
 
     /**
-     * 用户id
-     */
-    private Long userId;
-
-    /**
      * 志愿表名称
      */
     private String name;

@@ -10,9 +10,6 @@ import lombok.Data;
 @Data
 public class UpVolunteerParams {
 
-
-    private Long userId;
-
     private Long formId;
 
     private Boolean section;

@@ -10,8 +10,6 @@ import lombok.Data;
 @Data
 public class SwapVolunteerParams {
 
-    private Long userId;
-
     private Long formId;
 
     /**
