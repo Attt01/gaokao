@@ -34,10 +34,11 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import {logOut,getUserInfo} from "../../../utils/auth";
+import { getInfo } from '@/api/login'
 export default {
   data() {
     return {
-      userName: null
+      userName: ''
     }
   },
   components: {
@@ -62,9 +63,12 @@ export default {
       window.location.reload()
     },
     getUserName() {
-      const { nickname, phone } = JSON.parse(getUserInfo());
-      this.userName = nickname === "" ? phone : nickname;
-    }
+      // const { nickname, phone } = JSON.parse(getUserInfo());
+      // this.userName = nickname === "" ? phone : nickname;
+      getInfo().then(res => {
+        this.userName = res.data.username
+      })
+    },
   }
 }
 </script>

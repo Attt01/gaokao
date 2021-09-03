@@ -36,7 +36,12 @@ export default {
     }
   },
   created() {
-    this.init()
+    if (sessionStorage.getItem('accountActiveTab') !== 'updatePwd') {
+      sessionStorage.setItem('accountActiveTab', 'updatePwd')
+      location.reload()
+    } else {
+      this.init()
+    }
   },
   methods: {
     init() {
