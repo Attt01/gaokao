@@ -10,6 +10,7 @@ import com.gaokao.common.meta.vo.user.RegParams;
 import com.gaokao.common.meta.vo.user.UserMemberVO;
 import com.gaokao.common.meta.vo.user.UserUpdateParams;
 import com.gaokao.common.service.UserMemberService;
+import com.gaokao.common.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -60,9 +61,8 @@ public class UserMemberController {
     }
 
     @GetMapping("/info")
-    public AjaxResult<UserMemberVO> getInfo(Authentication authentication) {
-        JwtUser jwtUser = (JwtUser) authentication.getPrincipal();
-        return AjaxResult.SUCCESS(userMemberService.getInfo(jwtUser.getId()));
+    public AjaxResult<UserMemberVO> getInfo() {
+        return AjaxResult.SUCCESS(userMemberService.getInfo(UserUtils.getUserId()));
     }
 
     @PostMapping("/lock/{id}")

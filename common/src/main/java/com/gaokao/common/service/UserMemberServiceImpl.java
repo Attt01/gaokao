@@ -1,6 +1,7 @@
 package com.gaokao.common.service;
 
 
+import com.alibaba.fastjson.JSON;
 import com.gaokao.common.dao.UserMemberDao;
 import com.gaokao.common.enums.UserMemberStatus;
 import com.gaokao.common.enums.VeryCodeType;
@@ -162,6 +163,7 @@ public class UserMemberServiceImpl implements UserMemberService{
        else {
             BeanUtils.copyProperties(userMember, userMemberVO);
         }
+       userMemberVO.setSubject(JSON.parseArray(userMember.getSubject(), Long.class));
         return userMemberVO;
 
     }

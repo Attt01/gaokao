@@ -3,12 +3,14 @@ package com.gaokao.common.meta.vo.user;
 import com.gaokao.common.meta.po.UserMember;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @author wyc
  * 2021/8/15
  */
 @Data
-public class UserMemberVO extends UserMember {
+public class UserMemberVO {
 
     private Long id;
     /**
@@ -34,7 +36,7 @@ public class UserMemberVO extends UserMember {
     /**
      * 选课
      */
-    private String subject;
+    private List<Long> subject;
     /**
      * 手机
      */
