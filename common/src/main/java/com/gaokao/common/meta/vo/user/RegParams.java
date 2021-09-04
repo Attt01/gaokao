@@ -7,6 +7,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * @author attack204
@@ -35,7 +36,7 @@ public class RegParams {
     private Integer score;
 
     @NotNull(message = "选课不能为空")
-    private String subject;
+    private List<Long> subject;
 
     @NotNull(message = "排名不能为空")
     private Long province_rank;
