@@ -39,7 +39,7 @@ public class VolunteerServiceImpl implements VolunteerService{
     private VolunteerDao volunteerDao;
 
     @Override
-    public Long create(Long userId, List<Long> subject, Long score, Boolean generatedType, String name) {
+    public Long create(Long userId, List<Long> subject, Integer score, Boolean generatedType, String name) {
         UserForm userForm = new UserForm();
 
         if(userFormDao.findAllByUserId(userId).size() == 0) {
@@ -191,6 +191,9 @@ public class VolunteerServiceImpl implements VolunteerService{
             BeanUtils.copyProperties(volunteer, volunteerVO);
             //volunteerVO.setCategory(JSON.parseArray(volunteer.getCategory(), String.class));
             volunteerVO.setSubjectRestrictionDetail(JSON.parseArray(volunteer.getSubjectRestrictionDetail(), Integer.class));
+            volunteerVO.setVolunteerPosition(item.getVolunteerPosition());
+            volunteerVO.setVolunteerSection(item.getVolunteerSection());
+
             volunteerVOS.add(volunteerVO);
         });
         userFormDetailVO.setVolunteerList(volunteerVOS);

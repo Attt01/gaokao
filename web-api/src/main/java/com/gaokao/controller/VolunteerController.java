@@ -31,7 +31,12 @@ public class VolunteerController {
     @GetMapping("/getCurrent")
     public AjaxResult<UserFormDetailVO> listCurrent() {
         Long id = UserUtils.getUserId();
-        return AjaxResult.SUCCESS(volunteerService.listCurrentForm(id));
+        UserFormDetailVO userFormDetailVO = volunteerService.listCurrentForm(id);
+        if(userFormDetailVO == null) {
+            return AjaxResult.FAIL("无法获取用户当前志愿表或用户未创建志愿表");
+        } else {
+            return AjaxResult.SUCCESS(volunteerService.listCurrentForm(id));
+        }
     }
 
     /**
@@ -130,6 +135,8 @@ public class VolunteerController {
 
     /**
      * 志愿换位
+     * 如果第二个id是0的话，说明和一个空的志愿进行交换
+     *
      */
     @PostMapping("/swapVolunteer")
     public AjaxResult<Long> swapVolunteer(@RequestBody SwapVolunteerParams swapVolunteerParams) {
@@ -154,6 +161,7 @@ public class VolunteerController {
     /**
      * 上调志愿
      * 本质是和上一个交换位置
+     * //TODO 如果上一个已经有了，则变为交换
      */
     @PostMapping("/upVolunteer")
     public AjaxResult<Long> upVolunteer(@RequestBody UpVolunteerParams upVolunteerParams) {
@@ -178,6 +186,7 @@ public class VolunteerController {
     /**
      * 下调志愿
      * 本质是和下一个交换位置
+     * //TODO 参考上面的todo
      */
     @PostMapping("/downVolunteer")
     public AjaxResult<Long> downVolunteer(@RequestBody DownVolunteerParams downVolunteerParams) {

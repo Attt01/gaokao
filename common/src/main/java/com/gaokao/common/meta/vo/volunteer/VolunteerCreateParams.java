@@ -25,7 +25,7 @@ public class VolunteerCreateParams {
     /**
      * 分数
      */
-    private Long score;
+    private Integer score;
 
     /**
      * 创建类型

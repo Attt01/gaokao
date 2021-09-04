@@ -26,7 +26,7 @@ public class UserForm {
 
     private String name;
 
-    private Long score;
+    private Integer score;
 
     private String subject;
 

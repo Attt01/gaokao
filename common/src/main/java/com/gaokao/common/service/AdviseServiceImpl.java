@@ -156,7 +156,7 @@ public class AdviseServiceImpl implements AdviseService{
         UserForm userForm = new UserForm();
         userForm.setUserId(autoGenerateFormParams.getUserId());
         userForm.setName(autoGenerateFormParams.getScore() + "-新建志愿表");
-        userForm.setScore(autoGenerateFormParams.getScore().longValue());
+        userForm.setScore(autoGenerateFormParams.getScore());
         userForm.setSubject(autoGenerateFormParams.getSubject());
         userForm.setGeneratedType(true);
         userForm.setCurrent(true);
