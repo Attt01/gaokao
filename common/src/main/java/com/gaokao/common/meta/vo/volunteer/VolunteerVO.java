@@ -46,7 +46,7 @@ public class VolunteerVO {
 
     private Integer furtherRate;
 
-    private Integer volunteerSection;
+    private Boolean volunteerSection;
 
     private Integer lowestScore;
 

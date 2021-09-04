@@ -87,10 +87,11 @@ public class VolunteerServiceImpl implements VolunteerService{
         if(formVolunteer == null) {
             FormVolunteer newFormVolunteer = new FormVolunteer();
             newFormVolunteer.setFormId(formId);
+            newFormVolunteer.setVolunteerSection(section);
             newFormVolunteer.setVolunteerPosition(position);
             newFormVolunteer.setVolunteerId(volunteerId);
             return formVolunteerDao.save(newFormVolunteer).getId();
-        } {
+        } else {
             formVolunteer.setVolunteerId(volunteerId);
             return formVolunteerDao.save(formVolunteer).getId();
         }
@@ -175,7 +176,9 @@ public class VolunteerServiceImpl implements VolunteerService{
     public UserFormDetailVO listCurrentForm(Long userId) {
 
         UserForm userForm = userFormDao.findUserFormByUserIdAndCurrent(userId, Boolean.TRUE);
-
+        if(userForm == null) {
+            return null;
+        }
         UserFormDetailVO userFormDetailVO = new UserFormDetailVO();
         BeanUtils.copyProperties(userForm, userFormDetailVO);
         userFormDetailVO.setSubject(convertSubjectInformation(userForm.getSubject()));
