@@ -67,7 +67,7 @@ public class UserMember {
     /**
      * 全省排名
      */
-    private long provinceRank;
+    private Long provinceRank;
     /**
      * 选考科目
      */
