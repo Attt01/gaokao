@@ -73,7 +73,7 @@ public class UserMemberServiceImpl implements UserMemberService{
         userMember.setScore(regParams.getScore());
         userMember.setNickname(regParams.getNickname());
         userMember.setPhone(regParams.getPhone());
-        userMember.setSubject(regParams.getSubject());
+        userMember.setSubject(JSON.toJSONString(regParams.getSubject()));
         userMember.setStatus(UserMemberStatus.NORMAL.getCode());
         userMember.setPassword(passwordEncoder.encode(regParams.getPassword()));
 
