@@ -39,7 +39,7 @@ public class VolunteerServiceImpl implements VolunteerService{
     private VolunteerDao volunteerDao;
 
     @Override
-    public Long create(Long userId, List<Long> subject, Long score, Boolean generatedType, String name) {
+    public Long create(Long userId, List<Long> subject, Integer score, Boolean generatedType, String name) {
         UserForm userForm = new UserForm();
 
         if(userFormDao.findAllByUserId(userId).size() == 0) {

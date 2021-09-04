@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface VolunteerService {
 
-    Long create(Long userId, List<Long> subject, Long score, Boolean generatedType, String name);
+    Long create(Long userId, List<Long> subject, Integer score, Boolean generatedType, String name);
 
     Long setVolunteer(Long userId, Long formId, Boolean section,Integer position, Long volunteerId);
 
