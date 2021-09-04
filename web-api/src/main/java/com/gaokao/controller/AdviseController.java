@@ -29,12 +29,12 @@ public class AdviseController {
     }
 
     @GetMapping("/listall")
-    public AjaxResult<Page<AdviseVO>> advise(@RequestBody FilterParams filterParams){
+    public AjaxResult<Page<AdviseVO>> advise(@ModelAttribute FilterParams filterParams){
        return AjaxResult.SUCCESS(adviseService.list(filterParams));
     }
 
     @GetMapping("autoGenerateForm")
-    public AjaxResult<UserFormDetailVO> autoGenerateVolunteerForm(@RequestBody AutoGenerateFormParams autoGenerateFormParams){
+    public AjaxResult<UserFormDetailVO> autoGenerateVolunteerForm(@ModelAttribute AutoGenerateFormParams autoGenerateFormParams){
         return AjaxResult.SUCCESS(adviseService.generateVoluntForm(autoGenerateFormParams));
     }
 
