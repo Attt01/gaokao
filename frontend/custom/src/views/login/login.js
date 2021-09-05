@@ -49,14 +49,14 @@ export default {
           this.loading = true;
           login(this.loginForm.username, this.loginForm.password).then((res) => {
             this.loading = false;
-            console.log(res);
-            console.log(this.loading)
+            // console.log(res);
+            // console.log(this.loading)
             if (res.code === STATUS_CODE.SUCCESS) {
-              console.log("登陆成功");
-              setToken(res.data)
+              //console.log("登陆成功");
+              setToken(res.data);
               getInfo().then((res) => {
                 if (res.code === STATUS_CODE.SUCCESS) {
-                  console.log("userInfo:", res.data);
+                  //console.log("userInfo:", res.data);
                   localStorage.setItem('userGaoKaoInfo', JSON.stringify(res.data));
                   //setUserInfo(res.data);
                   this.$router.push({path: '/'});
