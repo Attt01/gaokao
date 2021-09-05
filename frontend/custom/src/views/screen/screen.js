@@ -21,7 +21,7 @@ export default {
       //请求参数
       listQuery: {
         userId: 3,
-        subject: "1",
+        subject: [1,2,3],
         score: 600,
         page: 1,
         limit: 5,
@@ -29,7 +29,7 @@ export default {
         other: undefined,
         universityName: undefined,
         majorName: undefined,
-        type: undefined,
+        type: 0,
       },
       level: undefined,
       location: undefined,

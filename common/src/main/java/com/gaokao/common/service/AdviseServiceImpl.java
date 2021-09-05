@@ -1,5 +1,6 @@
 package com.gaokao.common.service;
 
+import com.alibaba.fastjson.JSON;
 import com.gaokao.common.dao.*;
 import com.gaokao.common.enums.Subject;
 import com.gaokao.common.meta.po.FormVolunteer;
@@ -192,11 +193,7 @@ public class AdviseServiceImpl implements AdviseService{
             else{
                 volunteerVO.setVolunteerSection(false);
             }
-            List<Integer> res = new ArrayList<>();
-            for(int i = 0; i < volunteer.getSubjectRestrictionDetail().length(); i += 2){
-                res.add(Integer.parseInt(volunteer.getSubjectRestrictionDetail().substring(i, i + 1)));
-            }
-            volunteerVO.setSubjectRestrictionDetail(res);
+            volunteerVO.setSubjectRestrictionDetail(JSON.parseArray(volunteer.getSubjectRestrictionDetail(), Integer.class));
             if(filter(filterParams, volunteerVO)){
                 Integer rate = getRate(filterParams.getScore(), volunteer.getPosition());
                 String rateDesc = "";
