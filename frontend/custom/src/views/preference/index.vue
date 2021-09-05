@@ -14,10 +14,28 @@
         <el-table-column prop="num" label="志愿序号" width="180" align="center" ></el-table-column>
         <el-table-column prop="school" label="所选院校" width="180" align="center"></el-table-column>
         <el-table-column prop="profession" label="所选专业" align="center"></el-table-column>
-        <el-table-column>
+        <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <div v-if="tableData[scope.$index].isExist">
-              <el-button> 编辑 </el-button>
+              <el-button @click="upVol(scope.$index)"> 上移 </el-button>
+              <el-button @click="downVol(scope.$index)"> 下移 </el-button>
+              <!-- <el-button @click="swapVol(scope.$index)"> 交换 </el-button> -->
+              <el-popover
+                placement="bottom"
+                width="200"
+                v-model="tableData[scope.$index].swapVisible"
+                @after-leave="toSwapIndex = undefined;"  
+              >
+                <p>交换至第几志愿(1~96):</p>
+                <el-input type="number" :min="0" :max="96" v-model="toSwapIndex" placeholder=""/>
+                <div style="text-align: right; margin: 0">
+                  <el-button size="mini" type="text" @click="tableData[scope.$index].swapVisible = false;">取消</el-button>
+                  <el-button type="primary" size="mini" @click="swapVol(scope.$index)">确定</el-button>
+                </div>
+                <el-button slot="reference">交换</el-button>
+              </el-popover>
+
+              <el-button @click="deleteVol(scope.$index)"> 删除 </el-button>
             </div>
             <div v-else>
               <center> <el-button round @click="toScreen"> 添加 </el-button> </center>

@@ -1,4 +1,12 @@
-import { getVolunteer, getCurrentVolunteer, createVolunteerForm, changeCurrentForm } from "@/api/volunteer";
+import {
+  getCurrentVolunteer,
+  createVolunteerForm,
+  changeCurrentForm,
+  upVolunteer,
+  downVolunteer,
+  swapVolunteer,
+  deleteVolunteer
+} from "@/api/volunteer";
 import { STATUS_CODE } from "@/api/statusCode";
 import { TimeSelect } from "_element-ui@2.11.0@element-ui";
 export default {
@@ -13,13 +21,15 @@ export default {
         subject: [],
         province_rank: 0
       },
+      toSwapIndex: undefined,
       currentFormName: '暂无志愿表，点击添加',
       tableData: [
       // {
       //   num: '志愿1',
       //   school: 'school',
       //   profession: 'profession',
-      //   isExist: false
+      //   isExist: false,
+      //   id: 0
       // }
       ],
       createData: {
@@ -46,29 +56,32 @@ export default {
             num: '志愿' + index,
             school: '',
             profession: '',
-            isExist: false
+            isExist: false,
+            id: 0,
+            swapVisible: false
           });
       }
       //console.log('crdt', this.createData);
-      getVolunteer().then(res => {
+      getCurrentVolunteer().then(res => {
+        //console.log(res);
         if (res.code === STATUS_CODE.SUCCESS) {
-          if (res.data.length) {
-            this.isExist = true;
-            getCurrentVolunteer().then(res => {
-              //console.log(res);
-              if (res.code === STATUS_CODE.SUCCESS) {
-                this.userInfo.id = res.data.userId;
-                this.formId = res.data.id;
-                this.currentFormName = res.data.name;
-                this.userInfo.score = res.data.score;
-                this.userInfo.subject = res.data.subject;
-                // for (let i = 0; i < res.data.volunteerList.length; ++i) {
-                //   this.tableData[].school = ;
-                //   this.tableData[].profession = ;
-                // }
-              }
-            });
-          }
+          this.isExist = true;
+          this.userInfo.id = res.data.userId;
+          this.formId = res.data.id;
+          this.currentFormName = res.data.name;
+          this.userInfo.score = res.data.score;
+          this.userInfo.subject = res.data.subject;
+          res.data.volunteerList.forEach(volunteer => {
+            console.log(volunteer);
+            this.tableData[volunteer.volunteerPosition - 1].school = volunteer.name;
+            this.tableData[volunteer.volunteerPosition - 1].profession = volunteer.professionalName;
+            this.tableData[volunteer.volunteerPosition - 1].isExist = true;
+            this.tableData[volunteer.volunteerPosition - 1].id = volunteer.id;
+          });
+        }
+      }).catch(res => {
+        if (res.code === STATUS_CODE.FAIL) {
+          this.isExist = false;
         }
       });
     },
@@ -99,6 +112,93 @@ export default {
     },
     toScreen() {
       this.$router.push('/screen');
+    },
+    upVol(index) {
+      if (index == 0) {
+        this.$message({
+          message: '不能继续上移了(>_<)',
+          type: 'error'
+        });
+        return;
+      }
+      upVolunteer({
+        formId: this.formId,
+        section: true,
+        volunteerId: this.tableData[index].id,
+        volunteerPosition: index + 1
+      }).then(res => {
+        if (res.code === STATUS_CODE.SUCCESS) {
+          this.$message({
+            message: '移动成功',
+            type: 'success'
+          });
+          this.initData();
+        }
+      });
+    },
+    downVol(index) {
+      if (index == 95) {
+        this.$message({
+          message: '不能继续下移了(>_<)',
+          type: 'error'
+        });
+        return;
+      }
+      downVolunteer({
+        formId: this.formId,
+        section: true,
+        volunteerId: this.tableData[index].id,
+        volunteerPosition: index + 1
+      }).then(res => {
+        if (res.code === STATUS_CODE.SUCCESS) {
+          this.$message({
+            message: '移动成功',
+            type: 'success'
+          });
+          this.initData();
+        }
+      });
+    },
+    swapVol(index, toSwapIndex) {
+      this.toSwapIndex -= 1;
+      if (this.toSwapIndex < 0 || 95 < this.toSwapIndex) {
+        this.$message({
+          message: '填写志愿位置应该在1~96之间(>_<)',
+          type: 'error'
+        });
+        return;
+      }
+      swapVolunteer({
+        firstVolunteerId: this.tableData[index].id,
+        firstVolunteerPosition: index + 1,
+        formId: this.formId,
+        secondVolunteerId: this.tableData[this.toSwapIndex].id,
+        secondVolunteerPosition: this.toSwapIndex + 1,
+        section: true
+      }).then(res => {
+        if (res.code === STATUS_CODE.SUCCESS) {
+          this.$message({
+            message: '移动成功',
+            type: 'success'
+          });
+          this.initData();
+        }
+      });
+    },
+    deleteVol(index) {
+      deleteVolunteer({
+        formId: this.formId,
+        section: true,
+        volunteerPosition: index + 1
+      }).then(res => {
+        if (res.code === STATUS_CODE.SUCCESS) {
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          });
+          this.initData();
+        }
+      });
     }
   },
   mounted() {
