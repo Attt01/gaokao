@@ -8,7 +8,6 @@ import {
   deleteVolunteer
 } from "@/api/volunteer";
 import { STATUS_CODE } from "@/api/statusCode";
-import { TimeSelect } from "_element-ui@2.11.0@element-ui";
 export default {
   data() {
     return {
