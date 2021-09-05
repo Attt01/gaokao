@@ -24,7 +24,7 @@ public class FormVolunteer {
 
     private Long formId;
 
-    private Integer volunteerSection;
+    private Boolean volunteerSection;
 
     private Integer volunteerPosition;
 

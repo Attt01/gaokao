@@ -32,7 +32,7 @@ public class UserMemberVO {
     /**
      * 排名
      */
-    private long province_rank;
+    private Long province_rank;
     /**
      * 选课
      */

@@ -20,7 +20,7 @@ public class UserFormAllVO {
 
     private String name;
 
-    private Long score;
+    private Integer score;
 
     private List<String> subject;
 

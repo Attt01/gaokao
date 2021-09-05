@@ -52,7 +52,7 @@ public class UserMember {
      * vip 到期时间
      */
     @Column(name = "vip_expiration_time")
-    private long vipExpirationTime;
+    private Long vipExpirationTime;
 
     /**
      * 状态: 0为正常，1为锁定
@@ -67,7 +67,7 @@ public class UserMember {
     /**
      * 全省排名
      */
-    private Integer provinceRank;
+    private Long provinceRank;
     /**
      * 选考科目
      */
@@ -104,12 +104,12 @@ public class UserMember {
     /**
      * 注册时间
      */
-    private long createTime;
+    private Long createTime;
 
     /**
      * 更新时间
      */
-    private long updateTime;
+    private Long updateTime;
 
 
 }
