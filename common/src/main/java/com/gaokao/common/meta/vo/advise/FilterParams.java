@@ -17,7 +17,7 @@ public class FilterParams {
     private Integer score;
 
     //选课信息
-    private String subject;
+    private List<Integer> subject;
 
     private Integer page;
 
