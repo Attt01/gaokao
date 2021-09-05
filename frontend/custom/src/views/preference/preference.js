@@ -18,7 +18,7 @@ export default {
         id: 0,
         score: 0,
         subject: [],
-        province_rank: 0
+        provinceRank: 0
       },
       toSwapIndex: undefined,
       currentFormName: '暂无志愿表，点击添加',
@@ -50,6 +50,7 @@ export default {
       this.createData.score = this.userInfo.score;
       this.createData.subject = this.userInfo.subject;
       //初始化表格数据全为空
+      this.tableData.splice(0);
       for (let index = 1; index <= 96; ++index) {
         this.tableData.push({
             num: '志愿' + index,
@@ -158,9 +159,9 @@ export default {
         }
       });
     },
-    swapVol(index, toSwapIndex) {
-      this.toSwapIndex -= 1;
-      if (this.toSwapIndex < 0 || 95 < this.toSwapIndex) {
+    swapVol(index) {
+      let tempIndex = this.toSwapIndex - 1;
+      if (tempIndex < 0 || 95 < tempIndex) {
         this.$message({
           message: '填写志愿位置应该在1~96之间(>_<)',
           type: 'error'
@@ -171,8 +172,8 @@ export default {
         firstVolunteerId: this.tableData[index].id,
         firstVolunteerPosition: index + 1,
         formId: this.formId,
-        secondVolunteerId: this.tableData[this.toSwapIndex].id,
-        secondVolunteerPosition: this.toSwapIndex + 1,
+        secondVolunteerId: this.tableData[tempIndex].id,
+        secondVolunteerPosition: tempIndex + 1,
         section: true
       }).then(res => {
         if (res.code === STATUS_CODE.SUCCESS) {
@@ -207,7 +208,7 @@ export default {
     userInfoStr() {
       let subs = this.userInfo.subject;
       return '高考分数: ' + this.userInfo.score
-        + ' / 排名: ' + this.userInfo.province_rank
+        + ' / 排名: ' + this.userInfo.provinceRank
         + ' / 选科: ' + subs[0] + ' ' + subs[1] + ' ' + subs[2];
     }
   }
