@@ -4,7 +4,7 @@
     <el-form :model="listQuery" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="填报批次" prop="level">
         <el-select
-          v-model="listQuery.level"
+          v-model="level"
           placeholder="请选择批次"
           style="width: 240px">
           <el-option
@@ -17,7 +17,7 @@
       </el-form-item>
       <el-form-item label="就读地区" prop="location">
         <el-cascader
-          v-model="listQuery.location"
+          v-model="location"
           placeholder="不限"
           style="width: 240px"
           clearable
@@ -30,7 +30,7 @@
       </el-form-item>
       <el-form-item label="大学类型" prop="classification">
         <el-cascader
-          v-model="listQuery.classification"
+          v-model="classification"
           style="width: 240px"
           :options="classifyOptions"
           :props="multiProps"
@@ -40,7 +40,7 @@
       </el-form-item>
       <el-form-item label="专业类型" prop="majorType">
         <el-cascader
-          v-model="listQuery.majorType"
+          v-model="majorType"
           style="width: 240px"
           :options="majorOptions"
           :props="multiProps"
@@ -56,7 +56,7 @@
           style="width: 240px"
           clearable></el-input>
       </el-form-item>
-      <el-form-item label="搜索专业" prop="majoName">
+      <el-form-item label="搜索专业" prop="majorName">
         <el-input
           v-model="listQuery.majorName"
           placeholder="请输入专业名称"
@@ -65,7 +65,7 @@
       </el-form-item>
       <el-form-item>
         <div class="niceButton">
-          <el-button type="primary" icon="el-icon-search" @click.native="handleQuery">搜索</el-button>
+          <el-button type="primary" icon="el-icon-search" @click.native="handleQuery(0)">搜索</el-button>
         </div>
       </el-form-item>
       <el-divider content-position="right"/>
@@ -73,43 +73,41 @@
 
     <!--列表部分-->
     <el-button-group>
-      <el-button type="primary" plain>全部</el-button>
+      <el-button type="primary" plain @click.native="handleQuery(0)">全部</el-button>
       <el-tooltip class="item" effect="light" content="依据成绩信息结合招生计划、历史录取和填报规则推荐可以填报的冲一冲大学，这类大学一般填在志愿表中的前段。"
                   placement="top">
-        <el-button type="primary" plain @click.native="handleQuery">冲刺</el-button>
+        <el-button type="primary" plain @click.native="handleQuery(1)">冲刺</el-button>
       </el-tooltip>
       <el-tooltip class="item" effect="light" content="依据成绩信息结合招生计划、历史录取和填报规则推荐可以填报的稳一稳大学，这类大学一般填在志愿表中的中间段。"
                   placement="top">
-        <el-button type="primary" plain>稳妥</el-button>
+        <el-button type="primary" plain @click.native="handleQuery(2)">稳妥</el-button>
       </el-tooltip>
       <el-tooltip class="item" effect="light" content="依据成绩信息结合招生计划、历史录取和填报规则推荐可以填报的保一保大学，这类大学一般填在志愿表中的后段。"
                   placement="top">
-        <el-button type="primary" plain>保底</el-button>
+        <el-button type="primary" plain @click.native="handleQuery(3)">保底</el-button>
       </el-tooltip>
     </el-button-group>
     <el-table :data="volunteerList" v-loading="loading" border highlight-current-row>
-      <el-table-column label="录取概率" prop="percent" align="center">
+      <el-table-column label="录取概率" prop="rate" align="center">
         <template slot-scope="scope">
-          <el-tag type="danger" v-if="scope.row.percent<=50"><50% 难录取</el-tag>
-          <el-tag type="warning" v-if="scope.row.percent>50 && scope.row.percent<=60">{{ scope.row.percent}}%
-            可冲击
+          <el-tag type="danger" v-if="scope.row.rate<=50"><50%(难录取)</el-tag>
+          <el-tag type="warning" v-if="scope.row.rate>50 && scope.row.rate<=60">{{ scope.row.rate}}%(可冲击)
           </el-tag>
-          <el-tag type="success" v-if="scope.row.percent>60 && scope.row.percent<=80">{{ scope.row.percent}}%
-            较稳妥
+          <el-tag type="success" v-if="scope.row.rate>60 && scope.row.rate<=80">{{ scope.row.rate}}%(较稳妥)
           </el-tag>
-          <el-tag v-if="scope.row.percent>80 && scope.row.percent<=95">{{ scope.row.percent}}% 可保底</el-tag>
-          <el-tag type="info" v-if="scope.row.percent>95">>95% 浪费分</el-tag>
+          <el-tag v-if="scope.row.rate>80 && scope.row.rate<=95">{{ scope.row.rate}}%(可保底)</el-tag>
+          <el-tag type="info" v-if="scope.row.rate>95">>95%(浪费分)</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="2021招生计划" align="center">
-        <el-table-column label="招生院校" prop="universityName" align="center">
+        <el-table-column label="招生院校" prop="name" align="center">
           <template slot-scope="scope">
-            {{ scope.row.universityName }}
+            {{ scope.row.name }}
           </template>
         </el-table-column>
-        <el-table-column label="招生专业" align="center" prop="majorName">
+        <el-table-column label="招生专业" align="center" prop="professionalName">
           <template slot-scope="scope">
-            {{ scope.row.majorName }}
+            {{ scope.row.professionalName }}
           </template>
         </el-table-column>
       </el-table-column>
@@ -135,9 +133,9 @@
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-edit"
+            icon="el-icon-circle-plus-outline"
             @click="handleFill(scope.row)"
-          >填报
+          >填报为
           </el-button>
         </template>
       </el-table-column>
@@ -145,8 +143,17 @@
     <br>
     <el-dialog :title="title" :close-on-click-modal="false" :visible.sync="dialogFormVisible" width="500px">
       <el-form ref="form" :model="form" label-width="100px" :rules="rules">
-        <el-form-item label="志愿序号" prop="num">
-          <el-input-number v-model="form.name" placeholder="请输入志愿顺序号(1~96)" :min="1" :max="96" style="width: 360px"/>
+        <el-form-item label="招生院校" prop="name">
+          <el-input v-model="form.name" :disabled="edit" style="width: 360px"/>
+        </el-form-item>
+        <el-form-item label="招生专业" prop="professionalName">
+          <el-input v-model="form.professionalName" :disabled="edit" style="width: 360px"/>
+        </el-form-item>
+        <el-form-item label="志愿表序号" prop="formId">
+          <el-input-number v-model="form.formId" placeholder="志愿表序号" style="width: 360px"/>
+        </el-form-item>
+        <el-form-item label="志愿序号" prop="volunteerPosition">
+          <el-input-number v-model="form.volunteerPosition" placeholder="请输入志愿顺序号(1~96)" :min="1" :max="96" style="width: 360px"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">

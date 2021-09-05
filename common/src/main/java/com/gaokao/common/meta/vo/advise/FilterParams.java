@@ -25,13 +25,10 @@ public class FilterParams {
 
     private Integer total;
 
-    private Integer level;          //录取批次：一段or二段
-
-    private List<FilterParams1> location;       //地区
-
-    private List<FilterParams1> classification; //学校类型
-
-    private List<FilterParams1> majorType;      //专业类别
+    /**
+     * 其他信息，包括填报批次、就读地区、大学类型、专业类型
+     */
+    private List<Integer> other;
 
     private String universityName;
 
