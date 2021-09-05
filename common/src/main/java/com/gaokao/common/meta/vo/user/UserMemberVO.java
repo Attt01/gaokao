@@ -24,7 +24,7 @@ public class UserMemberVO {
     /**
      * vip
      */
-    private boolean is_vip;
+    private Boolean vipIsOrNot;
     /**
      * 分数
      */
@@ -32,7 +32,7 @@ public class UserMemberVO {
     /**
      * 排名
      */
-    private Long province_rank;
+    private Long provinceRank;
     /**
      * 选课
      */

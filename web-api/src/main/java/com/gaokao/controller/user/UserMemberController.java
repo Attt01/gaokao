@@ -61,12 +61,12 @@ public class UserMemberController {
     }
 
     @GetMapping("/info")
-    public AjaxResult<UserMemberVO> getInfo() {
+    public AjaxResult<UserMemberVO> Current() {
         return AjaxResult.SUCCESS(userMemberService.getInfo(UserUtils.getUserId()));
     }
 
     @PostMapping("/lock/{id}")
-    @PreAuthorize("hasPermission('usermember','update')")
+    @PreAuthorize("hasPermCurrentsion('usermember','update')")
     public AjaxResult<Long> lock(@PathVariable Long id) {
         Long result = userMemberService.lock(id);
         if(result == -1) {

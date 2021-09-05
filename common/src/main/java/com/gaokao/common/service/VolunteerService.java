@@ -1,5 +1,6 @@
 package com.gaokao.common.service;
 
+import com.gaokao.common.meta.po.FormVolunteer;
 import com.gaokao.common.meta.vo.volunteer.UserFormAllVO;
 import com.gaokao.common.meta.vo.volunteer.UserFormDetailVO;
 
@@ -25,5 +26,7 @@ public interface VolunteerService {
     Long changeCurrentForm(Long userId, Long preFormId, Long newFormId);
 
     Long deleteForm(Long formId);
+
+    FormVolunteer findByFormIdAndSectionAndVolunteerPosition(Long formId, Boolean section, Integer position);
 
 }

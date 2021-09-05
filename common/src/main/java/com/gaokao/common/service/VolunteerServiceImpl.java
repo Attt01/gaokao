@@ -62,8 +62,10 @@ public class VolunteerServiceImpl implements VolunteerService{
     public Long changeCurrentForm(Long userId, Long preFormId, Long newFormId) {
 
         UserForm userForm = userFormDao.findById(preFormId).orElse(null);
-        userForm.setCurrent(false);
-        userFormDao.save(userForm);
+        if(userForm != null ) {
+            userForm.setCurrent(false);
+            userFormDao.save(userForm);
+        }
 
         UserForm newUserForm = userFormDao.findById(newFormId).orElse(null);
         newUserForm.setCurrent(true);
@@ -207,6 +209,12 @@ public class VolunteerServiceImpl implements VolunteerService{
         });
         userFormDetailVO.setVolunteerList(volunteerVOS);
         return userFormDetailVO;
+
+    }
+
+    @Override
+    public FormVolunteer findByFormIdAndSectionAndVolunteerPosition(Long formId, Boolean section, Integer position) {
+        return formVolunteerDao.findByFormIdAndVolunteerSectionAndVolunteerPosition(formId, section, position);
 
     }
 }

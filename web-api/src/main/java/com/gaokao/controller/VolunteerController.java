@@ -2,6 +2,7 @@ package com.gaokao.controller;
 
 import com.gaokao.common.constants.VolunteerConstant;
 import com.gaokao.common.meta.AjaxResult;
+import com.gaokao.common.meta.po.FormVolunteer;
 import com.gaokao.common.meta.vo.volunteer.*;
 import com.gaokao.common.service.VolunteerService;
 import com.gaokao.common.utils.UserUtils;
@@ -140,6 +141,12 @@ public class VolunteerController {
      */
     @PostMapping("/swapVolunteer")
     public AjaxResult<Long> swapVolunteer(@RequestBody SwapVolunteerParams swapVolunteerParams) {
+
+        if(swapVolunteerParams.getFirstVolunteerPosition() < 1 || swapVolunteerParams.getFirstVolunteerPosition() > 96
+         ||swapVolunteerParams.getSecondVolunteerPosition() < 1 || swapVolunteerParams.getSecondVolunteerPosition() > 96) {
+            return AjaxResult.FAIL("需要交换志愿的边界出现异常");
+        }
+
         volunteerService.setVolunteer(UserUtils.getUserId(),
                 swapVolunteerParams.getFormId(),
                 swapVolunteerParams.getSection(),
@@ -165,6 +172,13 @@ public class VolunteerController {
      */
     @PostMapping("/upVolunteer")
     public AjaxResult<Long> upVolunteer(@RequestBody UpVolunteerParams upVolunteerParams) {
+
+        if(upVolunteerParams.getVolunteerPosition() <= 1 || upVolunteerParams.getVolunteerPosition() > 96) {
+            return AjaxResult.FAIL("待上移志愿的边界出现问题");
+        }
+
+        FormVolunteer formVolunteer = volunteerService.findByFormIdAndSectionAndVolunteerPosition(upVolunteerParams.getFormId(), upVolunteerParams.getSection(), upVolunteerParams.getVolunteerPosition() - 1);
+
         volunteerService.setVolunteer(UserUtils.getUserId(),
                 upVolunteerParams.getFormId(),
                 upVolunteerParams.getSection(),
@@ -175,6 +189,11 @@ public class VolunteerController {
                 upVolunteerParams.getSection(),
                 upVolunteerParams.getVolunteerPosition() - 1,
                 upVolunteerParams.getVolunteerId());
+
+        if(formVolunteer != null) {
+            volunteerService.setVolunteer(UserUtils.getUserId(), formVolunteer.getFormId(), formVolunteer.getVolunteerSection(), formVolunteer.getVolunteerPosition() + 1, formVolunteer.getVolunteerId());
+        }
+
 
         if (result == -1L)
             return AjaxResult.FAIL("操作失败");
@@ -190,6 +209,13 @@ public class VolunteerController {
      */
     @PostMapping("/downVolunteer")
     public AjaxResult<Long> downVolunteer(@RequestBody DownVolunteerParams downVolunteerParams) {
+
+        if(downVolunteerParams.getVolunteerPosition() >= 96 || downVolunteerParams.getVolunteerPosition() < 1) {
+            return AjaxResult.FAIL("待下移志愿的边界出现异常");
+        }
+
+        FormVolunteer formVolunteer = volunteerService.findByFormIdAndSectionAndVolunteerPosition(downVolunteerParams.getFormId(), downVolunteerParams.getSection(), downVolunteerParams.getVolunteerPosition() + 1);
+
         volunteerService.setVolunteer(UserUtils.getUserId(),
                 downVolunteerParams.getFormId(),
                 downVolunteerParams.getSection(),
@@ -200,6 +226,10 @@ public class VolunteerController {
                 downVolunteerParams.getSection(),
                 downVolunteerParams.getVolunteerPosition() + 1,
                 downVolunteerParams.getVolunteerId());
+
+        if(formVolunteer != null) {
+            volunteerService.setVolunteer(UserUtils.getUserId(), formVolunteer.getFormId(), formVolunteer.getVolunteerSection(), formVolunteer.getVolunteerPosition() - 1, formVolunteer.getVolunteerId());
+        }
 
         if (result == -1L)
             return AjaxResult.FAIL("操作失败");

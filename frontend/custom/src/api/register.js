@@ -12,7 +12,7 @@ export function register(formdata) {
     //   "nickname": "qwq",
     //   "score": 233,
     //   "subject": "1231",
-    //   "province_rank": 1322
+    //   "provinceRank": 1322
     // }
   });
 }
