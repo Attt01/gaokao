@@ -29,3 +29,18 @@ create table `tb_order_refund`
     PRIMARY KEY (`order_id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 comment '退款记录表';
+
+CREATE TABLE `tb_order_pay`
+(
+    `id`  bigint(20) NOT NULL AUTO_INCREMENT COMMENT '支付单id' ,
+    `order_id`  bigint(20) NOT NULL COMMENT '订单id' ,
+    `status`  tinyint(3) NOT NULL DEFAULT 0 COMMENT '状态' ,
+    `pay_type`  tinyint(3) NOT NULL DEFAULT 0 COMMENT '支付方式' ,
+    `pay_money`  int(11) NOT NULL DEFAULT 0 COMMENT '支付金额' ,
+    `out_trade_no`  varchar(64) NOT NULL DEFAULT '' COMMENT '对外暴露的订单号' ,
+    `third_pay_sn`  varchar(64) NOT NULL DEFAULT '' COMMENT '第三方支付流水号' ,
+    `pay_time`  bigint(20) NOT NULL DEFAULT 0 COMMENT '支付时间' ,
+     PRIMARY KEY (`id`),
+     INDEX `idx_order_id` (`order_id`) USING BTREE
+) ENGINE = InnoDB
+ DEFAULT CHARSET = utf8mb4 COMMENT='支付单';

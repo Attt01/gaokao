@@ -9,4 +9,7 @@ import lombok.Data;
  */
 @Data
 public class PreOrderParam {
+    private Integer totalPrice;
+
+    private long userId;
 }

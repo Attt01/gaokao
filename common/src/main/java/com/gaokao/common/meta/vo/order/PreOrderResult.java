@@ -8,4 +8,7 @@ import lombok.Data;
  */
 @Data
 public class PreOrderResult {
+    private long userId;
+
+    private Integer totalPrice;
 }
