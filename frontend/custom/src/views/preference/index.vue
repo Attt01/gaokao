@@ -3,10 +3,22 @@
     <el-row>
       <h1> {{ currentFormName }} </h1>
       <h2> {{ userInfoStr }} </h2>
-      <el-button @click="dialogVisible = true;"> <i class="el-icon-circle-plus-outline"/> 新建志愿表</el-button>
+      <el-button
+        @click="mode = true; dialogVisible = true;"
+      >
+        <i class="el-icon-circle-plus-outline"/>
+        新建志愿表
+      </el-button>
       <el-button type="primary" v-if="isExist"> <i class="el-icon-document"/> 复制志愿表</el-button>
       <el-button type="success" v-if="isExist"> <i class="el-icon-upload2"/> 导出志愿表</el-button>
-      <el-button type="info" v-if="isExist"> <i class="el-icon-edit"/> 修改表名称</el-button>
+      <el-button
+        @click="mode = false; dialogVisible = true;"
+        type="info"
+        v-if="isExist"
+      >
+        <i class="el-icon-edit"/>
+        修改表名称
+      </el-button>
     </el-row>
     <br/>
     <el-row v-if="isExist">
@@ -45,7 +57,7 @@
       </el-table>
     </el-row>
     <el-dialog
-      title="新建志愿表"
+      :title="mode ? '新建志愿表' : '修改当前志愿表名称'"
       :visible.sync="dialogVisible"
       width="50%"
     >
@@ -53,11 +65,12 @@
         <el-form-item label="志愿表名称" prop="name">
           <el-input v-model="createData.name"></el-input>
         </el-form-item>
-        <el-form-item label="成绩信息">
+        <el-form-item v-if="mode" label="成绩信息">
           <el-input v-model="userInfoStr"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="createForm">立即创建</el-button>
+          <el-button v-if="mode" type="primary" @click="createForm">立即创建</el-button>
+          <el-button v-else type="primary" @click="updateName">确认修改</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
