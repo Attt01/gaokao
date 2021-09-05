@@ -45,6 +45,17 @@ export function createVolunteerForm(formData) {
   })
 }
 
+export function updateVolunteerName(formId, name) {
+  return request({
+    url: '/xhr/v1/volunteer/updateName',
+    method: 'post',
+    data: {
+      formId,
+      name
+    }
+  })
+}
+
 export function upVolunteer(data) {
   return request({
     url: '/xhr/v1/volunteer/upVolunteer',

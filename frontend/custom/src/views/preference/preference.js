@@ -2,6 +2,7 @@ import {
   getCurrentVolunteer,
   createVolunteerForm,
   changeCurrentForm,
+  updateVolunteerName,
   upVolunteer,
   downVolunteer,
   swapVolunteer,
@@ -13,6 +14,8 @@ export default {
     return {
       isExist: false,
       dialogVisible: false,
+      //新建和修改表名称共用一个对话框，mode为true时表示新建
+      mode: true,
       formId: 0,
       userInfo: {
         id: 0,
@@ -109,6 +112,22 @@ export default {
           });
         }
       })
+    },
+    updateName() {
+      this.$refs['createVolForm'].validate(isvalid => {
+        if (isvalid) {
+          updateVolunteerName(this.formId, this.createData.name).then(res => {
+            if (res.code === STATUS_CODE.SUCCESS) {
+              this.$message({
+                message: '修改成功',
+                type: 'success'
+              });
+              this.currentFormName = this.createData.name;
+              this.dialogVisible = false;
+            }
+          });
+        }
+      });
     },
     toScreen() {
       this.$router.push('/screen');
