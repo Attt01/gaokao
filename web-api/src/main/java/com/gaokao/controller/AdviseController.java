@@ -33,8 +33,8 @@ public class AdviseController {
         return AjaxResult.SUCCESS(adviseService.list(filterParams));
     }
 
-    @GetMapping("autoGenerateForm")
-    public AjaxResult<UserFormDetailVO> autoGenerateVolunteerForm(@ModelAttribute AutoGenerateFormParams autoGenerateFormParams){
+    @PostMapping("autoGenerateForm")
+    public AjaxResult<UserFormDetailVO> autoGenerateVolunteerForm(@RequestBody AutoGenerateFormParams autoGenerateFormParams){
         return AjaxResult.SUCCESS(adviseService.generateVoluntForm(autoGenerateFormParams));
     }
 

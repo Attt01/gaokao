@@ -12,7 +12,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ScoreRankDao extends PagingAndSortingRepository<ScoreRank, Long> {
     //获得一分一段表中的记录
-    ScoreRank findAllByScore(Integer score);
+    @Query(value = "select total_nums from tb_score_rank where score = ? ;", nativeQuery = true)
+    Integer findTotalNumsByScore(Integer score);
 
     //获得一分一段表的最高分
     @Query(value = "select score from tb_score_rank LIMIT 1;", nativeQuery = true)

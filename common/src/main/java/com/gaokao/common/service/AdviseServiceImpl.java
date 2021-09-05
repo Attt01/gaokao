@@ -1,9 +1,6 @@
 package com.gaokao.common.service;
 
-import com.gaokao.common.dao.AdviseDao;
-import com.gaokao.common.dao.FormVolunteerDao;
-import com.gaokao.common.dao.ScoreRankDao;
-import com.gaokao.common.dao.UserFormDao;
+import com.gaokao.common.dao.*;
 import com.gaokao.common.enums.Subject;
 import com.gaokao.common.meta.po.FormVolunteer;
 import com.gaokao.common.meta.po.ScoreRank;
@@ -14,6 +11,7 @@ import com.gaokao.common.meta.vo.advise.FilterParams;
 import com.gaokao.common.meta.vo.advise.AdviseVO;
 import com.gaokao.common.meta.vo.volunteer.UserFormDetailVO;
 import com.gaokao.common.meta.vo.volunteer.VolunteerVO;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +43,9 @@ public class AdviseServiceImpl implements AdviseService{
     @Autowired
     private FormVolunteerDao formVolunteerDao;
 
+    @Autowired
+    private FilterDataDao filterDataDao;
+
     @Override
     public Integer getUserRank(Integer score){
         Integer t = scoreRankDao.getTopScore();
@@ -53,8 +54,9 @@ public class AdviseServiceImpl implements AdviseService{
             score = t;
         else if(score < l)
             score = l;
-        ScoreRank scoreRank = scoreRankDao.findAllByScore(score);
-        return scoreRank.getTotalNums();
+
+        Integer totalNums = scoreRankDao.findTotalNumsByScore(score);
+        return totalNums;
     }
 
     @Override
@@ -81,8 +83,99 @@ public class AdviseServiceImpl implements AdviseService{
         return rate;
     }
 
+    private Integer findCommon(List<Integer> m, List<Integer> n){
+        Integer res = 0;
+        for(int i = 0; i < m.size(); i++){
+            for (int j = 0; j < n.size(); j++){
+                if(m.get(i) == n.get(j)){
+                    res ++;
+                }
+            }
+        }
+        return res;
+    }
+
     @Override
     public boolean filter(FilterParams filterParams, VolunteerVO volunteerVO){
+
+        //首先判断选课是否符合
+        List<Integer> voluntSubject = volunteerVO.getSubjectRestrictionDetail();
+        List<Integer> subject = filterParams.getSubject();
+        Integer commom = findCommon(voluntSubject, subject);
+        switch(volunteerVO.getSubjectRestrictionType()){
+            case 0:
+                break;
+            case 1:
+                if(commom == 1){
+                    break;
+                }
+                else {
+                    return false;
+                }
+            case 2:
+                if(commom == 2){
+                    break;
+                }
+                else {
+                    return false;
+                }
+            case 3:
+                if(commom == 3){
+                    break;
+                }
+                else {
+                    return false;
+                }
+            case 4:
+                if(commom >= 1){
+                    break;
+                }
+                else{
+                    return false;
+                }
+            case 5:
+                if(commom >= 1){
+                    break;
+                }
+                else {
+                    return false;
+                }
+            case 6:
+                if(commom >= 2){
+                    break;
+                }
+                else {
+                    return false;
+                }
+        }
+
+        //接下来判断录取批次、地区、大学类型等是否符合条件
+        List<Integer> other = filterParams.getOther();
+        for(int i = 0; i < other.size(); i++){
+            Integer fatherId = filterDataDao.findFatherIdBySonId(other.get(i));
+            //判断录取批次是否符合
+            if(fatherId == 1){
+                String label = filterDataDao.findLabelById(other.get(i));
+                if(volunteerVO.getVolunteerSection() && label == "普通二段"){
+                    return false;
+                }
+                if(!volunteerVO.getVolunteerSection() && label == "普通一段"){
+                    return false;
+                }
+                continue;
+            }
+
+            fatherId = filterDataDao.findFatherIdBySonId(fatherId);
+            switch (fatherId){
+                case 2:
+                    //就读地区
+                case 3:
+                    //大学类型
+                case 4:
+                    //专业类别
+            }
+
+        }
         return true;
     }
 
@@ -93,6 +186,12 @@ public class AdviseServiceImpl implements AdviseService{
         volunteerList.forEach(volunteer -> {
             VolunteerVO volunteerVO = new VolunteerVO();
             BeanUtils.copyProperties(volunteer, volunteerVO);
+            if(volunteer.getVolunteerSection() == 1){
+                volunteerVO.setVolunteerSection(true);
+            }
+            else{
+                volunteerVO.setVolunteerSection(false);
+            }
             List<Integer> res = new ArrayList<>();
             for(int i = 0; i < volunteer.getSubjectRestrictionDetail().length(); i += 2){
                 res.add(Integer.parseInt(volunteer.getSubjectRestrictionDetail().substring(i, i + 1)));
@@ -157,7 +256,15 @@ public class AdviseServiceImpl implements AdviseService{
         userForm.setUserId(autoGenerateFormParams.getUserId());
         userForm.setName(autoGenerateFormParams.getScore() + "-新建志愿表");
         userForm.setScore(autoGenerateFormParams.getScore());
-        userForm.setSubject(autoGenerateFormParams.getSubject());
+        List<Integer> subject1 = autoGenerateFormParams.getSubject();
+        String s = "";
+        for(int i = 0; i < 3; i++){
+            s += subject1.get(i);
+            if(i != 2){
+                s += ";";
+            }
+        }
+        userForm.setSubject(s);
         userForm.setGeneratedType(true);
         userForm.setCurrent(true);
         userForm.setGeneratedTime(timestamp);
