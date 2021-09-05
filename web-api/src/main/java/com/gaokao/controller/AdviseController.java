@@ -28,9 +28,9 @@ public class AdviseController {
         return AjaxResult.SUCCESS(adviseService.getUserRank(score));
     }
 
-    @GetMapping("/listall")
-    public AjaxResult<Page<AdviseVO>> advise(@ModelAttribute FilterParams filterParams){
-       return AjaxResult.SUCCESS(adviseService.list(filterParams));
+    @PostMapping("/listAll")
+    public AjaxResult<Page<AdviseVO>> advise(@RequestBody FilterParams filterParams){
+        return AjaxResult.SUCCESS(adviseService.list(filterParams));
     }
 
     @GetMapping("autoGenerateForm")
