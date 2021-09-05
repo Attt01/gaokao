@@ -1,583 +1,215 @@
-
+import {
+  getCurrentVolunteer,
+  createVolunteerForm,
+  changeCurrentForm,
+  upVolunteer,
+  downVolunteer,
+  swapVolunteer,
+  deleteVolunteer
+} from "@/api/volunteer";
+import { STATUS_CODE } from "@/api/statusCode";
+import { TimeSelect } from "_element-ui@2.11.0@element-ui";
 export default {
   data() {
     return {
+      isExist: false,
+      dialogVisible: false,
+      formId: 0,
+      userInfo: {
+        id: 0,
+        score: 0,
+        subject: [],
+        province_rank: 0
+      },
+      toSwapIndex: undefined,
+      currentFormName: '暂无志愿表，点击添加',
       tableData: [
-      {
-        num: '志愿1',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿2',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿3',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿4',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿5',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿6',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿7',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿8',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿9',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿10',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿11',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿12',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿13',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿14',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿15',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿16',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿17',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿18',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿19',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿20',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿21',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿22',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿23',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿24',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿25',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿26',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿27',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿28',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿29',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿30',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿31',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿32',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿33',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿34',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿35',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿36',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿37',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿38',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿39',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿40',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿41',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿42',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿43',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿44',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿45',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-
-      {
-        num: '志愿46',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿47',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿48',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿49',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿50',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }, 
-      {
-        num: '志愿51',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
+      // {
+      //   num: '志愿1',
+      //   school: 'school',
+      //   profession: 'profession',
+      //   isExist: false,
+      //   id: 0
+      // }
+      ],
+      createData: {
+        generatedType: true,
+        name: '',
+        score: 0,
+        subject: []
       },
-      {
-        num: '志愿52',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },
-      {
-        num: '志愿53',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },
-      {
-        num: '志愿54',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },
-      {
-        num: '志愿55',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },
-      {
-        num: '志愿56',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },
-      {
-        num: '志愿57',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },
-      {
-        num: '志愿58',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },
-      {
-        num: '志愿59',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },
-      {
-        num: '志愿60',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },{
-        num: '志愿61',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },{
-        num: '志愿62',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },{
-        num: '志愿63',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },{
-        num: '志愿64',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },{
-        num: '志愿65',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },{
-        num: '志愿66',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },{
-        num: '志愿67',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },{
-        num: '志愿68',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },{
-        num: '志愿69',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },
-      {
-        num: '志愿70',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },
-      {
-        num: '志愿71',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },
-      {
-        num: '志愿72',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },
-      {
-        num: '志愿73',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },
-      {
-        num: '志愿74',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },
-      {
-        num: '志愿75',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },
-      {
-        num: '志愿76',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },
-      {
-        num: '志愿77',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },
-      {
-        num: '志愿78',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },
-      {
-        num: '志愿79',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },
-      {
-        num: '志愿80',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },
-      {
-        num: '志愿81',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },
-      {
-        num: '志愿82',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },
-      {
-        num: '志愿83',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },
-      {
-        num: '志愿84',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },
-      {
-        num: '志愿85',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },
-      {
-        num: '志愿86',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },
-      {
-        num: '志愿87',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },
-      {
-        num: '志愿88',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },
-      {
-        num: '志愿89',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },
-      {
-        num: '志愿90',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },
-      {
-        num: '志愿91',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },
-      {
-        num: '志愿92',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },
-      {
-        num: '志愿93',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },
-      {
-        num: '志愿94',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },
-      {
-        num: '志愿95',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      },
-      {
-        num: '志愿96',
-        school: '',
-        profession: '',
-        add:<el-button round>添加</el-button>
-      }]
+      createRules: {
+        name: [
+          { required: true, message: '请输入志愿表名称', trigger: 'blur'}
+        ]
+      }
     }
   },
   methods: {
     initData() {
+      this.userInfo = JSON.parse(localStorage.getItem("userGaoKaoInfo"));
+      this.createData.score = this.userInfo.score;
+      this.createData.subject = this.userInfo.subject;
+      //初始化表格数据全为空
+      for (let index = 1; index <= 96; ++index) {
+        this.tableData.push({
+            num: '志愿' + index,
+            school: '',
+            profession: '',
+            isExist: false,
+            id: 0,
+            swapVisible: false
+          });
+      }
+      //console.log('crdt', this.createData);
+      getCurrentVolunteer().then(res => {
+        //console.log(res);
+        if (res.code === STATUS_CODE.SUCCESS) {
+          this.isExist = true;
+          this.userInfo.id = res.data.userId;
+          this.formId = res.data.id;
+          this.currentFormName = res.data.name;
+          this.userInfo.score = res.data.score;
+          this.userInfo.subject = res.data.subject;
+          res.data.volunteerList.forEach(volunteer => {
+            console.log(volunteer);
+            this.tableData[volunteer.volunteerPosition - 1].school = volunteer.name;
+            this.tableData[volunteer.volunteerPosition - 1].profession = volunteer.professionalName;
+            this.tableData[volunteer.volunteerPosition - 1].isExist = true;
+            this.tableData[volunteer.volunteerPosition - 1].id = volunteer.id;
+          });
+        }
+      }).catch(res => {
+        if (res.code === STATUS_CODE.FAIL) {
+          this.isExist = false;
+        }
+      });
     },
-    
-  mounted() {
-    this.initData()
+    createForm() {
+      this.$refs['createVolForm'].validate(isvalid => {
+        if (isvalid) {
+          createVolunteerForm(this.createData).then(res => {
+            if (res.code === STATUS_CODE.SUCCESS) {
+              this.$message({
+                message: '创建成功',
+                type: 'success'
+              });
+              changeCurrentForm({
+                newFormId: res.data,
+                preFormId: this.formId,
+                userId: this.userInfo.id
+              }).then(res => {
+                if (res.code === STATUS_CODE.SUCCESS) {
+                  this.dialogVisible = false;
+                  this.formId = res.data;
+                  this.initData();
+                }
+              });
+            }
+          });
+        }
+      })
+    },
+    toScreen() {
+      this.$router.push('/screen');
+    },
+    upVol(index) {
+      if (index == 0) {
+        this.$message({
+          message: '不能继续上移了(>_<)',
+          type: 'error'
+        });
+        return;
+      }
+      upVolunteer({
+        formId: this.formId,
+        section: true,
+        volunteerId: this.tableData[index].id,
+        volunteerPosition: index + 1
+      }).then(res => {
+        if (res.code === STATUS_CODE.SUCCESS) {
+          this.$message({
+            message: '移动成功',
+            type: 'success'
+          });
+          this.initData();
+        }
+      });
+    },
+    downVol(index) {
+      if (index == 95) {
+        this.$message({
+          message: '不能继续下移了(>_<)',
+          type: 'error'
+        });
+        return;
+      }
+      downVolunteer({
+        formId: this.formId,
+        section: true,
+        volunteerId: this.tableData[index].id,
+        volunteerPosition: index + 1
+      }).then(res => {
+        if (res.code === STATUS_CODE.SUCCESS) {
+          this.$message({
+            message: '移动成功',
+            type: 'success'
+          });
+          this.initData();
+        }
+      });
+    },
+    swapVol(index, toSwapIndex) {
+      this.toSwapIndex -= 1;
+      if (this.toSwapIndex < 0 || 95 < this.toSwapIndex) {
+        this.$message({
+          message: '填写志愿位置应该在1~96之间(>_<)',
+          type: 'error'
+        });
+        return;
+      }
+      swapVolunteer({
+        firstVolunteerId: this.tableData[index].id,
+        firstVolunteerPosition: index + 1,
+        formId: this.formId,
+        secondVolunteerId: this.tableData[this.toSwapIndex].id,
+        secondVolunteerPosition: this.toSwapIndex + 1,
+        section: true
+      }).then(res => {
+        if (res.code === STATUS_CODE.SUCCESS) {
+          this.$message({
+            message: '移动成功',
+            type: 'success'
+          });
+          this.initData();
+        }
+      });
+    },
+    deleteVol(index) {
+      deleteVolunteer({
+        formId: this.formId,
+        section: true,
+        volunteerPosition: index + 1
+      }).then(res => {
+        if (res.code === STATUS_CODE.SUCCESS) {
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          });
+          this.initData();
+        }
+      });
+    }
   },
-}}
+  mounted() {
+    this.initData();
+  },
+  computed: {
+    userInfoStr() {
+      let subs = this.userInfo.subject;
+      return '高考分数: ' + this.userInfo.score
+        + ' / 排名: ' + this.userInfo.province_rank
+        + ' / 选科: ' + subs[0] + ' ' + subs[1] + ' ' + subs[2];
+    }
+  }
+}
