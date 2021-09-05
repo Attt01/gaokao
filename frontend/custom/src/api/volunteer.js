@@ -1,7 +1,7 @@
 import request from '@/utils/request'
-export function getVolunteer(params) {
+export function getVolunteer() {
   return request({
-    url: '/xhr/v1/volunteer/getAll/' + params,
+    url: '/xhr/v1/volunteer/getAll/',
     method: 'get'
   })
 }
@@ -28,5 +28,20 @@ export function changeCurrentForm(params) {
       preFormId: params.preFormId,
       userId: params.userId
     }
+  })
+}
+
+export function getCurrentVolunteer() {
+  return request({
+    url: '/xhr/v1/volunteer/getCurrent/',
+    method: 'get'
+  })
+}
+
+export function createVolunteerForm(formData) {
+  return request({
+    url: '/xhr/v1/volunteer/create',
+    method: 'post',
+    data: formData
   })
 }
