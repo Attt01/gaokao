@@ -47,22 +47,25 @@ public class AdviseServiceImpl implements AdviseService{
     @Autowired
     private FilterDataDao filterDataDao;
 
+    private static List<VolunteerVO> volunteerVOList;
+
+
     @Override
     public Integer getUserRank(Integer score){
-        Integer t = scoreRankDao.getTopScore();
-        Integer l = scoreRankDao.getLowestScore();
-        if(score > t)
-            score = t;
-        else if(score < l)
-            score = l;
-
         Integer totalNums = scoreRankDao.findTotalNumsByScore(score);
+        if(totalNums == null){
+            if(score > 400){
+                totalNums = 50;
+            }
+            else {
+                totalNums = 548762;
+            }
+        }
         return totalNums;
     }
 
     @Override
-    public Integer getRate(Integer score, Integer guess){
-        Integer rank = getUserRank(score);
+    public Integer getRate(Integer rank, Integer guess){
         Integer dif = Math.abs(rank - guess);
         Integer rate = 0;
         if(rank > guess){//用户排名大于预估最低录取名次
@@ -149,9 +152,10 @@ public class AdviseServiceImpl implements AdviseService{
                     return false;
                 }
         }
+/*
 
         //接下来判断录取批次、地区、大学类型等是否符合条件
-        List<Integer> other = filterParams.getOther();
+        List<Integer> other = filterParams.getOther();d
         for(int i = 0; i < other.size(); i++){
             Integer fatherId = filterDataDao.findFatherIdBySonId(other.get(i));
             //判断录取批次是否符合
@@ -177,25 +181,36 @@ public class AdviseServiceImpl implements AdviseService{
             }
 
         }
+*/
+
         return true;
     }
+
 
     @Override
     public List<AdviseVO> listAll(FilterParams filterParams){
         List<AdviseVO> adviseVOList = new ArrayList<>();
-        List<Volunteer> volunteerList = adviseDao.getAllVolunteer();
-        volunteerList.forEach(volunteer -> {
-            VolunteerVO volunteerVO = new VolunteerVO();
-            BeanUtils.copyProperties(volunteer, volunteerVO);
-            if(volunteer.getVolunteerSection() == 1){
-                volunteerVO.setVolunteerSection(true);
-            }
-            else{
-                volunteerVO.setVolunteerSection(false);
-            }
-            volunteerVO.setSubjectRestrictionDetail(JSON.parseArray(volunteer.getSubjectRestrictionDetail(), Integer.class));
+        if(volunteerVOList == null){
+            List<Volunteer> volunteerList = adviseDao.getAllVolunteer();
+            List<VolunteerVO> volunteerVOS = new ArrayList<>();
+            volunteerList.forEach(volunteer -> {
+                VolunteerVO volunteerVO = new VolunteerVO();
+                BeanUtils.copyProperties(volunteer, volunteerVO);
+                if(volunteer.getVolunteerSection() == 1){
+                    volunteerVO.setVolunteerSection(true);
+                }
+                else{
+                    volunteerVO.setVolunteerSection(false);
+                }
+                volunteerVO.setSubjectRestrictionDetail(JSON.parseArray(volunteer.getSubjectRestrictionDetail(), Integer.class));
+                volunteerVOS.add(volunteerVO);
+            });
+            volunteerVOList = volunteerVOS;
+        }
+        Integer rank = getUserRank(filterParams.getScore());
+        volunteerVOList.forEach(volunteerVO -> {
             if(filter(filterParams, volunteerVO)){
-                Integer rate = getRate(filterParams.getScore(), volunteer.getPosition());
+                Integer rate = getRate(rank, volunteerVO.getPosition());
                 String rateDesc = "";
                 if(rate <= 50)
                     rateDesc = "难录取";
@@ -213,6 +228,7 @@ public class AdviseServiceImpl implements AdviseService{
                 adviseVO.setVolunteerVO(volunteerVO);
                 adviseVOList.add(adviseVO);
             }
+
         });
         return adviseVOList.stream().sorted(Comparator.comparing(AdviseVO::getRate))
                 .collect(Collectors.toList());
@@ -221,8 +237,9 @@ public class AdviseServiceImpl implements AdviseService{
     @Override
     public Page<AdviseVO> list(FilterParams filterParams){
         List<AdviseVO> adviseVOS = listAll(filterParams);
-        if(filterParams.getType() == 0)
+        if(filterParams.getType() == 0){
             return new PageImpl<>(adviseVOS, PageRequest.of(filterParams.getPage() - 1, filterParams.getLimit()), adviseVOS.size());
+        }
         Map<String, List<AdviseVO>> map = new HashMap<>();
         List<AdviseVO> adviseVOList = new ArrayList<>();
         adviseVOS.stream().collect(Collectors.groupingBy(AdviseVO::getRateDesc,Collectors.toList()))
@@ -241,7 +258,7 @@ public class AdviseServiceImpl implements AdviseService{
                 adviseVOList = adviseVOS;
             }
             adviseVOList.sort(Comparator.comparing(AdviseVO::getRate).reversed());
-            return new PageImpl<>(adviseVOList, PageRequest.of(filterParams.getPage() - 1, filterParams.getLimit()), adviseVOList.size());
+        return new PageImpl<>(adviseVOList, PageRequest.of(filterParams.getPage() - 1, filterParams.getLimit()), adviseVOList.size());
     }
 
     @Override
@@ -289,15 +306,17 @@ public class AdviseServiceImpl implements AdviseService{
                 volunteerVOList.add(baoList.get(i).getVolunteerVO());
             }
         }
+        List<FormVolunteer> formVolunteerList = new ArrayList<>();
         for(int i = 0; i < 96; i++){
             FormVolunteer formVolunteer = new FormVolunteer();
             formVolunteer.setFormId(userForm1.getId());
             formVolunteer.setVolunteerSection(volunteerVOList.get(i).getVolunteerSection());
             formVolunteer.setVolunteerPosition(i + 1);
             formVolunteer.setVolunteerId(volunteerVOList.get(i).getId());
-            formVolunteerDao.save(formVolunteer);
+            formVolunteerList.add(formVolunteer);
             volunteerVOList.get(i).setVolunteerPosition(i + 1);
         }
+        formVolunteerDao.saveAll(formVolunteerList);
 
         //接下来构造返回对象
         UserFormDetailVO userFormDetailVO = new UserFormDetailVO();
@@ -311,5 +330,6 @@ public class AdviseServiceImpl implements AdviseService{
         userFormDetailVO.setSubject(subject);
         return userFormDetailVO;
     }
+    
 
 }
