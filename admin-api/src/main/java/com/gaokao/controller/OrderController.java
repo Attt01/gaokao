@@ -1,14 +1,15 @@
 package com.gaokao.controller;
 
 import com.gaokao.common.meta.AjaxResult;
-import com.gaokao.common.meta.vo.order.PreOrderParam;
-import com.gaokao.common.meta.vo.order.PreOrderResult;
-import com.gaokao.common.meta.vo.order.SubmitOrderParam;
+import com.gaokao.common.meta.vo.order.*;
 import com.gaokao.common.service.OrderService;
+import com.gaokao.common.utils.IPUtils;
 import com.gaokao.common.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author attack204
@@ -40,15 +41,23 @@ public class OrderController {
         return AjaxResult.SUCCESS(String.valueOf(orderId));
     }
 
-//    @PostMapping("/pay")
-//    public AjaxResult<PayResult> pay(@RequestBody PayParam param, HttpServletRequest request) {
-//        Long userId = UserUtils.getUserId();
-//        String ip = IPUtils.getRequestClientRealIP(request);
-//        PayResult payResult = orderService.pay(param, ip, userId);
-//        return AjaxResult.SUCCESS(payResult);
-//    }
+    @PostMapping("/pay")
+    public AjaxResult<PayResult> pay(@RequestBody PayParam param, HttpServletRequest request) {
+        Long userId = UserUtils.getUserId();
+        String ip = IPUtils.getRequestClientRealIP(request);
+        PayResult payResult = orderService.pay(param, ip, userId);
+        return AjaxResult.SUCCESS(payResult);
+    }
 
-
+    @PostMapping("/success")
+    public AjaxResult<Boolean> success(@RequestParam String orderId) {
+        //获取当前用户id
+        Long userId = UserUtils.getUserId();
+        orderService.completeOrder(Long.valueOf(orderId), userId);
+        AjaxResult<Boolean> result = AjaxResult.SUCCESS(true);
+        result.setMsg("成功");
+        return result;
+    }
 
     @PostMapping("/close")
     public AjaxResult<Boolean> close(@RequestParam String orderId) {

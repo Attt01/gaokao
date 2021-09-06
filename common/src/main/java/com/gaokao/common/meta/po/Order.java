@@ -44,4 +44,10 @@ public class Order extends BaseEntity{
     private String thirdPaySn;
 
     private Integer status;
+
+    private String rejectReason;
+
+    private String refundReason;
+
+    private Integer payMoney;
 }
