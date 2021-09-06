@@ -59,6 +59,17 @@ public class VolunteerServiceImpl implements VolunteerService{
     }
 
     @Override
+    public Boolean queryExist(Long formId, Boolean volunteerSection, Integer position) {
+
+        if(formVolunteerDao.findByFormIdAndVolunteerSectionAndVolunteerPosition(formId, volunteerSection, position) != null) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    @Override
     public Long changeCurrentForm(Long userId, Long preFormId, Long newFormId) {
 
         UserForm userForm = userFormDao.findById(preFormId).orElse(null);
