@@ -13,17 +13,23 @@ public class MemberUpdateParams {
      */
     @NotBlank(message = "手机号不能空")
     private String phone;
-
     /**
      * 用户名
      */
     @NotBlank(message = "用户名不能空")
     private String username;
-
     /**
      * 昵称
      */
     private String nickname;
+    /**
+     * 全省排名
+     */
+    private Long provinceRank;
+    /**
+     * 选考科目
+     */
+    private String subject;
 
 
 }
