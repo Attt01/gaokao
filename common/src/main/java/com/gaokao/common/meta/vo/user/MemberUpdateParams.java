@@ -19,6 +19,10 @@ public class MemberUpdateParams {
     @NotBlank(message = "用户名不能空")
     private String username;
     /**
+     * 分数
+     */
+    private Integer score;
+    /**
      * 昵称
      */
     private String nickname;
