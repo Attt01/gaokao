@@ -50,3 +50,25 @@ export function getMajorType() {
     method: 'get',
   })
 }
+
+/**
+ *填报志愿
+ */
+export function submitVolunteer(params) {
+  return request({
+    url: '/xhr/v1/volunteer/addVolunteer',
+    method: 'post',
+    data: params
+  })
+}
+
+/**
+ * 获取当前信息
+ */
+export function getCurrentInfo() {
+  return request({
+    url: '/xhr/v1/volunteer/getCurrent',
+    method: 'get',
+  })
+}
+
