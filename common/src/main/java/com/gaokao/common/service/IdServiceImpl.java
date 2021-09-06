@@ -44,4 +44,25 @@ public class IdServiceImpl implements IdService {
 
         return Long.valueOf(idBuilder.toString());
     }
+
+    @Override
+    public Long genOrderPayId(Long orderId) {
+        //一共19位：8位年月日 11位订单id
+        Calendar now = Calendar.getInstance();
+        Integer year = now.get(Calendar.YEAR);
+        Integer month = now.get(Calendar.MONTH) + 1; //第一个月从0开始，所以得到月份＋1
+        Integer day = now.get(Calendar.DAY_OF_MONTH);
+
+        StringBuilder idBuilder = new StringBuilder();
+        idBuilder.append(String.format("%04d", year));
+        idBuilder.append(String.format("%02d", month));
+        idBuilder.append(String.format("%02d", day));
+
+        String key = idBuilder.toString();
+
+        Long orderCount = redisTemplate.opsForValue().increment(key);
+        idBuilder.append(String.format("%011d", orderCount));
+
+        return Long.valueOf(idBuilder.toString());
+    }
 }
