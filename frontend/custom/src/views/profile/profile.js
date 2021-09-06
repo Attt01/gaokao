@@ -1,5 +1,6 @@
 import { updatePwd } from '@/api/login'
 import { getInfo, updateUserInfo } from '@/api/login'
+import { SUBJECT_TYPE } from '../../consts/Subject'
 
 export default {
   data() {
@@ -8,14 +9,13 @@ export default {
       user: {
         id: 0,
         username: '',
-        vipIsOrNot: '',
+        vipIsOrNot: false,
         nickname: '',
         score: '',
         provinceRank: '',
-        subject: '',
+        subject: [],
         phone: '',
-        email: '',
-        password: ''
+        email: ''
       },
       edit: false
     }
@@ -28,13 +28,18 @@ export default {
       getInfo().then(res => {
         this.user.id = res.data.id
         this.user.username = res.data.username
-        this.user.vipIsOrNot = res.data.vipIsOrNot
+        this.user.phone = res.data.phone
+        this.user.vipIsOrNot = res.data._vip
         this.user.nickname = res.data.nickname
         this.user.score = res.data.score
-        this.user.provinceRank = res.data.provinceRank
-        this.user.subject = res.data.subject
-        this.user.phone = res.data.phone
+        this.user.provinceRank = res.data.province_rank
+        res.data.subject.forEach((value, index) => {
+          this.user.subject[index] = SUBJECT_TYPE[value - 1]
+          // console.log('subject:' + this.user.subject[index])
+        })
+        // this.user.subject = res.data.subject
         this.user.email = res.data.email
+        // console.log(res.data)
       })
       console.log(this.user)
     },
@@ -73,7 +78,7 @@ export default {
           if (res.code === 200) {
             this.$message({
               message: '修个个人信息成功！',
-              type: 'succes',
+              type: 'success',
               duration: 700
             })
           } else {
