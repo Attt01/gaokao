@@ -1,4 +1,4 @@
-import { getVolunteer, deleteVolunteer,changeCurrentForm } from '../../api/volunteer'
+import { getVolunteer, deleteVolunteer,changeCurrentForm, updateVolunteerName } from '../../api/volunteer'
 import { getInfo } from '../../api/login'
 export default {
   data() {
@@ -11,8 +11,9 @@ export default {
         iscurrent: ''
       }],
       userId: 0,
-      checkList: [],
       activeIndex: 0,
+      checkList: [],
+      editName: false
     }
   },
   methods: {
@@ -20,7 +21,7 @@ export default {
       getInfo().then(res => {
         this.userId = res.data.id
         const data = []
-        getVolunteer(this.userId).then(volunteer => {
+        getVolunteer().then(volunteer => {
           volunteer.data.forEach((item, index) => {
             data[index] = {
               id: item.id,
@@ -53,6 +54,7 @@ export default {
       })
     },
     deletePreference(preferData) {
+      // confirm事件在删除前确认一下
       const index = this.tableData.indexOf(preferData)
       if (preferData.iscurrent === '是') {
         this.activeIndex = 0
@@ -68,6 +70,54 @@ export default {
         userId: this.userId
       }
       // deleteVolunteer(params)
+    },
+    handleSelectionChange(val) {
+      this.checkList = val
+    },
+    editVolunteerName() {
+      const data = []
+      this.tableData.forEach((item, index) => {
+        if (item.name === '') {
+          this.$message({
+            message: '志愿名不能为空',
+            type: 'error'
+          })
+          return
+        }
+      })
+      if (this.editName === true) {
+        // 提交修改志愿名
+        getVolunteer().then(volunteer => {
+          volunteer.data.forEach((item, index) => {
+            data[index] = {
+              id: item.id,
+              name: item.name
+            }
+            if (this.tableData[index].name !== data[index].name) {
+              const param = {
+                formId: data[index].id,
+                name: this.tableData[index].name
+              }
+              updateVolunteerName(param).then(res => {
+                if (res.code === 200) {
+                  this.$message({
+                    message: '修改志愿名成功！',
+                    type: 'success',
+                    duration: 700
+                  })
+                } else {
+                  this.$message({
+                    message: '修改志愿名失败',
+                    type: 'error',
+                    duration: 700
+                  })
+                }
+              })
+            }
+          })
+        })
+      }
+      this.editName = !this.editName
     }
   },
   mounted() {

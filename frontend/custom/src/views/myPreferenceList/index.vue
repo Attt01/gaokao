@@ -1,21 +1,27 @@
 <template>
   <div class="user-content">
+    <el-button type="primary">使用选中志愿表</el-button>
+    <el-button type="primary" v-if="!editName" @click="editVolunteerName">修改志愿表名称</el-button>
+    <el-button type="primary" v-else  @click="editVolunteerName">提交志愿表名称</el-button>
+    <el-button type="primary">删除志愿表</el-button>
     <el-table
       :data="tableData"
       border
-      style="width: 100%">
+      @selection-change="handleSelectionChange"
+      style="width: 100%; margin-top: 20px;">
       <el-table-column
         label="选择"
-        prop="checkbox"
-        width="80"
-        class="checkbox">
-        <template slot-scope="scope">
-        <el-checkbox :value="scope.row"></el-checkbox>
-        </template>
+        type="selection"
+        width="80">
       </el-table-column>
       <el-table-column
         prop="name"
-        label="志愿表名称">
+        label="志愿表名称"
+      >
+        <template slot-scope="scope">
+          <el-input v-model="scope.row.name" v-if="editName"></el-input>
+          <span v-else> {{scope.row.name}}</span>
+        </template>
       </el-table-column>
       <el-table-column
         prop="type"
@@ -49,9 +55,5 @@
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/common.scss";
-.checkbox{
-  width: 20px;
-  margin-left: auto;
-  margin-right: auto;
-}
+
 </style>

@@ -39,7 +39,7 @@
             <span>{{ user.provinceRank }}</span>
           </el-form-item>
           <el-form-item label="选课">
-            <span>{{ user.subject }}</span>
+            <span>{{ user.subject[0] }},{{user.subject[1]}},{{user.subject[2]}}</span>
           </el-form-item>
         </el-form>
         <el-divider></el-divider>
