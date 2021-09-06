@@ -38,7 +38,7 @@ public interface OrderService {
     /**
      * 4：退款
      */
-    void applyRefund(OrderRefund refundParam);
+    void applyRefund(RefundParam refundParam);
 
     /**
      * 4.1: 退款回调

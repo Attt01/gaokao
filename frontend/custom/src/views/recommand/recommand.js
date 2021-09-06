@@ -14,7 +14,7 @@ export default {
       userInfo: {
         score: 0,
         subject: [],
-        province_rank: 0
+        provinceRank: 0
       },
       form: {
         userInfoStr: undefined,
@@ -98,7 +98,7 @@ export default {
       if (this.userInfo.score) {
         let subs = this.userInfo.subject;
         return '高考分数: ' + this.userInfo.score
-          + ' / 排名: ' + this.userInfo.province_rank
+          + ' / 排名: ' + this.userInfo.provinceRank
           + ' / 选科: ' + subjects[subs[0]] + ' ' + subjects[subs[1]] + ' ' + subjects[subs[2]];
       }
     }

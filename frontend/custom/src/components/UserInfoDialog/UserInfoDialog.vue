@@ -19,9 +19,9 @@
             >
             </el-input>
           </el-form-item>
-          <el-form-item label="高考排名" prop="province_rank">
+          <el-form-item label="高考排名" prop="provinceRank">
             <el-input
-              v-model.number="userInfo.province_rank"
+              v-model.number="userInfo.provinceRank"
               type="text"
               maxlength="7"
               placeholder="请输入高考排名"
@@ -68,14 +68,14 @@ export default {
       userInfo: {
         score: null,
         subject: [],
-        province_rank: null
+        provinceRank: null
       },
       rules: {
         score: [
           { required: true, message: '请输入高考分数', trigger: 'blur' },
           { type: 'number', min: 100, max: 750, message: '必须是100~750的整数', trigger: 'blur'}
         ],
-        province_rank: [
+        provinceRank: [
           { type: 'number', message: '必须是整数', trigger: 'blur'}
         ],
         subject: [
@@ -117,7 +117,7 @@ export default {
         if (isValid) {
           getRank(this.userInfo.score).then((res) => {
             if (res.code === STATUS_CODE.SUCCESS) {
-              this.userInfo.province_rank = res.data;
+              this.userInfo.provinceRank = res.data;
             }
           });
         }

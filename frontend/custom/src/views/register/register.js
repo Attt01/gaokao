@@ -39,7 +39,7 @@ export default {
         nickname: '',
         score: 0,
         subject: [],
-        province_rank: 0
+        provinceRank: 0
       },
       regRules: {
         nickname: [
@@ -71,7 +71,7 @@ export default {
       let userGaokaoInfo = JSON.parse(localStorage.getItem('userGaoKaoInfo'));
       //console.log(JSON.parse(localStorage.getItem('userGaoKaoInfo')));
       this.regForm.score = userGaokaoInfo.score;
-      this.regForm.province_rank = userGaokaoInfo.province_rank;
+      this.regForm.provinceRank = userGaokaoInfo.provinceRank;
       this.regForm.subject = userGaokaoInfo.subject;
     },
     showPwd() {
@@ -118,7 +118,7 @@ export default {
       if (this.regForm.score) {
         let subs = this.regForm.subject;
         return '高考分数: ' + this.regForm.score
-          + ' / 排名: ' + this.regForm.province_rank
+          + ' / 排名: ' + this.regForm.provinceRank
           + ' / 选科: ' + subs[0][0] + ' ' + subs[1][0] + ' ' + subs[2][0];
       }
     }

@@ -3,11 +3,11 @@ import request from '@/utils/request'
 /**
  * 获取列表数据（后端待实现）
  */
-export function getVOList(query) {
+export function getVOList(params) {
   return request({
-    url: '/xhr/v1/advise/',
-    method: 'get',
-    params: query
+    url: '/xhr/v1/advise/listAll',
+    method: 'post',
+    data: params
   })
 }
 

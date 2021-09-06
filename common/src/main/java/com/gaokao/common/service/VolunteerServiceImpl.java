@@ -1,6 +1,7 @@
 package com.gaokao.common.service;
 
 import com.alibaba.fastjson.JSON;
+import com.gaokao.common.constants.VolunteerConstant;
 import com.gaokao.common.dao.FormVolunteerDao;
 import com.gaokao.common.dao.VolunteerDao;
 import com.gaokao.common.dao.UserFormDao;
@@ -10,6 +11,7 @@ import com.gaokao.common.meta.po.UserForm;
 import com.gaokao.common.meta.po.Volunteer;
 import com.gaokao.common.meta.vo.volunteer.UserFormAllVO;
 import com.gaokao.common.meta.vo.volunteer.UserFormDetailVO;
+import com.gaokao.common.meta.vo.volunteer.VolunteerCreateParams;
 import com.gaokao.common.meta.vo.volunteer.VolunteerVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -60,8 +62,10 @@ public class VolunteerServiceImpl implements VolunteerService{
     public Long changeCurrentForm(Long userId, Long preFormId, Long newFormId) {
 
         UserForm userForm = userFormDao.findById(preFormId).orElse(null);
-        userForm.setCurrent(false);
-        userFormDao.save(userForm);
+        if(userForm != null ) {
+            userForm.setCurrent(false);
+            userFormDao.save(userForm);
+        }
 
         UserForm newUserForm = userFormDao.findById(newFormId).orElse(null);
         newUserForm.setCurrent(true);
@@ -85,6 +89,9 @@ public class VolunteerServiceImpl implements VolunteerService{
         FormVolunteer formVolunteer = formVolunteerDao.findByFormIdAndVolunteerSectionAndVolunteerPosition(formId, section, position);
 
         if(formVolunteer == null) {
+            if(volunteerId == VolunteerConstant.EMPTY_VOLUNTEER) {
+                return 0L;
+            }
             FormVolunteer newFormVolunteer = new FormVolunteer();
             newFormVolunteer.setFormId(formId);
             newFormVolunteer.setVolunteerSection(section);
@@ -92,6 +99,10 @@ public class VolunteerServiceImpl implements VolunteerService{
             newFormVolunteer.setVolunteerId(volunteerId);
             return formVolunteerDao.save(newFormVolunteer).getId();
         } else {
+            if(volunteerId == VolunteerConstant.EMPTY_VOLUNTEER) {
+                formVolunteerDao.deleteById(formVolunteer.getId());
+                return formVolunteer.getId();
+            }
             formVolunteer.setVolunteerId(volunteerId);
             return formVolunteerDao.save(formVolunteer).getId();
         }
@@ -198,6 +209,12 @@ public class VolunteerServiceImpl implements VolunteerService{
         });
         userFormDetailVO.setVolunteerList(volunteerVOS);
         return userFormDetailVO;
+
+    }
+
+    @Override
+    public FormVolunteer findByFormIdAndSectionAndVolunteerPosition(Long formId, Boolean section, Integer position) {
+        return formVolunteerDao.findByFormIdAndVolunteerSectionAndVolunteerPosition(formId, section, position);
 
     }
 }
