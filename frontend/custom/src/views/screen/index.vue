@@ -34,6 +34,7 @@
           style="width: 240px"
           :options="classifyOptions"
           :props="multiProps"
+          collapse-tags
           clearable
           filterable
           @change="changeClassify"></el-cascader>
@@ -149,11 +150,11 @@
         <el-form-item label="招生专业" prop="professionalName">
           <el-input v-model="form.professionalName" :disabled="edit" style="width: 360px"/>
         </el-form-item>
-        <el-form-item label="志愿表序号" prop="formId">
-          <el-input-number v-model="form.formId" placeholder="志愿表序号" style="width: 360px"/>
-        </el-form-item>
         <el-form-item label="志愿序号" prop="volunteerPosition">
-          <el-input-number v-model="form.volunteerPosition" placeholder="请输入志愿顺序号(1~96)" :min="1" :max="96" style="width: 360px"/>
+          <el-tooltip class="item" effect="light" content="志愿序号：指填报为第几志愿"
+                      placement="bottom">
+            <el-input-number v-model="form.volunteerPosition" placeholder="请输入志愿顺序号(1~96)" :min="1" :max="96" style="width: 360px"/>
+          </el-tooltip>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">

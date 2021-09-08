@@ -7,6 +7,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import '@/styles/index.scss'
 import 'normalize.css/normalize.css'
 
+import VueParticles from 'vue-particles'
 import App from './App'
 import router from './router'
 import store from './store'
@@ -15,6 +16,7 @@ import i18n from './lang'
 import '@/icons'
 import './permission'
 
+Vue.use(VueParticles)
 Vue.use(ElementUI, {
   size: Cookies.get('size') || 'medium',
   i18n: (key, value) => i18n.t(key, value)
@@ -22,7 +24,7 @@ Vue.use(ElementUI, {
 Vue.component('v-chart', ECharts)
 Vue.directive('perm', {
   inserted(el, binding, vnode) {
-    const { value } = binding
+    const {value} = binding
     const permissions = store.getters && store.getters.permCodes
     if (value) {
       const hasPermission = permissions.indexOf(value) !== -1

@@ -5,6 +5,8 @@
       :visible.sync="dialogVisible"
       width="30%"
       :show-close="false"
+      :lock-scroll="false"
+      :modal-append-to-body='false'
       :close-on-click-modal="false"
       :close-on-press-escape="false"
     >
@@ -58,7 +60,7 @@
 </template>
 
 <script>
-import { getRank } from '@/api/recommand.js';
+import {getRank} from '@/api/recommand.js';
 import {STATUS_CODE} from "@/api/statusCode";
 import store from '@/store';
 
@@ -72,15 +74,15 @@ export default {
       },
       rules: {
         score: [
-          { required: true, message: '请输入高考分数', trigger: 'blur' },
-          { type: 'number', min: 100, max: 750, message: '必须是100~750的整数', trigger: 'blur'}
+          {required: true, message: '请输入高考分数', trigger: 'blur'},
+          {type: 'number', min: 100, max: 750, message: '必须是100~750的整数', trigger: 'blur'}
         ],
         provinceRank: [
-          { type: 'number', message: '必须是整数', trigger: 'blur'}
+          {type: 'number', message: '必须是整数', trigger: 'blur'}
         ],
         subject: [
-          { required: true, message: '请选择科目' },
-          { type: 'array', len: 3, message: '选择三项', trigger: 'blur'}
+          {required: true, message: '请选择科目'},
+          {type: 'array', len: 3, message: '选择三项', trigger: 'blur'}
         ]
       }
     };
