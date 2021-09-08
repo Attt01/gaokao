@@ -38,9 +38,5 @@ public class AdviseController {
         return AjaxResult.SUCCESS(adviseService.generateVoluntForm(autoGenerateFormParams));
     }
 
-    @GetMapping("auto")
-    public Integer autoGenerateVolunteerForm(){
-        return adviseService.test();
-    }
 
 }
