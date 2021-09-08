@@ -3,10 +3,7 @@ package com.gaokao.common.service;
 import com.alibaba.fastjson.JSON;
 import com.gaokao.common.dao.*;
 import com.gaokao.common.enums.Subject;
-import com.gaokao.common.meta.po.FormVolunteer;
-import com.gaokao.common.meta.po.ScoreRank;
-import com.gaokao.common.meta.po.UserForm;
-import com.gaokao.common.meta.po.Volunteer;
+import com.gaokao.common.meta.po.*;
 import com.gaokao.common.meta.vo.advise.AutoGenerateFormParams;
 import com.gaokao.common.meta.vo.advise.FilterParams;
 import com.gaokao.common.meta.vo.advise.AdviseVO;
@@ -49,6 +46,9 @@ public class AdviseServiceImpl implements AdviseService{
 
     private static List<VolunteerVO> volunteerVOList;
 
+    private static Map<String, List<FilterData>> filterDataS = new HashMap<>();
+
+    private Map<String, Boolean> conditionsMap = new HashMap<>();
 
     @Override
     public Integer getUserRank(Integer score){
@@ -102,6 +102,7 @@ public class AdviseServiceImpl implements AdviseService{
     @Override
     public boolean filter(FilterParams filterParams, VolunteerVO volunteerVO){
 
+
         //首先判断选课是否符合
         List<Integer> voluntSubject = volunteerVO.getSubjectRestrictionDetail();
         List<Integer> subject = filterParams.getSubject();
@@ -152,44 +153,36 @@ public class AdviseServiceImpl implements AdviseService{
                     return false;
                 }
         }
-/*
 
-        //接下来判断录取批次、地区、大学类型等是否符合条件
-        List<Integer> other = filterParams.getOther();d
-        for(int i = 0; i < other.size(); i++){
-            Integer fatherId = filterDataDao.findFatherIdBySonId(other.get(i));
-            //判断录取批次是否符合
-            if(fatherId == 1){
-                String label = filterDataDao.findLabelById(other.get(i));
-                if(volunteerVO.getVolunteerSection() && label == "普通二段"){
-                    return false;
-                }
-                if(!volunteerVO.getVolunteerSection() && label == "普通一段"){
-                    return false;
-                }
-                continue;
-            }
+        /*
+           接下来判断录取批次、地区、大学类型、专业类型是否符合条件
+                必须同时满足才可以返回true，只要一个不满足就返回false。
+        */
 
-            fatherId = filterDataDao.findFatherIdBySonId(fatherId);
-            switch (fatherId){
-                case 2:
-                    //就读地区
-                case 3:
-                    //大学类型
-                case 4:
-                    //专业类别
-            }
 
+
+        Integer section;
+        if(volunteerVO.getVolunteerSection()){
+            section = 1;
         }
-*/
+        else {
+            section = 2;
+        }
+        if(!conditionsMap.containsKey(section + "")){
+            return false;
+        }
+
+        String city = volunteerVO.getCity();
+        if(!conditionsMap.containsKey(city)){
+            return false;
+        }
+
 
         return true;
+
     }
 
-
-    @Override
-    public List<AdviseVO> listAll(FilterParams filterParams){
-        List<AdviseVO> adviseVOList = new ArrayList<>();
+    private void start(FilterParams filterParams){
         if(volunteerVOList == null){
             List<Volunteer> volunteerList = adviseDao.getAllVolunteer();
             List<VolunteerVO> volunteerVOS = new ArrayList<>();
@@ -207,6 +200,138 @@ public class AdviseServiceImpl implements AdviseService{
             });
             volunteerVOList = volunteerVOS;
         }
+
+        if(filterDataS.isEmpty()) {
+            for (int i = 1; i <= 4; i++) {
+                List<FilterData> secondList = filterDataDao.findSonsByFatherId(i);
+                if (i == 1) {
+                    filterDataS.put("批次", secondList);
+                    continue;
+                }
+                if(i == 2){
+                    List<FilterData> thirdList = new ArrayList<>();
+                    for (int j = 0; j < secondList.size(); j++) {
+                        thirdList.addAll(filterDataDao.findSonsByFatherId(secondList.get(j).getId()));
+                    }
+                    filterDataS.put("地区", thirdList);
+                    continue;
+                }
+                if(i == 3){
+                    for(int j = 0; j < secondList.size(); j++){
+                        String label = secondList.get(j).getLabel();
+                        if(label.equals("大学特色")){
+                            List<FilterData> teSeList = filterDataDao.findSonsByFatherId(secondList.get(j).getId());
+                            filterDataS.put(label, teSeList);
+                        }
+                        if(label.equals("办学性质")){
+                            List<FilterData> xingZhiList = filterDataDao.findSonsByFatherId(secondList.get(j).getId());
+                            filterDataS.put(label, xingZhiList);
+                        }
+                        if(label.equals("大学类型")){
+                            List<FilterData> typeList = filterDataDao.findSonsByFatherId(secondList.get(j).getId());
+                            filterDataS.put(label, typeList);
+                        }
+                    }
+                }
+            }
+        }
+
+        if(filterParams.getBatch().size() == 0){
+            conditionsMap.put("1",true);
+            conditionsMap.put("2",true);
+        }else {
+            for(int i = 0; i < filterParams.getBatch().size(); i++){
+                FilterData filterData = filterDataDao.getOneById(filterParams.getBatch().get(i));
+                String label = filterData.getLabel();
+                if(label.equals("普通一段")){
+                    conditionsMap.put("1", true);
+                }else{
+                    conditionsMap.put("2", true);
+                }
+            }
+        }
+
+        if(filterParams.getRegion().size() == 0){
+            List<FilterData> regionList = filterDataS.get("地区");
+            for(int i = 0; i < regionList.size(); i++){
+                String label = regionList.get(i).getLabel();
+                Integer j = label.indexOf("市");
+                if(j != -1) {
+                    label = label.substring(0, j);
+                    conditionsMap.put(label, true);
+                }
+                else{
+                    conditionsMap.put(label,true);
+                }
+            }
+        }else{
+            for(int i = 1; i < filterParams.getRegion().size(); i++){
+                FilterData filterData = filterDataDao.getOneById(filterParams.getRegion().get(i));
+                String label = filterData.getLabel();
+                Integer j = label.indexOf("市");
+                if(j != -1) {
+                    label = label.substring(0, j);
+                    conditionsMap.put(label, true);
+                }
+                else{
+                    conditionsMap.put(label,true);
+                }
+            }
+        }
+
+        if(filterParams.getSchoolTeSe().size() == 0){
+            List<FilterData> teSeList = filterDataS.get("大学特色");
+            for(int i = 0; i < teSeList.size(); i++){
+                String label = teSeList.get(i).getLabel();
+                conditionsMap.put(label, true);
+            }
+        }else{
+            for(int i = 0; i < filterParams.getSchoolTeSe().size(); i++){
+                FilterData filterData = filterDataDao.getOneById(filterParams.getRegion().get(i));
+                String label = filterData.getLabel();
+                conditionsMap.put(label, true);
+            }
+        }
+
+        if(filterParams.getSchoolXingZhi().size() == 0){
+            List<FilterData> xingZhiList = filterDataS.get("办学性质");
+            for(int i = 0; i < xingZhiList.size(); i++){
+                String label = xingZhiList.get(i).getLabel();
+                conditionsMap.put(label, true);
+            }
+        }else{
+            for(int i = 0; i < filterParams.getSchoolXingZhi().size(); i++){
+                FilterData filterData = filterDataDao.getOneById(filterParams.getRegion().get(i));
+                String label = filterData.getLabel();
+                conditionsMap.put(label, true);
+            }
+        }
+
+        if(filterParams.getSchoolType().size() == 0){
+            List<FilterData> typeList = filterDataS.get("大学类型");
+            for(int i = 0; i < typeList.size(); i++){
+                String label = typeList.get(i).getLabel();
+                conditionsMap.put(label, true);
+            }
+        }else{
+            for(int i = 0; i < filterParams.getSchoolType().size(); i++){
+                FilterData filterData = filterDataDao.getOneById(filterParams.getRegion().get(i));
+                String label = filterData.getLabel();
+                conditionsMap.put(label, true);
+            }
+        }
+
+    }
+
+
+    @Override
+    public List<AdviseVO> listAll(FilterParams filterParams){
+        List<AdviseVO> adviseVOList = new ArrayList<>();
+
+        start(filterParams);
+
+        System.out.println(conditionsMap);
+
         Integer rank = getUserRank(filterParams.getScore());
         volunteerVOList.forEach(volunteerVO -> {
             if(filter(filterParams, volunteerVO)){

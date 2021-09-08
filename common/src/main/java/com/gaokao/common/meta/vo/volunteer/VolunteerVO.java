@@ -22,6 +22,8 @@ public class VolunteerVO {
 
     private String province;
 
+    private String city;
+
     private String address;
 
     private Boolean undergraduateSchoolIsOrNot;
