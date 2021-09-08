@@ -31,10 +31,6 @@ public class MemberUpdateParams {
      */
     private Long provinceRank;
     /**
-     * 分数
-     */
-    private Integer score;
-    /**
      * 选考科目
      */
     private String subject;
