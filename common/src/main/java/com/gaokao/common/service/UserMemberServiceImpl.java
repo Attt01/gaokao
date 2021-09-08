@@ -46,6 +46,7 @@ public class UserMemberServiceImpl implements UserMemberService{
         return verifyCodeService.sendVeryCode(type, phone);
     }
 
+    // 好像是登录用的..?
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         UserMember userMember = userMemberDao.findUserMemberByPhone(s);
@@ -60,7 +61,7 @@ public class UserMemberServiceImpl implements UserMemberService{
                 AuthorityUtils.commaSeparatedStringToAuthorityList("HasLoggedIn"), userMember.getId());
     }
 
-
+    // 新增用户
     @Override
     public Long reg(RegParams regParams) {
         UserMember userMember = userMemberDao.findUserMemberByPhone(regParams.getPhone());
@@ -83,16 +84,19 @@ public class UserMemberServiceImpl implements UserMemberService{
         return userMemberDao.save(userMember).getId();
     }
 
+
+    // 获取列表和搜索的接口对应
     @Override
     public Page<UserMemberVO> list(String keyword, Integer page, Integer size) {
-        List<UserMember> userMembers = userMemberDao.findByUsernameContaining(keyword, PageRequest.of(page - 1, size));
-        List<UserMemberVO> userMemberVOS = new ArrayList<>(userMembers.size());
-        userMembers.forEach(userMember -> {
-            UserMemberVO userMemberVO = new UserMemberVO();
+
+          List<UserMember> phones = userMemberDao.findByPhoneContaining(keyword, PageRequest.of(page - 1, size));
+          List<UserMemberVO> phoneVOS = new ArrayList<>(phones.size());
+          phones.forEach(userMember -> {
+              UserMemberVO userMemberVO = new UserMemberVO();
             BeanUtils.copyProperties(userMember, userMemberVO);
-            userMemberVOS.add(userMemberVO);
+            phoneVOS.add(userMemberVO);
         });
-        return new PageImpl<>(userMemberVOS, PageRequest.of(page - 1, size), userMemberVOS.size());
+        return new PageImpl<>(phoneVOS, PageRequest.of(page - 1, size), phoneVOS.size());
     }
 
     @Override

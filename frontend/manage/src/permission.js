@@ -11,7 +11,7 @@ router.beforeEach((to, from, next) => {
   NProgress.start()
   if (getToken()) {
     if (to.path === '/login') {
-      next({path: '/'})
+      next({path: '/' })
       NProgress.done() // if current page is dashboard will not trigger	afterEach hook, so manually handle it
     } else if (store.getters.addRouters.length === 0) {
       store.dispatch('GenerateRoutes', {permissions: getPermissions()}).then(() => {
