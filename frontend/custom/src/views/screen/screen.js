@@ -22,12 +22,16 @@ export default {
       multiProps: {multiple: true},
       //请求参数
       listQuery: {
-        subject: [],
-        score: undefined,
+        subject: [1, 2, 4],
+        score: 600,
         page: 1,
         limit: 5,
         total: 10,
-        other: undefined,
+        batch: [],
+        region: [],
+        schoolType: [],
+        schoolTeSe: [],
+        schoolXingZhi: [],
         universityName: undefined,
         majorName: undefined,
         type: 0,
@@ -59,14 +63,16 @@ export default {
     this.selectRegion();
     this.selectSchoolType();
     this.selectMajorType();
-    this.getCurrent();
+    //this.getCurrent();
     this.fetchData();
   },
 
   methods: {
     //请求列表数据
     fetchData() {
-      this.handleArray();
+      this.getArrayBatch();
+      this.getArrayRegion();
+      this.getClassification();
       //默认加载全部数据
       if (!this.listQuery.type) {
         this.listQuery.type = 0;
@@ -83,60 +89,57 @@ export default {
         this.listQuery.total = response.data.totalPages;*/
       })
     },
-    handleArray() {
-      //合并数组
-      let allInfo1 = [];
+    getArrayBatch() {
+      if (this.level) {
+        let a = [this.level];
+        this.listQuery.batch = [].concat(a);
+      } else {
+        this.listQuery.batch = []
+      }
+    },
+    getArrayRegion() {
+      let j;
+      let info = this.location;
+      if (this.location) {
+        for (j = 0; j < info.length; j++) {
+          let array = info[j][1];
+          this.listQuery.region.push(array);
+        }
+      } else {
+        this.listQuery.region = [];
+      }
+    },
+    getClassification() {
+      let i;
       let info1 = this.classification;
-      let i, j, z;
-      const newInfo1 = [];
+      const newInfo = [];
       if (this.classification) {
         for (i = 0; i < info1.length; i++) {
           let array1 = info1[i][1];
-          newInfo1.push(array1);
-          allInfo1 = newInfo1;
+          newInfo.push(array1);
         }
-      } else {
-        allInfo1 = [];
       }
-      let info2 = this.majorType;
-      const newInfo2 = [];
-      if (this.majorType) {
-        for (j = 0; j < info2.length; j++) {
-          let array2 = info2[j][1];
-          newInfo2.push(array2);
-          allInfo1 = newInfo2.concat(newInfo1);
-        }
-      } else {
-        allInfo1 = newInfo2;
-      }
-      let allInfo2 = [];
-      let info3 = this.location;
-      const newInfo3 = [];
-      if (this.location) {
-        for (z = 0; z < info3.length; z++) {
-          let array3 = info3[z][1];
-          newInfo3.push(array3);
-          allInfo2 = newInfo3;
-        }
-      } else {
-        allInfo2 = [];
-      }
-      let info4 = [this.level];
-      if (info4) {
-        allInfo2 = newInfo3.concat(info4)
-      } else {
-        allInfo2 = newInfo3;
-      }
-      let data = allInfo2.concat(allInfo1);
-      this.listQuery.other = data.filter(Boolean);
-      console.log("this.listQuery.other");
-      console.log(this.listQuery.other);
+      console.log("newInfo")
+      console.log(newInfo)
+      let feature, character, genre = [];
+      feature = newInfo.filter(function (value) {
+        return value >= 609 && value <= 612
+      });
+      this.listQuery.schoolTeSe = feature;
+      character = newInfo.filter(function (value) {
+        return value >= 616 && value <= 617
+      });
+      this.listQuery.schoolXingZhi = character;
+      genre = newInfo.filter(function (value) {
+        return value >= 619 && value <= 631
+      });
+      this.listQuery.schoolType = genre;
     },
     reset() {
       this.form = {
         universityName: undefined,
         majorName: undefined,
-        volunteerPosition: 1
+        volunteerPosition: undefined
       };
       this.formReset("form");
     },
