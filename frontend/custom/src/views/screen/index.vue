@@ -39,17 +39,18 @@
           filterable
           @change="changeClassify"></el-cascader>
       </el-form-item>
-      <el-form-item label="专业类型" prop="majorType">
-        <el-cascader
-          v-model="majorType"
-          style="width: 240px"
-          :options="majorOptions"
-          :props="multiProps"
-          collapse-tags
-          clearable
-          filterable
-          @change="changeClassify"></el-cascader>
-      </el-form-item>
+      <!-- 爬虫尚未获取数据
+             <el-form-item label="专业类型" prop="majorType">
+              <el-cascader
+                v-model="majorType"
+                style="width: 240px"
+                :options="majorOptions"
+                :props="multiProps"
+                collapse-tags
+                clearable
+                filterable
+                @change="changeClassify"></el-cascader>
+            </el-form-item>-->
       <el-form-item label="搜索大学" prop="universityName">
         <el-input
           v-model="listQuery.universityName"
@@ -92,11 +93,11 @@
       <el-table-column label="录取概率" prop="rate" align="center">
         <template slot-scope="scope">
           <el-tag type="danger" v-if="scope.row.rate<=50"><50%(难录取)</el-tag>
-          <el-tag type="warning" v-if="scope.row.rate>50 && scope.row.rate<=60">{{ scope.row.rate}}%(可冲击)
+          <el-tag type="warning" v-if="scope.row.rate>50 && scope.row.rate<=60">{{ scope.row.rate }}%(可冲击)
           </el-tag>
-          <el-tag type="success" v-if="scope.row.rate>60 && scope.row.rate<=80">{{ scope.row.rate}}%(较稳妥)
+          <el-tag type="success" v-if="scope.row.rate>60 && scope.row.rate<=80">{{ scope.row.rate }}%(较稳妥)
           </el-tag>
-          <el-tag v-if="scope.row.rate>80 && scope.row.rate<=95">{{ scope.row.rate}}%(可保底)</el-tag>
+          <el-tag v-if="scope.row.rate>80 && scope.row.rate<=95">{{ scope.row.rate }}%(可保底)</el-tag>
           <el-tag type="info" v-if="scope.row.rate>95">>95%(浪费分)</el-tag>
         </template>
       </el-table-column>
@@ -153,7 +154,8 @@
         <el-form-item label="志愿序号" prop="volunteerPosition">
           <el-tooltip class="item" effect="light" content="志愿序号：指填报为第几志愿"
                       placement="bottom">
-            <el-input-number v-model="form.volunteerPosition" placeholder="请输入志愿顺序号(1~96)" :min="1" :max="96" style="width: 360px"/>
+            <el-input-number v-model="form.volunteerPosition" placeholder="请输入志愿顺序号(1~96)" :min="1" :max="96"
+                             style="width: 360px"/>
           </el-tooltip>
         </el-form-item>
       </el-form>
