@@ -12,11 +12,11 @@ import java.util.List;
 public interface OrderDao extends PagingAndSortingRepository<Order, Long>  {
     List<Order> findAllByUserId(String userId,Pageable pageable);
 
-    List<Order> findAllByGoodsId(String goodsId,Pageable pageable);
-
     Order findByIdAndGoodsId(Long id, Long shopId);
 
     Page<Order> findAllByStatus(int status, Pageable pageable);
+
+    Order findByOutTradeNo(String outTradeNo);
 
     @Override
     Page<Order> findAll(Pageable pageable);
