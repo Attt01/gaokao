@@ -16,6 +16,9 @@ import com.gaokao.common.meta.po.UserMember;
 import com.gaokao.common.meta.vo.order.*;
 import com.gaokao.common.utils.CreateSignUtils;
 import com.gaokao.common.utils.RandomUtils;
+import com.github.binarywang.wxpay.bean.notify.WxPayNotifyResponse;
+import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyResult;
+import com.github.binarywang.wxpay.bean.notify.WxPayRefundNotifyResult;
 import com.github.binarywang.wxpay.bean.request.WxPayOrderCloseRequest;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
 import com.github.binarywang.wxpay.bean.result.WxPayOrderCloseResult;
@@ -171,7 +174,32 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public String wxPayNotify(String content) {
-        return null;
+        try {
+            WxPayOrderNotifyResult notifyResult = this.wxService.parseOrderNotifyResult(content);
+            String outTradeNo = notifyResult.getOutTradeNo();
+            Order order = orderDao.findByOutTradeNo(outTradeNo);
+            if (order == null) {
+                throw new BusinessException("订单不存在");
+            }
+            if (order.getStatus() != OrderStatus.READY_FOR_PAY.getValue()) {
+                throw new BusinessException("订单状态不对");
+            }
+            order.setStatus(OrderStatus.PAID_SUCCESS.getValue());
+            orderDao.save(order);
+
+            OrderPay orderPay = orderPayDao.findByOrderId(order.getId());
+            if (orderPay == null) {
+                throw new BusinessException("订单不存在");
+            }
+            if (orderPay.getStatus() != OrderStatus.READY_FOR_PAY.getValue()) {
+                throw new BusinessException("订单状态不对");
+            }
+            orderPay.setStatus(OrderStatus.PAID_SUCCESS.getValue());
+            orderPayDao.save(orderPay);
+        } catch (Exception e) {
+            throw new BusinessException("回调失败:", e);
+        }
+        return WxPayNotifyResponse.success("成功");
     }
 
     @Override
@@ -249,7 +277,42 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public String refundCallback(String content) {
-        return null;
+        try {
+            WxPayRefundNotifyResult notifyResult = this.wxService.parseRefundNotifyResult(content);
+            String outTradeNo = notifyResult.getReqInfo().getOutTradeNo();
+            Order order = orderDao.findByOutTradeNo(outTradeNo);
+            if (order == null) {
+                throw new BusinessException("订单不存在");
+            }
+            if (order.getStatus() != OrderStatus.REFUND_WAITING_NOTIFY.getValue()) {
+                throw new BusinessException("订单状态不对");
+            }
+            order.setStatus(OrderStatus.REFUND_SUCCESS.getValue());
+            orderDao.save(order);
+
+            OrderPay orderPay = orderPayDao.findByOrderId(order.getId());
+            if (orderPay == null) {
+                throw new BusinessException("订单不存在");
+            }
+            if (orderPay.getStatus() != OrderStatus.REFUND_WAITING_NOTIFY.getValue()) {
+                throw new BusinessException("订单状态不对");
+            }
+            orderPay.setStatus(OrderStatus.REFUND_SUCCESS.getValue());
+            orderPayDao.save(orderPay);
+
+            OrderRefund orderRefund = orderRefundDao.findByOrderId(order.getId());
+            if (orderRefund == null) {
+                throw new BusinessException("订单不存在");
+            }
+            if (orderRefund.getStatus() != OrderStatus.REFUND_WAITING_NOTIFY.getValue()) {
+                throw new BusinessException("订单状态不对");
+            }
+            orderRefund.setStatus(OrderStatus.REFUND_SUCCESS.getValue());
+            orderRefundDao.save(orderRefund);
+        } catch (Exception e) {
+            throw new BusinessException("微信退款回调失败:", e);
+        }
+        return "SUCCESS";
     }
 
     @Override

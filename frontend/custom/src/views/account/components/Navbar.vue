@@ -66,7 +66,7 @@ export default {
       // const { nickname, phone } = JSON.parse(getUserInfo());
       // this.userName = nickname === "" ? phone : nickname;
       getInfo().then(res => {
-        this.userName = res.data.username
+        this.userName = res.data.nickname
       })
     },
   }

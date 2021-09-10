@@ -22,7 +22,7 @@ public class UserFormAllVO {
 
     private Integer score;
 
-    private List<String> subject;
+    private List<Long> subject;
 
     private Boolean generatedType;
 
