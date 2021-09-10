@@ -21,6 +21,19 @@
             >
             </el-input>
           </el-form-item>
+          <el-form-item label="选考科目" prop="subject">
+            <el-checkbox-group
+              v-model="userInfo.subject"
+              :max="3"
+            >
+              <el-checkbox label="1">物理</el-checkbox>
+              <el-checkbox label="2">化学</el-checkbox>
+              <el-checkbox label="3">生物</el-checkbox>
+              <el-checkbox label="4">历史</el-checkbox>
+              <el-checkbox label="5">地理</el-checkbox>
+              <el-checkbox label="6">政治</el-checkbox>
+            </el-checkbox-group>
+          </el-form-item>
           <el-form-item label="高考排名" prop="provinceRank">
             <el-input
               v-model.number="userInfo.provinceRank"
@@ -34,19 +47,6 @@
                 </el-button>
               </i>
             </el-input>
-          </el-form-item>
-          <el-form-item label="选考科目" prop="subject">
-            <el-checkbox-group
-              v-model="userInfo.subject"
-              :max="3"
-            >
-              <el-checkbox label="1">物理</el-checkbox>
-              <el-checkbox label="2">化学</el-checkbox>
-              <el-checkbox label="3">生物</el-checkbox>
-              <el-checkbox label="4">历史</el-checkbox>
-              <el-checkbox label="5">地理</el-checkbox>
-              <el-checkbox label="6">政治</el-checkbox>
-            </el-checkbox-group>
           </el-form-item>
           <el-form-item>
             <div style="float: right;">

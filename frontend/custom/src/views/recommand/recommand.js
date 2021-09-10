@@ -2,14 +2,18 @@ import {getBatch, getMajorType, getRegion, getSchoolType} from "../../api/screen
 
 export default {
   data() {
-    // const validatePlan = (rule, value, callback) => {
-    //   alert("qwq");
-    //   if (this.plan.num[0] + this.plan.num[1] + this.plan.num[2] != 96) {
-    //     callback(new Error('三个志愿总和应该是96'));
-    //   } else {
-    //     callback();
-    //   }
-    // }
+    const validatePlan = (rule, value, callback) => {
+      let sum = 0;
+      this.plan.forEach(num => {
+        sum += parseInt(num);
+      });
+      console.log(sum);
+      if (sum != 96) {
+        callback(new Error('三个志愿总和应该是96'));
+      } else {
+        callback();
+      }
+    };
     return {
       userInfo: {
         score: 0,
@@ -17,7 +21,6 @@ export default {
         provinceRank: 0
       },
       form: {
-        userInfoStr: undefined,
         major: [],
         school: [],
         batch: undefined,
@@ -29,13 +32,11 @@ export default {
       majorOptions: [],
       locationOptions: [],
       classifyOptions: [],
-      plan: {
-        num: []
-      },
+      plan: [],
       isAutoRecommand: true,
-      // valiRules: {
-      //   plan: [{ validator: validatePlan, trigger: 'blur' }]
-      // }
+      validateRules: {
+        plan: [{ validator: validatePlan, trigger: 'blur' }]
+      }
     }
   },
   methods: {
@@ -49,13 +50,13 @@ export default {
       this.selectMajorType();
     },
     onSubmit() {
-      // this.$refs['favorite'].validate((valid) => {
-      //   if (valid) {
-      //     alert('submit!');
-      //   } else {
-      //     return false;
-      //   }
-      // })
+      this.$refs['form'].validate((isValid) => {
+        if (isValid) {
+          alert('submit!');
+        } else {
+          return false;
+        }
+      })
     },
     selectBatch() {
       getBatch().then(response => {
