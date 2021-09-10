@@ -448,9 +448,9 @@ public class AdviseServiceImpl implements AdviseService{
         BeanUtils.copyProperties(userForm, userFormDetailVO);
         userFormDetailVO.setVolunteerList(volunteerVOList);
         userFormDetailVO.setScore(autoGenerateFormParams.getScore());
-        List<String> subject = new ArrayList<>();
+        List<Long> subject = new ArrayList<>();
         for(int i = 0; i < userForm.getSubject().length(); i += 2){
-            subject.add(Subject.getDescByCode(Integer.parseInt(userForm.getSubject().substring(i, i + 1))));
+            subject.add(Long.valueOf(Integer.parseInt(userForm.getSubject().substring(i, i + 1))));
         }
         userFormDetailVO.setSubject(subject);
         return userFormDetailVO;

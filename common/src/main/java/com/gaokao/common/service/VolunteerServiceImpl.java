@@ -134,22 +134,11 @@ public class VolunteerServiceImpl implements VolunteerService{
         return userFormDao.save(UserForm).getId();
     }
 
-    public List<String> convertSubjectInformation(String subject) {
+    public List<Long> convertSubjectInformation(String subject) {
 
         List<Long> list = JSON.parseArray(subject, Long.class);
 
-        List<String> subjectList = new ArrayList<>(list.size());
-
-        list.forEach((item) -> {
-            if(item == Subject.PHYSICS.getCode())  subjectList.add(Subject.PHYSICS.getDesc());
-            else if(item == Subject.CHEMISTRY.getCode()) subjectList.add(Subject.CHEMISTRY.getDesc());
-            else if(item == Subject.BIOLOGY.getCode()) subjectList.add(Subject.BIOLOGY.getDesc());
-            else if(item == Subject.HISTORY.getCode()) subjectList.add(Subject.HISTORY.getDesc());
-            else if(item == Subject.GEOGRAPHY.getCode()) subjectList.add(Subject.GEOGRAPHY.getDesc()) ;
-            else if(item == Subject.POLITICS.getCode()) subjectList.add(Subject.POLITICS.getDesc());
-        });
-
-        return subjectList;
+        return list;
 
     }
 
@@ -158,7 +147,7 @@ public class VolunteerServiceImpl implements VolunteerService{
         UserFormAllVO userFormAllVO = new UserFormAllVO();
         BeanUtils.copyProperties(userForm, userFormAllVO);
 
-        List<String> subjectList = convertSubjectInformation(userForm.getSubject());
+        List<Long> subjectList = convertSubjectInformation(userForm.getSubject());
 
         userFormAllVO.setSubject(subjectList);
 
