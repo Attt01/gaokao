@@ -96,10 +96,10 @@ export default {
     userInfoStr() {
       const subjects = ['', '物理', '化学', '生物', '历史', '地理', '政治']
       if (this.userInfo.score) {
-        let subs = this.userInfo.subject;
+        let subs = this.userInfo.subject
         return '高考分数: ' + this.userInfo.score
           + ' / 排名: ' + this.userInfo.provinceRank
-          + ' / 选科: ' + subjects[subs[0]] + ' ' + subjects[subs[1]] + ' ' + subjects[subs[2]];
+          + ' / 选科: ' + subjects[subs[0]] + ' ' + subjects[subs[1]] + ' ' + subjects[subs[2]]
       }
     }
   },

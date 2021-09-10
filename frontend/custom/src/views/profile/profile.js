@@ -32,7 +32,7 @@ export default {
         this.user.vipIsOrNot = res.data._vip
         this.user.nickname = res.data.nickname
         this.user.score = res.data.score
-        this.user.provinceRank = res.data.province_rank
+        this.user.provinceRank = res.data.provinceRank
         res.data.subject.forEach((value, index) => {
           this.user.subject[index] = SUBJECT_TYPE[value - 1]
           // console.log('subject:' + this.user.subject[index])
