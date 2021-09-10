@@ -31,13 +31,6 @@ export default {
           callback();
         }
       }
-      
-      // else if (value.length !== 11) {
-      //   //是不是要拿正则验证手机号qwq?
-      //   callback(new Error('请输入正确的手机号'));
-      // } else {
-      //   callback();
-      // }
     }
     return {
       regForm: {
@@ -119,7 +112,6 @@ export default {
           return false;
         }
       })
-      
     }
   },
   computed: {

@@ -89,7 +89,7 @@
                  @click.native.prevent="handleRegister"> 注册
       </el-button>
     </el-form>
-    <user-info-dialog></user-info-dialog>
+    <user-info-dialog @refresh="initData"></user-info-dialog>
   </div>
 </template>
 

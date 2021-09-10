@@ -99,14 +99,18 @@ export default {
           //console.log('submit!');
           //console.log(userInfo);
           localStorage.setItem('userGaoKaoInfo', JSON.stringify(userInfo));
-          console.log(localStorage.getItem('userGaoKaoInfo'));
+          //console.log(localStorage.getItem('userGaoKaoInfo'));
           store.commit('SHOW_DIALOG', false);
-          this.$router.replace({
-            path: '/refresh',
-            query: {
-              path: this.$route.path
-            }
-          });
+          if (this.$route.path == '/recommand') {
+            this.$router.replace({
+              path: '/refresh',
+              query: {
+                path: this.$route.path
+              }
+            });
+          } else {
+            this.$emit('refresh');
+          }
         } else {
           //console.log('error submit!!');
           return false;
