@@ -33,13 +33,23 @@
         <el-form class="form1"  label-width="80px">
           <h4>基本信息</h4>
           <el-form-item label="高考分数">
-            <span>{{ user.score }}</span>
+            <el-input v-if="!user.vipIsOrNot && edit" v-model="user.score" ref="score"></el-input>
+            <span v-else>{{ user.score }}</span>
           </el-form-item>
           <el-form-item label="排名预测">
-            <span>{{ user.provinceRank }}</span>
+            <el-input v-if="!user.vipIsOrNot && edit" v-model="user.provinceRank" ref="provinceRank"></el-input>
+            <span v-else>{{ user.provinceRank }}</span>
           </el-form-item>
           <el-form-item label="选课">
-            <span>{{ user.subject[0] }},{{user.subject[1]}},{{user.subject[2]}}</span>
+            <el-checkbox-group v-model="subjectList"  v-if="!user.vipIsOrNot && edit" :max="3">
+              <el-checkbox label="1" v-model="subject">物理</el-checkbox>
+              <el-checkbox label="2" v-model="subject">化学</el-checkbox>
+              <el-checkbox label="3" v-model="subject">生物</el-checkbox>
+              <el-checkbox label="4" v-model="subject">历史</el-checkbox>
+              <el-checkbox label="5" v-model="subject">地理</el-checkbox>
+              <el-checkbox label="6" v-model="subject">政治</el-checkbox>
+            </el-checkbox-group>
+            <span v-else>{{ user.subject[0] }}{{user.subject[1]}},{{ user.subject[2] }}{{user.subject[3]}},{{ user.subject[4] }}{{user.subject[5]}}</span>
           </el-form-item>
         </el-form>
         <el-divider></el-divider>
