@@ -74,4 +74,9 @@ public class OrderController {
         result.setMsg("取消成功");
         return result;
     }
+
+    @PostMapping("/wxPayNotify")
+    public String wxPayNotify(@RequestBody String xmlData) {
+        return orderService.wxPayNotify(xmlData);
+    }
 }
