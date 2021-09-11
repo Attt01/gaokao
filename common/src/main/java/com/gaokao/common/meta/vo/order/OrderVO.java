@@ -14,9 +14,9 @@ public class OrderVO {
 
     private Long goodsId;
 
-    private Integer totalPrice;
+    private String totalPrice;
 
-    private Integer realPrice;
+    private String realPrice;
 
     private Long createTime;
 

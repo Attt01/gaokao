@@ -15,6 +15,7 @@ import com.gaokao.common.meta.po.OrderRefund;
 import com.gaokao.common.meta.po.UserMember;
 import com.gaokao.common.meta.vo.order.*;
 import com.gaokao.common.utils.CreateSignUtils;
+import com.gaokao.common.utils.NumberUtils;
 import com.gaokao.common.utils.RandomUtils;
 import com.github.binarywang.wxpay.bean.notify.WxPayNotifyResponse;
 import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyResult;
@@ -26,13 +27,12 @@ import com.github.binarywang.wxpay.bean.result.WxPayUnifiedOrderResult;
 import com.github.binarywang.wxpay.constant.WxPayConstants;
 import com.github.binarywang.wxpay.service.WxPayService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -348,7 +348,15 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderVO getByOrderId(Long id, Long userId) {
-        return null;
+        Order order = orderDao.findById(id).orElse(null);
+        if (order == null || !order.getUserId().equals(userId)) {
+            throw new BusinessException("该订单不存在");
+        }
+        OrderVO orderVO = new OrderVO();
+        BeanUtils.copyProperties(order, orderVO);
+        orderVO.setRealPrice(NumberUtils.priceFormatToYuan(order.getRealPrice()));
+        orderVO.setTotalPrice(NumberUtils.priceFormatToYuan(order.getTotalPrice()));
+        return orderVO;
     }
 
     @Override
