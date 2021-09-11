@@ -353,7 +353,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Long allOrderNum() {
-        return null;
+       return orderDao.count();
     }
 
     @Override
