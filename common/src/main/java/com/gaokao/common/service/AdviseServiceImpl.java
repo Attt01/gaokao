@@ -450,6 +450,15 @@ public class AdviseServiceImpl implements AdviseService{
         List<AdviseVO> chongList = map.get("可冲击");
         List<AdviseVO> wenList = map.get("较稳妥");
         List<AdviseVO> baoList = map.get("可保底");
+        if(chongList == null){
+            chongList = new ArrayList<>();
+        }
+        if(wenList == null){
+            wenList = new ArrayList<>();
+        }
+        if(baoList == null){
+            baoList = new ArrayList<>();
+        }
         List<VolunteerVO> volunteerVOList = new ArrayList<>();
         if(chongList.size() > autoGenerateFormParams.getChongRate() && baoList.size() > autoGenerateFormParams.getBaoRate()
             && wenList.size() > autoGenerateFormParams.getWenRate()){
@@ -462,6 +471,9 @@ public class AdviseServiceImpl implements AdviseService{
             for(int i = 0; i < autoGenerateFormParams.getBaoRate(); i++){
                 volunteerVOList.add(baoList.get(i).getVolunteerVO());
             }
+        }
+        else if(chongList.size() + wenList.size() + baoList.size() >= 96){
+
         }
         List<FormVolunteer> formVolunteerList = new ArrayList<>();
         for(int i = 0; i < 96; i++){
