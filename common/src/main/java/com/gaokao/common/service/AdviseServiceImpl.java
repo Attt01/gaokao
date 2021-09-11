@@ -450,6 +450,8 @@ public class AdviseServiceImpl implements AdviseService{
         List<AdviseVO> chongList = map.get("可冲击");
         List<AdviseVO> wenList = map.get("较稳妥");
         List<AdviseVO> baoList = map.get("可保底");
+        List<AdviseVO> hardList = map.get("难录取");
+        List<AdviseVO> wasteList = map.get("浪费分");
         if(chongList == null){
             chongList = new ArrayList<>();
         }
@@ -459,7 +461,17 @@ public class AdviseServiceImpl implements AdviseService{
         if(baoList == null){
             baoList = new ArrayList<>();
         }
+        if(hardList == null){
+            hardList = new ArrayList<>();
+        }
+        if(wasteList == null){
+            wasteList = new ArrayList<>();
+        }
         List<VolunteerVO> volunteerVOList = new ArrayList<>();
+        //接下来构造96个志愿的列表，共分为四种情况
+        /*
+        * 第一种情况，筛选后的冲、稳、保数量均足够。
+        * */
         if(chongList.size() > autoGenerateFormParams.getChongRate() && baoList.size() > autoGenerateFormParams.getBaoRate()
             && wenList.size() > autoGenerateFormParams.getWenRate()){
             for(int i = 0; i < autoGenerateFormParams.getChongRate(); i++){
@@ -472,8 +484,129 @@ public class AdviseServiceImpl implements AdviseService{
                 volunteerVOList.add(baoList.get(i).getVolunteerVO());
             }
         }
+        /*
+        * 第二种情况：筛选后冲、稳、保某一个或两个数量不够，但三者总数够96个。
+        * 处理方案为：先按照筛选后的向志愿表中添加，然后用数量多的list去填够96个，优先顺序为保、稳、冲
+        * */
         else if(chongList.size() + wenList.size() + baoList.size() >= 96){
+            int c = 0, w = 0, b = 0;
+            boolean isFull = false;
+            for(c = 0; c < chongList.size() && c < autoGenerateFormParams.getChongRate(); c++){
+                volunteerVOList.add(chongList.get(c).getVolunteerVO());
+            }
+            for(w = 0; w < wenList.size() && w < autoGenerateFormParams.getWenRate(); w++){
+                volunteerVOList.add(wenList.get(w).getVolunteerVO());
+            }
+            for(b = 0; b < baoList.size() && b < autoGenerateFormParams.getBaoRate(); b++){
+                volunteerVOList.add(baoList.get(b).getVolunteerVO());
+            }
+            if(b < baoList.size()){
+                for(b = b; b < baoList.size(); b++){
+                    volunteerVOList.add(baoList.get(b).getVolunteerVO());
+                    if(volunteerVOList.size() == 96){
+                        isFull = true;
+                        break;
+                    }
+                }
+            }
+            if(!isFull && w < wenList.size()){
+                for(w = w; w < wenList.size(); w++){
+                    volunteerVOList.add(c + b, wenList.get(w).getVolunteerVO());
+                    if(volunteerVOList.size() == 96){
+                        isFull = true;
+                        break;
+                    }
+                }
+            }
+            if(!isFull && c < chongList.size()){
+                for(c = c; c < chongList.size(); c++){
+                    volunteerVOList.add(c, chongList.get(c).getVolunteerVO());
+                    if(volunteerVOList.size() == 96){
+                        isFull = true;
+                        break;
+                    }
+                }
+            }
 
+        }
+        /*
+        * 第三种情况：筛选后冲、稳、保总数不够96个但加上浪费分和难录取的数量够96个。
+        * 处理方案为：先用筛选后的浪费分的志愿当作保底的去补充，数量还不够则用筛选后的难录取的志愿当作冲击的志愿去补充。
+        * */
+        else if(chongList.size() + wenList.size() + baoList.size() + hardList.size() + wasteList.size() >= 96){
+            boolean isFull = false;
+            for(int i = 0; i < chongList.size(); i++){
+                volunteerVOList.add(chongList.get(i).getVolunteerVO());
+            }
+            for(int i = 0; i < wenList.size(); i++){
+                volunteerVOList.add(wenList.get(i).getVolunteerVO());
+            }
+            for(int i = 0; i < baoList.size(); i++){
+                volunteerVOList.add(baoList.get(i).getVolunteerVO());
+            }
+            for(int i = 0; i < wasteList.size(); i++){
+                volunteerVOList.add(wasteList.get(i).getVolunteerVO());
+                if(volunteerVOList.size() == 96){
+                    isFull = true;
+                    break;
+                }
+            }
+            if(!isFull){
+                for(int i = 0; i < hardList.size(); i++){
+                    volunteerVOList.add(0, hardList.get(i).getVolunteerVO());
+                    if(volunteerVOList.size() == 96){
+                        isFull = true;
+                        break;
+                    }
+                }
+            }
+        }
+        /*
+        * 第四种情况：筛选后的 冲、稳、保、浪费分、难录取加起来总数还不够96个。
+        * 处理方案为：先将满足筛选条件的加入进去，然后清空筛选条件重新获得志愿的list，补充至96个。
+        * */
+        else{
+            for(int i = 0; i < hardList.size(); i++){
+                volunteerVOList.add(hardList.get(i).getVolunteerVO());
+            }
+            for(int i = 0; i < chongList.size(); i++){
+                volunteerVOList.add(chongList.get(i).getVolunteerVO());
+            }
+            for(int i = 0; i < wenList.size(); i++){
+                volunteerVOList.add(wenList.get(i).getVolunteerVO());
+            }
+            for(int i = 0; i < baoList.size(); i++){
+                volunteerVOList.add(baoList.get(i).getVolunteerVO());
+            }
+            for(int i = 0; i < wasteList.size(); i++){
+                volunteerVOList.add(wasteList.get(i).getVolunteerVO());
+            }
+
+            List<Integer> integerList = new ArrayList<>();
+            FilterParams filterParams = new FilterParams();
+            filterParams.setBatch(integerList);
+            filterParams.setRegion(integerList);
+            filterParams.setSchoolTeSe(integerList);
+            filterParams.setSchoolType(integerList);
+            filterParams.setSchoolXingZhi(integerList);
+            filterParams.setType(0);
+            filterParams.setScore(autoGenerateFormParams.getScore());
+            filterParams.setSubject(autoGenerateFormParams.getSubject());
+            filterParams.setLimit(autoGenerateFormParams.getLimit());
+            filterParams.setPage(autoGenerateFormParams.getPage());
+            filterParams.setTotal(autoGenerateFormParams.getTotal());
+
+            List<AdviseVO> adviseVOList1 = list(filterParams).getContent();
+            Integer i = 0;
+            while(true){
+                if(!volunteerVOList.contains(adviseVOList1.get(i).getVolunteerVO())){
+                    volunteerVOList.add(adviseVOList1.get(i).getVolunteerVO());
+                }
+                i ++;
+                if(volunteerVOList.size() == 96){
+                    break;
+                }
+            }
         }
         List<FormVolunteer> formVolunteerList = new ArrayList<>();
         for(int i = 0; i < 96; i++){
