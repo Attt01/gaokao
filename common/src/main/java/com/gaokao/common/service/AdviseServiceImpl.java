@@ -48,8 +48,6 @@ public class AdviseServiceImpl implements AdviseService{
 
     private static Map<String, List<FilterData>> filterDataS = new HashMap<>();
 
-    private Map<String, Boolean> conditionsMap = new HashMap<>();
-
     @Override
     public Integer getUserRank(Integer score){
         Integer totalNums = scoreRankDao.findTotalNumsByScore(score);
@@ -64,7 +62,6 @@ public class AdviseServiceImpl implements AdviseService{
         return totalNums;
     }
 
-    @Override
     public Integer getRate(Integer rank, Integer guess){
         Integer dif = Math.abs(rank - guess);
         Integer rate = 0;
@@ -87,102 +84,7 @@ public class AdviseServiceImpl implements AdviseService{
         return rate;
     }
 
-    private Integer findCommon(List<Integer> m, List<Integer> n){
-        Integer res = 0;
-        for(int i = 0; i < m.size(); i++){
-            for (int j = 0; j < n.size(); j++){
-                if(m.get(i) == n.get(j)){
-                    res ++;
-                }
-            }
-        }
-        return res;
-    }
-
-    @Override
-    public boolean filter(FilterParams filterParams, VolunteerVO volunteerVO){
-
-
-        //首先判断选课是否符合
-        List<Integer> voluntSubject = volunteerVO.getSubjectRestrictionDetail();
-        List<Integer> subject = filterParams.getSubject();
-        Integer commom = findCommon(voluntSubject, subject);
-        switch(volunteerVO.getSubjectRestrictionType()){
-            case 0:
-                break;
-            case 1:
-                if(commom == 1){
-                    break;
-                }
-                else {
-                    return false;
-                }
-            case 2:
-                if(commom == 2){
-                    break;
-                }
-                else {
-                    return false;
-                }
-            case 3:
-                if(commom == 3){
-                    break;
-                }
-                else {
-                    return false;
-                }
-            case 4:
-                if(commom >= 1){
-                    break;
-                }
-                else{
-                    return false;
-                }
-            case 5:
-                if(commom >= 1){
-                    break;
-                }
-                else {
-                    return false;
-                }
-            case 6:
-                if(commom >= 2){
-                    break;
-                }
-                else {
-                    return false;
-                }
-        }
-
-        /*
-           接下来判断录取批次、地区、大学类型、专业类型是否符合条件
-                必须同时满足才可以返回true，只要一个不满足就返回false。
-        */
-
-
-
-        Integer section;
-        if(volunteerVO.getVolunteerSection()){
-            section = 1;
-        }
-        else {
-            section = 2;
-        }
-        if(!conditionsMap.containsKey(section + "")){
-            return false;
-        }
-
-        String city = volunteerVO.getCity();
-        if(!conditionsMap.containsKey(city)){
-            return false;
-        }
-
-
-        return true;
-
-    }
-
-    private void start(FilterParams filterParams){
+    private Map<String, Boolean> start(FilterParams filterParams){
         if(volunteerVOList == null){
             List<Volunteer> volunteerList = adviseDao.getAllVolunteer();
             List<VolunteerVO> volunteerVOS = new ArrayList<>();
@@ -236,6 +138,8 @@ public class AdviseServiceImpl implements AdviseService{
             }
         }
 
+        //接下来构造存储过滤条件的map
+        Map<String, Boolean> conditionsMap = new HashMap<>();
         if(filterParams.getBatch().size() == 0){
             conditionsMap.put("1",true);
             conditionsMap.put("2",true);
@@ -265,7 +169,7 @@ public class AdviseServiceImpl implements AdviseService{
                 }
             }
         }else{
-            for(int i = 1; i < filterParams.getRegion().size(); i++){
+            for(int i = 0; i < filterParams.getRegion().size(); i++){
                 FilterData filterData = filterDataDao.getOneById(filterParams.getRegion().get(i));
                 String label = filterData.getLabel();
                 Integer j = label.indexOf("市");
@@ -287,7 +191,7 @@ public class AdviseServiceImpl implements AdviseService{
             }
         }else{
             for(int i = 0; i < filterParams.getSchoolTeSe().size(); i++){
-                FilterData filterData = filterDataDao.getOneById(filterParams.getRegion().get(i));
+                FilterData filterData = filterDataDao.getOneById(filterParams.getSchoolTeSe().get(i));
                 String label = filterData.getLabel();
                 conditionsMap.put(label, true);
             }
@@ -301,7 +205,7 @@ public class AdviseServiceImpl implements AdviseService{
             }
         }else{
             for(int i = 0; i < filterParams.getSchoolXingZhi().size(); i++){
-                FilterData filterData = filterDataDao.getOneById(filterParams.getRegion().get(i));
+                FilterData filterData = filterDataDao.getOneById(filterParams.getSchoolXingZhi().get(i));
                 String label = filterData.getLabel();
                 conditionsMap.put(label, true);
             }
@@ -315,26 +219,154 @@ public class AdviseServiceImpl implements AdviseService{
             }
         }else{
             for(int i = 0; i < filterParams.getSchoolType().size(); i++){
-                FilterData filterData = filterDataDao.getOneById(filterParams.getRegion().get(i));
+                FilterData filterData = filterDataDao.getOneById(filterParams.getSchoolType().get(i));
                 String label = filterData.getLabel();
                 conditionsMap.put(label, true);
             }
         }
+        return conditionsMap;
+    }
+
+
+
+    private Integer findCommon(List<Integer> m, List<Integer> n){
+        Integer res = 0;
+        for(int i = 0; i < m.size(); i++){
+            for (int j = 0; j < n.size(); j++){
+                if(m.get(i) == n.get(j)){
+                    res ++;
+                }
+            }
+        }
+        return res;
+    }
+
+    public boolean filter(FilterParams filterParams, Map<String, Boolean> conditionsMap, VolunteerVO volunteerVO){
+
+        //首先判断选课是否符合
+        List<Integer> voluntSubject = volunteerVO.getSubjectRestrictionDetail();
+        List<Integer> subject = filterParams.getSubject();
+        Integer commom = findCommon(voluntSubject, subject);
+        switch(volunteerVO.getSubjectRestrictionType()){
+            case 0:
+                break;
+            case 1:
+                if(commom == 1){
+                    break;
+                }
+                else {
+                    return false;
+                }
+            case 2:
+                if(commom == 2){
+                    break;
+                }
+                else {
+                    return false;
+                }
+            case 3:
+                if(commom == 3){
+                    break;
+                }
+                else {
+                    return false;
+                }
+            case 4:
+                if(commom >= 1){
+                    break;
+                }
+                else{
+                    return false;
+                }
+            case 5:
+                if(commom >= 1){
+                    break;
+                }
+                else {
+                    return false;
+                }
+            case 6:
+                if(commom >= 2){
+                    break;
+                }
+                else {
+                    return false;
+                }
+        }
+
+        /*
+           接下来判断录取批次、地区、大学特色、办学性质、大学类型等是否符合条件
+                必须同时满足才可以返回true，只要一个不满足就返回false。
+        */
+
+        //判断录取批次是否符合
+        Integer section;
+        if(volunteerVO.getVolunteerSection()){
+            section = 1;
+        }
+        else {
+            section = 2;
+        }
+        if(!conditionsMap.containsKey(section + "")){
+            return false;
+        }
+
+        //判断地区是否符合
+        String city = volunteerVO.getCity();
+        if(!conditionsMap.containsKey(city)){
+            return false;
+        }
+
+        //判断大学特色（985、211、本科、专科）是否符合
+        if(conditionsMap.containsKey("985") && conditionsMap.containsKey("211") && conditionsMap.containsKey("本科") && conditionsMap.containsKey("专科")){
+
+        }else{
+            if(conditionsMap.containsKey("985") && !volunteerVO.getIs985()){
+                return false;
+            }
+            if(conditionsMap.containsKey("211") && !volunteerVO.getIs211()){
+
+                return false;
+            }
+            if(conditionsMap.containsKey("本科") && !volunteerVO.getUndergraduateSchoolIsOrNot()){
+                return false;
+            }
+            if(conditionsMap.containsKey("专科") && !volunteerVO.getJuniorSchoolIsOrNot()){
+                return false;
+            }
+        }
+
+        //判断办学性质（公办、民办）是否符合
+        if(conditionsMap.containsKey("公办") && conditionsMap.containsKey("民办")){
+
+        }else{
+            if(conditionsMap.containsKey("公办") && volunteerVO.getPrivateIsOrNot()){
+                return false;
+            }
+            if(conditionsMap.containsKey("民办") && volunteerVO.getPublicIsOrNot()){
+                return false;
+            }
+        }
+
+        //判读大学类型是否符合
+        String category = volunteerVO.getCategory();
+        if(!conditionsMap.containsKey(category)){
+            return false;
+        }
+
+        return true;
 
     }
 
 
-    @Override
     public List<AdviseVO> listAll(FilterParams filterParams){
         List<AdviseVO> adviseVOList = new ArrayList<>();
 
-        start(filterParams);
-
-        System.out.println(conditionsMap);
+        Map<String, Boolean> conditionsMap = start(filterParams);
 
         Integer rank = getUserRank(filterParams.getScore());
         volunteerVOList.forEach(volunteerVO -> {
-            if(filter(filterParams, volunteerVO)){
+            if(filter(filterParams, conditionsMap,volunteerVO)){
                 Integer rate = getRate(rank, volunteerVO.getPosition());
                 String rateDesc = "";
                 if(rate <= 50)
@@ -455,6 +487,5 @@ public class AdviseServiceImpl implements AdviseService{
         userFormDetailVO.setSubject(subject);
         return userFormDetailVO;
     }
-    
 
 }
