@@ -28,7 +28,6 @@ export default {
   methods: {
     init() {
       getInfo().then(res => {
-        console.log(res.data)
         this.user.id = res.data.id
         this.user.username = res.data.username
         this.user.phone = res.data.phone
@@ -38,13 +37,10 @@ export default {
         this.user.provinceRank = res.data.provinceRank
         res.data.subject.forEach((value) => {
           this.user.subject = this.user.subject + SUBJECT_TYPE[value - 1]
-          // console.log('subject:' + this.user.subject)
+          this.subjectList.push(value.toString())
         })
-        // this.user.subject = res.data.subject
         this.user.email = res.data.email
-        // console.log(res.data)
       })
-      // console.log(this.user)
     },
     handleClick(tab, event) {
       this.$router.push({path: '/account/' + tab.name})
@@ -78,6 +74,7 @@ export default {
           })
           return
         }
+        console.log(this.subjectList)
         this.edit = !this.edit
         if (!this.user.vipIsOrNot) {
           this.subject = '['
@@ -88,8 +85,6 @@ export default {
             }
           }
           this.subject = this.subject + ']'
-          // console.log(this.subjectList)
-          // console.log(this.subject)
         }
         const params = {
           id: this.user.id,
