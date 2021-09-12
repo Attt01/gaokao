@@ -22,11 +22,11 @@ export default {
       multiProps: {multiple: true},
       //请求参数
       listQuery: {
-        subject: [1, 2, 4],
+        subject: [1, 2, 3],
         score: 600,
         page: 1,
         limit: 5,
-        total: 10,
+        total: 0,
         batch: [],
         region: [],
         schoolType: [],
@@ -36,7 +36,7 @@ export default {
         majorName: undefined,
         type: 0,
       },
-      level: undefined,
+      level: 8,
       location: undefined,
       classification: undefined,
       majorType: undefined,
@@ -44,6 +44,11 @@ export default {
       locationOptions: [],
       majorOptions: [],
       classifyOptions: [],
+      responseList:
+        {
+          rate: undefined,
+          volunteerVO: {}
+        },
       //表单参数
       form: {
         formId: undefined,
@@ -77,16 +82,39 @@ export default {
       if (!this.listQuery.type) {
         this.listQuery.type = 0;
       }
-      this.volunteerList = [{
-        "rate": "0.05", "name": "A大学",
-        "professionalName": "计科", "lowestScore": "67",
-        "lowestPosition": "90", "enrollment": "95"
-      }];
-      //获取列表
+      console.log("this.listQuery.type")
+      console.log(this.listQuery.type)
       getVOList(this.listQuery).then(response => {
         this.loading = false;
-        /*this.total = response.data.totalElements;
-        this.listQuery.total = response.data.totalPages;*/
+        this.responseList = [];
+        this.responseList = response.data.content;
+        this.volunteerList = [];
+        this.responseList.forEach(item => {
+          this.volunteerList.push({
+            "rate": item.rate,
+            "name": item.volunteerVO.name,
+            "province": item.volunteerVO.province,
+            "lowestScore": item.volunteerVO.lowestScore,
+            "lowestPosition": item.volunteerVO.lowestPosition,
+            "professionalName": item.volunteerVO.professionalName,
+            "category": item.volunteerVO.category,
+            "enrollment": item.volunteerVO.enrollment,
+            "time": item.volunteerVO.time,
+            "fee": item.volunteerVO.fee,
+            "universityCode": item.volunteerVO.universityCode,
+            "privateIsOrNot": item.volunteerVO.privateIsOrNot,
+            "publicIsOrNot": item.volunteerVO.publicIsOrNot,
+            "majorCode": item.volunteerVO.majorCode,
+            "subjectRestrictionType": item.volunteerVO.subjectRestrictionType,
+          })
+        })
+        this.total = response.data.numberOfElements;
+        let s = response.data.size;
+        this.listQuery.total = Math.ceil(this.total / s);
+        console.log("total")
+        console.log(this.total)
+        console.log("this.listQuery.total")
+        console.log(this.listQuery.total)
       })
     },
     getArrayBatch() {
@@ -101,6 +129,7 @@ export default {
       let j;
       let info = this.location;
       if (this.location) {
+        this.listQuery.region = [];
         for (j = 0; j < info.length; j++) {
           let array = info[j][1];
           this.listQuery.region.push(array);
@@ -119,8 +148,8 @@ export default {
           newInfo.push(array1);
         }
       }
-      console.log("newInfo")
-      console.log(newInfo)
+      /*console.log("newInfo")
+      console.log(newInfo)*/
       let feature, character, genre = [];
       feature = newInfo.filter(function (value) {
         return value >= 609 && value <= 612
@@ -183,9 +212,11 @@ export default {
       });
     },
     changeLocation(value) {
+      this.$forceUpdate();
       console.log(value)
     },
     changeClassify(value) {
+      this.$forceUpdate();
       console.log(value)
     },
     selectBatch() {
@@ -221,6 +252,23 @@ export default {
       this.listQuery.page = 1;
       this.listQuery.type = type;
       this.fetchData();
+    },
+    // 分页方法
+    fetchNext() {
+      this.listQuery.page = this.listQuery.page + 1
+      this.fetchData()
+    },
+    fetchPrev() {
+      this.listQuery.page = this.listQuery.page - 1
+      this.fetchData()
+    },
+    fetchPage(page) {
+      this.listQuery.page = page
+      this.fetchData(page)
+    },
+    changeSize(limit) {
+      this.listQuery.limit = limit
+      this.fetchData()
     },
   }
 

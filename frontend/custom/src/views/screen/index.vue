@@ -89,7 +89,8 @@
         <el-button type="primary" plain @click.native="handleQuery(3)">保底</el-button>
       </el-tooltip>
     </el-button-group>
-    <el-table :data="volunteerList" v-loading="loading" border highlight-current-row>
+    <el-table :data="volunteerList" v-loading="loading" border highlight-current-row stripe height="600"
+              :header-cell-style="{'text-align':'center'}">
       <el-table-column label="录取概率" prop="rate" align="center">
         <template slot-scope="scope">
           <el-tag type="danger" v-if="scope.row.rate<=50"><50%(难录取)</el-tag>
@@ -102,14 +103,55 @@
         </template>
       </el-table-column>
       <el-table-column label="2021招生计划" align="center">
-        <el-table-column label="招生院校" prop="name" align="center">
+        <el-table-column label="招生院校" prop="name" align="left">
           <template slot-scope="scope">
-            {{ scope.row.name }}
+            <div class="important-text">
+              {{ scope.row.name }}
+            </div>
+            <div class="sign-text">
+              <el-row>
+                <el-col :span="8">
+                  <div class="grid-content bg-purple"></div>
+                  {{ scope.row.province }}
+                </el-col>
+                <el-col :span="8">
+                  <div class="grid-content bg-purple-light">{{ scope.row.category }}</div>
+                </el-col>
+              </el-row>
+            </div>
+            <div class="sign-text-second">
+              <el-row>
+                <el-col :span="24">
+                  <div class="grid-content bg-purple"></div>
+                  院校代码{{ scope.row.universityCode }}
+                </el-col>
+              </el-row>
+            </div>
           </template>
         </el-table-column>
-        <el-table-column label="招生专业" align="center" prop="professionalName">
+        <el-table-column label="招生专业" align="left" prop="professionalName" fit>
           <template slot-scope="scope">
-            {{ scope.row.professionalName }}
+            <div class="important-text">
+              {{ scope.row.professionalName }}
+            </div>
+            <div class="sign-text">
+              <el-row>
+                <el-col :span="12">
+                  <div class="grid-content bg-purple"></div>
+                  学费{{ scope.row.fee }}
+                </el-col>
+                <el-col :span="12">
+                  <div class="grid-content bg-purple-light">学制{{ scope.row.time }}</div>
+                </el-col>
+              </el-row>
+            </div>
+            <!--            <div class="sign-text-second">
+                          <el-row>
+                            <el-col :span="8"><div class="grid-content bg-purple"></div>专业代码{{scope.row.majorCode}}</el-col>
+                            <el-col :span="8"><div class="grid-content bg-purple-light">招生人数。</div></el-col>
+                            <el-col :span="8"><div class="grid-content bg-purple-light">选科信息。</div></el-col>
+                          </el-row>
+                        </div>-->
           </template>
         </el-table-column>
       </el-table-column>
@@ -164,6 +206,12 @@
         <el-button type="primary" @click.native="submitForm">提交</el-button>
       </div>
     </el-dialog>
+    <!--工具条-->
+    <el-col :span="24" class="toolbar">
+      <el-pagination layout="prev, pager, next" @current-change="fetchPage" :page-size="listQuery.limit"
+                     :page-count="listQuery.total" style="text-align:center;margin:10px">
+      </el-pagination>
+    </el-col>
   </div>
 </template>
 
@@ -190,5 +238,24 @@
   background-color: #1795bb;
   box-shadow: 0 5px #666;
   transform: translateY(4px);
+}
+
+.important-text {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.sign-text {
+  color: #8c939d;
+  font-size: smaller;
+  font-family: 幼圆;
+  font-weight: bold;
+}
+
+.sign-text-second {
+  color: #8c939d;
+  font-size: smaller;
+  font-family: 幼圆;
+  font-weight: bold;
 }
 </style>
