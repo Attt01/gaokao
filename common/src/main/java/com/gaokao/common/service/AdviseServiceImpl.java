@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -142,7 +143,6 @@ public class AdviseServiceImpl implements AdviseService{
         Map<String, Boolean> conditionsMap = new HashMap<>();
         if(filterParams.getBatch().size() == 0){
             conditionsMap.put("1",true);
-            conditionsMap.put("2",true);
         }else {
             for(int i = 0; i < filterParams.getBatch().size(); i++){
                 FilterData filterData = filterDataDao.getOneById(filterParams.getBatch().get(i));
@@ -156,6 +156,11 @@ public class AdviseServiceImpl implements AdviseService{
         }
 
         if(filterParams.getRegion().size() == 0){
+            conditionsMap.put("北京",true);
+            conditionsMap.put("南京",true);
+            conditionsMap.put("上海",true);
+            conditionsMap.put("天津",true);
+            /*
             List<FilterData> regionList = filterDataS.get("地区");
             for(int i = 0; i < regionList.size(); i++){
                 String label = regionList.get(i).getLabel();
@@ -168,6 +173,7 @@ public class AdviseServiceImpl implements AdviseService{
                     conditionsMap.put(label,true);
                 }
             }
+            */
         }else{
             for(int i = 0; i < filterParams.getRegion().size(); i++){
                 FilterData filterData = filterDataDao.getOneById(filterParams.getRegion().get(i));
@@ -184,11 +190,14 @@ public class AdviseServiceImpl implements AdviseService{
         }
 
         if(filterParams.getSchoolTeSe().size() == 0){
+            conditionsMap.put("本科", true);
+            /*
             List<FilterData> teSeList = filterDataS.get("大学特色");
             for(int i = 0; i < teSeList.size(); i++){
                 String label = teSeList.get(i).getLabel();
                 conditionsMap.put(label, true);
             }
+            */
         }else{
             for(int i = 0; i < filterParams.getSchoolTeSe().size(); i++){
                 FilterData filterData = filterDataDao.getOneById(filterParams.getSchoolTeSe().get(i));
@@ -198,11 +207,14 @@ public class AdviseServiceImpl implements AdviseService{
         }
 
         if(filterParams.getSchoolXingZhi().size() == 0){
+            conditionsMap.put("公办", true);
+            /*
             List<FilterData> xingZhiList = filterDataS.get("办学性质");
             for(int i = 0; i < xingZhiList.size(); i++){
                 String label = xingZhiList.get(i).getLabel();
                 conditionsMap.put(label, true);
             }
+            */
         }else{
             for(int i = 0; i < filterParams.getSchoolXingZhi().size(); i++){
                 FilterData filterData = filterDataDao.getOneById(filterParams.getSchoolXingZhi().get(i));
@@ -212,11 +224,14 @@ public class AdviseServiceImpl implements AdviseService{
         }
 
         if(filterParams.getSchoolType().size() == 0){
+            conditionsMap.put("综合", true);
+            /*
             List<FilterData> typeList = filterDataS.get("大学类型");
             for(int i = 0; i < typeList.size(); i++){
                 String label = typeList.get(i).getLabel();
                 conditionsMap.put(label, true);
             }
+            */
         }else{
             for(int i = 0; i < filterParams.getSchoolType().size(); i++){
                 FilterData filterData = filterDataDao.getOneById(filterParams.getSchoolType().get(i));
@@ -385,7 +400,6 @@ public class AdviseServiceImpl implements AdviseService{
                 adviseVO.setVolunteerVO(volunteerVO);
                 adviseVOList.add(adviseVO);
             }
-
         });
         return adviseVOList.stream().sorted(Comparator.comparing(AdviseVO::getRate))
                 .collect(Collectors.toList());
@@ -395,7 +409,14 @@ public class AdviseServiceImpl implements AdviseService{
     public Page<AdviseVO> list(FilterParams filterParams){
         List<AdviseVO> adviseVOS = listAll(filterParams);
         if(filterParams.getType() == 0){
-            return new PageImpl<>(adviseVOS, PageRequest.of(filterParams.getPage() - 1, filterParams.getLimit()), adviseVOS.size());
+            Pageable pageable = PageRequest.of(filterParams.getPage() - 1, filterParams.getLimit());
+            Integer fromIndex = (filterParams.getPage() - 1) * filterParams.getLimit();
+            Integer toIndex = fromIndex + filterParams.getLimit();
+            if(toIndex >= adviseVOS.size()){
+                toIndex = adviseVOS.size();
+            }
+            List<AdviseVO> adviseVOS1 = adviseVOS.subList(fromIndex, toIndex);
+            return new PageImpl<>(adviseVOS1, pageable, adviseVOS.size());
         }
         Map<String, List<AdviseVO>> map = new HashMap<>();
         List<AdviseVO> adviseVOList = new ArrayList<>();
@@ -415,7 +436,14 @@ public class AdviseServiceImpl implements AdviseService{
                 adviseVOList = adviseVOS;
             }
             adviseVOList.sort(Comparator.comparing(AdviseVO::getRate).reversed());
-        return new PageImpl<>(adviseVOList, PageRequest.of(filterParams.getPage() - 1, filterParams.getLimit()), adviseVOList.size());
+
+        Integer fromIndex = (filterParams.getPage() - 1) * filterParams.getLimit();
+        Integer toIndex = fromIndex + filterParams.getLimit();
+        if(toIndex >= adviseVOS.size()){
+            toIndex = adviseVOS.size();
+        }
+        List<AdviseVO> adviseVOList1 = adviseVOS.subList(fromIndex, toIndex);
+        return new PageImpl<>(adviseVOList1, PageRequest.of(filterParams.getPage() - 1, filterParams.getLimit()), adviseVOList.size());
     }
 
     @Override
