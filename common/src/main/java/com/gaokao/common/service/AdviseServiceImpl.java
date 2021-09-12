@@ -160,6 +160,8 @@ public class AdviseServiceImpl implements AdviseService{
             conditionsMap.put("南京",true);
             conditionsMap.put("上海",true);
             conditionsMap.put("天津",true);
+            conditionsMap.put("武汉",true);
+            conditionsMap.put("济南",true);
             /*
             List<FilterData> regionList = filterDataS.get("地区");
             for(int i = 0; i < regionList.size(); i++){
@@ -435,14 +437,17 @@ public class AdviseServiceImpl implements AdviseService{
             default:
                 adviseVOList = adviseVOS;
             }
+            if(adviseVOList == null){
+                adviseVOList = new ArrayList<>();
+            }
             adviseVOList.sort(Comparator.comparing(AdviseVO::getRate).reversed());
 
         Integer fromIndex = (filterParams.getPage() - 1) * filterParams.getLimit();
         Integer toIndex = fromIndex + filterParams.getLimit();
-        if(toIndex >= adviseVOS.size()){
-            toIndex = adviseVOS.size();
+        if(toIndex >= adviseVOList.size()){
+            toIndex = adviseVOList.size();
         }
-        List<AdviseVO> adviseVOList1 = adviseVOS.subList(fromIndex, toIndex);
+        List<AdviseVO> adviseVOList1 = adviseVOList.subList(fromIndex, toIndex);
         return new PageImpl<>(adviseVOList1, PageRequest.of(filterParams.getPage() - 1, filterParams.getLimit()), adviseVOList.size());
     }
 
