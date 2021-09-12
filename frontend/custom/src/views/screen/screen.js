@@ -25,7 +25,7 @@ export default {
         subject: [1, 2, 3],
         score: 600,
         page: 1,
-        limit: 5,
+        limit: 10,
         total: 0,
         batch: [],
         region: [],
@@ -108,13 +108,8 @@ export default {
             "subjectRestrictionType": item.volunteerVO.subjectRestrictionType,
           })
         })
-        this.total = response.data.numberOfElements;
-        let s = response.data.size;
-        this.listQuery.total = Math.ceil(this.total / s);
-        console.log("total")
-        console.log(this.total)
-        console.log("this.listQuery.total")
-        console.log(this.listQuery.total)
+        this.total = response.data.totalElements;
+        this.listQuery.total = response.data.totalPages;
       })
     },
     getArrayBatch() {
