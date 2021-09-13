@@ -143,6 +143,7 @@ public class AdviseServiceImpl implements AdviseService{
         Map<String, Boolean> conditionsMap = new HashMap<>();
         if(filterParams.getBatch().size() == 0){
             conditionsMap.put("1",true);
+            conditionsMap.put("2",true);
         }else {
             for(int i = 0; i < filterParams.getBatch().size(); i++){
                 FilterData filterData = filterDataDao.getOneById(filterParams.getBatch().get(i));
@@ -156,13 +157,14 @@ public class AdviseServiceImpl implements AdviseService{
         }
 
         if(filterParams.getRegion().size() == 0){
+            /*
             conditionsMap.put("北京",true);
             conditionsMap.put("南京",true);
             conditionsMap.put("上海",true);
             conditionsMap.put("天津",true);
             conditionsMap.put("武汉",true);
             conditionsMap.put("济南",true);
-            /*
+            */
             List<FilterData> regionList = filterDataS.get("地区");
             for(int i = 0; i < regionList.size(); i++){
                 String label = regionList.get(i).getLabel();
@@ -175,7 +177,7 @@ public class AdviseServiceImpl implements AdviseService{
                     conditionsMap.put(label,true);
                 }
             }
-            */
+
         }else{
             for(int i = 0; i < filterParams.getRegion().size(); i++){
                 FilterData filterData = filterDataDao.getOneById(filterParams.getRegion().get(i));
@@ -192,14 +194,15 @@ public class AdviseServiceImpl implements AdviseService{
         }
 
         if(filterParams.getSchoolTeSe().size() == 0){
-            conditionsMap.put("本科", true);
             /*
+            conditionsMap.put("本科", true);
+            */
             List<FilterData> teSeList = filterDataS.get("大学特色");
             for(int i = 0; i < teSeList.size(); i++){
                 String label = teSeList.get(i).getLabel();
                 conditionsMap.put(label, true);
             }
-            */
+
         }else{
             for(int i = 0; i < filterParams.getSchoolTeSe().size(); i++){
                 FilterData filterData = filterDataDao.getOneById(filterParams.getSchoolTeSe().get(i));
@@ -209,14 +212,15 @@ public class AdviseServiceImpl implements AdviseService{
         }
 
         if(filterParams.getSchoolXingZhi().size() == 0){
-            conditionsMap.put("公办", true);
             /*
+            conditionsMap.put("公办", true);
+            */
             List<FilterData> xingZhiList = filterDataS.get("办学性质");
             for(int i = 0; i < xingZhiList.size(); i++){
                 String label = xingZhiList.get(i).getLabel();
                 conditionsMap.put(label, true);
             }
-            */
+
         }else{
             for(int i = 0; i < filterParams.getSchoolXingZhi().size(); i++){
                 FilterData filterData = filterDataDao.getOneById(filterParams.getSchoolXingZhi().get(i));
@@ -226,14 +230,15 @@ public class AdviseServiceImpl implements AdviseService{
         }
 
         if(filterParams.getSchoolType().size() == 0){
-            conditionsMap.put("综合", true);
             /*
+            conditionsMap.put("综合", true);
+            */
             List<FilterData> typeList = filterDataS.get("大学类型");
             for(int i = 0; i < typeList.size(); i++){
                 String label = typeList.get(i).getLabel();
                 conditionsMap.put(label, true);
             }
-            */
+
         }else{
             for(int i = 0; i < filterParams.getSchoolType().size(); i++){
                 FilterData filterData = filterDataDao.getOneById(filterParams.getSchoolType().get(i));
@@ -244,6 +249,28 @@ public class AdviseServiceImpl implements AdviseService{
         return conditionsMap;
     }
 
+    Map<Long, Boolean> getSchoolAndMajorMap(FilterParams filterParams){
+        if(filterParams.getMajorName().length() != 0 || filterParams.getUniversityName().length() != 0) {
+            Map<Long, Boolean> map = new HashMap<>();
+            String universityName = filterParams.getUniversityName();
+            String majorName = filterParams.getMajorName();
+
+            String schoolParm = "%";
+            String majorParm = "%";
+            for (int i = 0; i < majorName.length(); i++) {
+                majorParm += majorName.substring(i, i + 1) + "%";
+            }
+            for (int i = 0; i < universityName.length(); i++) {
+                schoolParm += universityName.substring(i, i + 1) + "%";
+            }
+            List<Volunteer> volunteerList = adviseDao.getVolunteerByMajorAndSchool(schoolParm, majorParm);
+            volunteerList.forEach(volunteer -> {
+                map.put(volunteer.getId(), true);
+            });
+            return map;
+        }
+        return null;
+    }
 
 
     private Integer findCommon(List<Integer> m, List<Integer> n){
@@ -258,7 +285,13 @@ public class AdviseServiceImpl implements AdviseService{
         return res;
     }
 
-    public boolean filter(FilterParams filterParams, Map<String, Boolean> conditionsMap, VolunteerVO volunteerVO){
+    public boolean filter(FilterParams filterParams, Map<String, Boolean> conditionsMap, Map<Long, Boolean> schoolAndmajorMap, VolunteerVO volunteerVO){
+
+        if(schoolAndmajorMap != null){
+            if(!schoolAndmajorMap.containsKey(volunteerVO.getId())){
+                return false;
+            }
+        }
 
         //首先判断选课是否符合
         List<Integer> voluntSubject = volunteerVO.getSubjectRestrictionDetail();
@@ -381,9 +414,14 @@ public class AdviseServiceImpl implements AdviseService{
 
         Map<String, Boolean> conditionsMap = start(filterParams);
 
+        Map<Long, Boolean> schoolAndMajorMap = getSchoolAndMajorMap(filterParams);
+
         Integer rank = getUserRank(filterParams.getScore());
-        volunteerVOList.forEach(volunteerVO -> {
-            if(filter(filterParams, conditionsMap,volunteerVO)){
+
+        List<VolunteerVO> volunteerVOList1 = volunteerVOList;
+
+        volunteerVOList1.forEach(volunteerVO -> {
+            if(filter(filterParams, conditionsMap, schoolAndMajorMap, volunteerVO)){
                 Integer rate = getRate(rank, volunteerVO.getPosition());
                 String rateDesc = "";
                 if(rate <= 50)

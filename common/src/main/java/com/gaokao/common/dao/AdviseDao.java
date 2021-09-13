@@ -19,4 +19,7 @@ public interface AdviseDao extends PagingAndSortingRepository<Volunteer, Long> {
 
     @Query(value = "select * from tb_volunteer; ", nativeQuery = true)
     List<Volunteer> getAllVolunteer();
+
+    @Query(value = "select * from tb_volunteer where name LIKE ?1 AND professional_name LIKE ?2 ;", nativeQuery = true)
+    List<Volunteer> getVolunteerByMajorAndSchool(String schoolParm, String majorParm);
 }
