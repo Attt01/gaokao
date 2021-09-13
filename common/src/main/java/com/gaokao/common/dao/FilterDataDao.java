@@ -12,8 +12,14 @@ import java.util.List;
  */
 public interface FilterDataDao extends PagingAndSortingRepository<FilterData, Integer> {
 
+    @Query(value = "select * from tb_filter_conditions; ", nativeQuery = true)
+    List<FilterData> getAll();
+
     @Query(value = "select * from tb_filter_conditions where father_id = ?;", nativeQuery = true)
     List<FilterData> findSonsByFatherId(Integer fatherId);
+
+    @Query(value = "select * from tb_filter_conditions where id = ? ;", nativeQuery = true)
+    FilterData getOneById(Integer id);
 
     @Query(value = "select father_id from tb_filter_conditions where id = ? ", nativeQuery = true)
     Integer findFatherIdBySonId(Integer sonId);
