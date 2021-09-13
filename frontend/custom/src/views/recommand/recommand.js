@@ -1,5 +1,6 @@
-import {getBatch, getMajorType, getRegion, getSchoolType} from "../../api/screen";
-import {autoGenerateForm} from "@/api/recommand"
+import { getBatch, getMajorType, getRegion, getSchoolType } from "../../api/screen";
+import { autoGenerateForm } from "@/api/recommand"
+import { changeCurrentForm } from "@/api/volunteer"
 import { STATUS_CODE } from "@/api/statusCode";
 
 export default {
@@ -116,11 +117,16 @@ export default {
             universityName: ''
           };
           autoGenerateForm(totalForm).then(res => {
-            console.log(res);
+            //console.log(res);
             if (res.code === STATUS_CODE.SUCCESS) {
-              this.$message({
-                type: 'success',
-                message: '生成成功，请前往我的志愿表并切换至当前查看'
+              changeCurrentForm(res.data.id).then(res => {
+                if (res.code === STATUS_CODE.SUCCESS) {
+                  this.$message({
+                    type: 'success',
+                    message: '智能推荐生成志愿表成功'
+                  });
+                  this.$router.push('/preference');
+                }
               });
             }
           });
