@@ -93,13 +93,13 @@
               :header-cell-style="{'text-align':'center'}">
       <el-table-column label="录取概率" prop="rate" align="center">
         <template slot-scope="scope">
-          <el-tag type="danger" v-if="scope.row.rate<=50"><50%(难录取)</el-tag>
+          <el-tag type="danger" v-if="scope.row.rate<=50">&lt;50%(难录取)</el-tag>
           <el-tag type="warning" v-if="scope.row.rate>50 && scope.row.rate<=60">{{ scope.row.rate }}%(可冲击)
           </el-tag>
           <el-tag type="success" v-if="scope.row.rate>60 && scope.row.rate<=80">{{ scope.row.rate }}%(较稳妥)
           </el-tag>
           <el-tag v-if="scope.row.rate>80 && scope.row.rate<=95">{{ scope.row.rate }}%(可保底)</el-tag>
-          <el-tag type="info" v-if="scope.row.rate>95">>95%(浪费分)</el-tag>
+          <el-tag type="info" v-if="scope.row.rate>95">&ge;95%(浪费分)</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="2021招生计划" align="center">
@@ -219,9 +219,6 @@
 
 
 <style>
-.app-container {
-
-}
 
 .niceButton {
   position: relative;

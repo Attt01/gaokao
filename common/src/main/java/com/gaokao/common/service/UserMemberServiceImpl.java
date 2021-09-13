@@ -69,7 +69,7 @@ public class UserMemberServiceImpl implements UserMemberService{
         }
 
         userMember = new UserMember();
-        userMember.setProvinceRank((long)Math.toIntExact(regParams.getProvince_rank()));
+        userMember.setProvinceRank((long)Math.toIntExact(regParams.getProvinceRank()));
         userMember.setScore(regParams.getScore());
         userMember.setNickname(regParams.getNickname());
         userMember.setPhone(regParams.getPhone());

@@ -11,7 +11,7 @@
             <el-col :span="21">
               <div class="form-container">
 
-                <el-form :model="form" ref="form" label-width="80px">
+                <el-form :model="form" :rules="validateRules" ref="form" label-width="80px">
 
                   <el-form-item label="成绩信息">
                     <el-input
@@ -20,7 +20,7 @@
                     </el-input>
                   </el-form-item>
 
-                  <el-form-item label="专业意向" prop="major">
+                  <!-- <el-form-item label="专业意向" prop="major">
                     <el-cascader
                       v-model="form.major"
                       :options="majorOptions"
@@ -29,7 +29,7 @@
                       clearable
                       filterable
                       @change="changeClassify"></el-cascader>
-                  </el-form-item>
+                  </el-form-item> -->
 
                   <el-form-item label="大学类型" prop="school">
                     <el-cascader
@@ -38,31 +38,31 @@
                       :props="multiProps"
                       clearable
                       filterable
-                      @change="changeClassify"></el-cascader>
+                      collapse-tags
+                    ></el-cascader>
                   </el-form-item>
 
-                  <el-form-item label="意向地区" prop="area">
+                  <el-form-item label="意向地区" prop="region">
                     <el-cascader
-                      v-model="form.area"
+                      v-model="form.region"
                       clearable
                       filterable
                       :options="locationOptions"
                       :props="multiProps"
                       collapse-tags
-                      @change="changeLocation">
+                    >
                     </el-cascader>
                   </el-form-item>
 
-
                   <el-form-item label="填报方案" prop="plan">
                     <el-form-item label="冲击">
-                      <el-input v-model="plan.num[0]" type="number" placeholder="请输入冲击数"></el-input>
+                      <el-input v-model="plan[0]" type="number" placeholder="请输入冲击数"></el-input>
                     </el-form-item>
                     <el-form-item label="稳妥">
-                      <el-input v-model="plan.num[1]" type="number" placeholder="请输入稳妥数"></el-input>
+                      <el-input v-model="plan[1]" type="number" placeholder="请输入稳妥数"></el-input>
                     </el-form-item>
                     <el-form-item label="保底">
-                      <el-input v-model="plan.num[2]" type="number" placeholder="请输入保底数"></el-input>
+                      <el-input v-model="plan[2]" type="number" placeholder="请输入保底数"></el-input>
                     </el-form-item>
                   </el-form-item>
 
