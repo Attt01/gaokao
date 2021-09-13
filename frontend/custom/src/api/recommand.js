@@ -6,3 +6,11 @@ export function getRank(score) {
     method: 'get'
   })
 }
+
+export function autoGenerateForm(params) {
+  return request({
+    url: '/xhr/v1/advise/autoGenerateForm',
+    method: 'post',
+    data: params
+  })
+}

@@ -20,7 +20,7 @@
                     </el-input>
                   </el-form-item>
 
-                  <el-form-item label="专业意向" prop="major">
+                  <!-- <el-form-item label="专业意向" prop="major">
                     <el-cascader
                       v-model="form.major"
                       :options="majorOptions"
@@ -29,7 +29,7 @@
                       clearable
                       filterable
                       @change="changeClassify"></el-cascader>
-                  </el-form-item>
+                  </el-form-item> -->
 
                   <el-form-item label="大学类型" prop="school">
                     <el-cascader
@@ -38,18 +38,19 @@
                       :props="multiProps"
                       clearable
                       filterable
-                      @change="changeClassify"></el-cascader>
+                      collapse-tags
+                    ></el-cascader>
                   </el-form-item>
 
-                  <el-form-item label="意向地区" prop="area">
+                  <el-form-item label="意向地区" prop="region">
                     <el-cascader
-                      v-model="form.area"
+                      v-model="form.region"
                       clearable
                       filterable
                       :options="locationOptions"
                       :props="multiProps"
                       collapse-tags
-                      @change="changeLocation">
+                    >
                     </el-cascader>
                   </el-form-item>
 
