@@ -70,9 +70,9 @@ public class VolunteerServiceImpl implements VolunteerService{
     }
 
     @Override
-    public Long changeCurrentForm(Long userId, Long preFormId, Long newFormId) {
+    public Long changeCurrentForm(Long userId, Long newFormId) {
 
-        UserForm userForm = userFormDao.findById(preFormId).orElse(null);
+        UserForm userForm = userFormDao.findUserFormByUserIdAndCurrent(userId, Boolean.TRUE);
         if(userForm != null ) {
             userForm.setCurrent(false);
             userFormDao.save(userForm);
