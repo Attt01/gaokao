@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 /**
- * 获取列表数据（后端待实现）
+ * 获取列表数据
  */
 export function getVOList(params) {
   return request({
@@ -10,6 +10,18 @@ export function getVOList(params) {
     data: params
   })
 }
+
+/**
+ * 获取收藏列表数据
+ */
+export function getStars(query) {
+  return request({
+    url: '/xhr/v1/stars/list',
+    method: 'get',
+    params: query
+  })
+}
+
 
 /**
  * 获取区域信息下拉框
@@ -72,3 +84,12 @@ export function getCurrentInfo() {
   })
 }
 
+/**
+ * 更改收藏状态
+ */
+export function changeStarStatus(id) {
+  return request({
+    url: '/xhr/v1/stars/star/' + id,
+    method: 'get',
+  })
+}

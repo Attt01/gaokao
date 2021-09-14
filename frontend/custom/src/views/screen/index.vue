@@ -98,8 +98,8 @@
           </el-tag>
           <el-tag type="success" v-if="scope.row.rate>60 && scope.row.rate<=80">{{ scope.row.rate }}%(较稳妥)
           </el-tag>
-          <el-tag v-if="scope.row.rate>80 && scope.row.rate<=95">{{ scope.row.rate }}%(可保底)</el-tag>
-          <el-tag type="info" v-if="scope.row.rate>95">&ge;95%(浪费分)</el-tag>
+          <el-tag v-if="scope.row.rate>80 && scope.row.rate<95">{{ scope.row.rate }}%(可保底)</el-tag>
+          <el-tag type="info" v-if="scope.row.rate>=95">&gt;95%(浪费分)</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="2021招生计划" align="center">
@@ -174,13 +174,37 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-circle-plus-outline"
-            @click="handleFill(scope.row)"
-          >填报为
-          </el-button>
+          <el-row>
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-circle-plus-outline"
+              @click="handleFill(scope.row)"
+            >填报为
+            </el-button>
+          </el-row>
+          <el-row :gutter="16">
+            <div v-if="scope.row.myStar===true">
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-star-on"
+                @click="handleStar(scope.row)"
+                circle
+              >已收藏
+              </el-button>
+            </div>
+            <div v-else>
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-star-off"
+                @click="handleStar(scope.row)"
+                circle
+              >未收藏
+              </el-button>
+            </div>
+          </el-row>
         </template>
       </el-table-column>
     </el-table>
