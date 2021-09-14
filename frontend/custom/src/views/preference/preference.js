@@ -116,7 +116,14 @@ export default {
     updateName() {
       this.$refs['createVolForm'].validate(isvalid => {
         if (isvalid) {
-          updateVolunteerName(this.formId, this.createData.name).then(res => {
+          console.log(this.formId);
+          console.log(this.createData.name);
+          let params = {
+            formId: this.formId,
+            name: this.createData.name
+          }
+
+          updateVolunteerName(params).then(res => {
             if (res.code === STATUS_CODE.SUCCESS) {
               this.$message({
                 message: '修改成功',
