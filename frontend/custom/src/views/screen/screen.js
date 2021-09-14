@@ -1,4 +1,5 @@
 import {
+  changeStarStatus,
   getBatch, getCurrentInfo, getMajorType, getRegion, getSchoolType, getVOList, submitVolunteer
 } from "../../api/screen";
 
@@ -6,8 +7,7 @@ export default {
   data() {
     return {
       // 遮罩层
-      // loading: true,
-      loading: false,
+      loading: true,
       // 显示搜索条件
       showSearch: true,
       //志愿列表
@@ -75,6 +75,7 @@ export default {
   methods: {
     //请求列表数据
     fetchData() {
+      this.loading = true;
       this.getArrayBatch();
       this.getArrayRegion();
       this.getClassification();
@@ -82,8 +83,12 @@ export default {
       if (!this.listQuery.type) {
         this.listQuery.type = 0;
       }
-      console.log("this.listQuery.type")
-      console.log(this.listQuery.type)
+      if (!this.listQuery.universityName) {
+        this.listQuery.universityName = "";
+      }
+      if (!this.listQuery.majorName) {
+        this.listQuery.majorName = "";
+      }
       getVOList(this.listQuery).then(response => {
         this.loading = false;
         this.responseList = [];
@@ -92,6 +97,7 @@ export default {
         this.responseList.forEach(item => {
           this.volunteerList.push({
             "rate": item.rate,
+            "volunteerId": item.volunteerVO.id,
             "name": item.volunteerVO.name,
             "province": item.volunteerVO.province,
             "lowestScore": item.volunteerVO.lowestScore,
@@ -106,6 +112,7 @@ export default {
             "publicIsOrNot": item.volunteerVO.publicIsOrNot,
             "majorCode": item.volunteerVO.majorCode,
             "subjectRestrictionType": item.volunteerVO.subjectRestrictionType,
+            "myStar": item.volunteerVO.myStar
           })
         })
         this.total = response.data.totalElements;
@@ -143,8 +150,6 @@ export default {
           newInfo.push(array1);
         }
       }
-      /*console.log("newInfo")
-      console.log(newInfo)*/
       let feature, character, genre = [];
       feature = newInfo.filter(function (value) {
         return value >= 609 && value <= 612
@@ -173,6 +178,27 @@ export default {
       this.dialogFormVisible = true;
       this.form.name = row.name;
       this.form.professionalName = row.professionalName;
+    },
+    handleStar(row) {
+      let text = undefined;
+      if (row.myStar === false) {
+        text = "收藏";
+      } else {
+        text = "取消收藏";
+      }
+      let id = row.volunteerId;
+      this.$confirm('确认' + text + '吗?', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function () {
+        return changeStarStatus(id);
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '更新信息成功'
+        })
+      });
     },
     getCurrent() {
       getCurrentInfo().then(response => {

@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 /**
- * 获取列表数据（后端待实现）
+ * 获取列表数据
  */
 export function getVOList(params) {
   return request({
@@ -72,3 +72,12 @@ export function getCurrentInfo() {
   })
 }
 
+/**
+ * 更改收藏状态
+ */
+export function changeStarStatus(id) {
+  return request({
+    url: '/xhr/v1/stars/star/' + id,
+    method: 'get',
+  })
+}

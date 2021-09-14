@@ -174,13 +174,37 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-circle-plus-outline"
-            @click="handleFill(scope.row)"
-          >填报为
-          </el-button>
+          <el-row>
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-circle-plus-outline"
+              @click="handleFill(scope.row)"
+            >填报为
+            </el-button>
+          </el-row>
+          <el-row :gutter="16">
+            <div v-if="scope.row.myStar===true" class="star-active">
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-star-on"
+                @click="handleStar(scope.row)"
+                circle
+              >已收藏
+              </el-button>
+            </div>
+            <div v-else class="star-inactive">
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-star-off"
+                @click="handleStar(scope.row)"
+                circle
+              >未收藏
+              </el-button>
+            </div>
+          </el-row>
         </template>
       </el-table-column>
     </el-table>
