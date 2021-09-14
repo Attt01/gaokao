@@ -43,6 +43,9 @@ public class AdviseServiceImpl implements AdviseService{
     @Autowired
     private FilterDataDao filterDataDao;
 
+    @Autowired
+    private UserStarDao userStarDao;
+
     private static List<VolunteerVO> volunteerVOList;
 
     private static Map<String, List<FilterData>> filterDataS = new HashMap<>();
@@ -97,6 +100,7 @@ public class AdviseServiceImpl implements AdviseService{
                     volunteerVO.setVolunteerSection(false);
                 }
                 volunteerVO.setSubjectRestrictionDetail(JSON.parseArray(volunteer.getSubjectRestrictionDetail(), Integer.class));
+                volunteerVO.setMyStar(false);
                 volunteerVOS.add(volunteerVO);
             });
             volunteerVOList = volunteerVOS;
@@ -248,6 +252,14 @@ public class AdviseServiceImpl implements AdviseService{
     }
 
     private Map<Long, Boolean> getSchoolAndMajorMap(FilterParams filterParams){
+
+        if(filterParams.getMajorName() == null){
+            filterParams.setMajorName("");
+        }
+        if(filterParams.getUniversityName() == null){
+            filterParams.setUniversityName("");
+        }
+
         if(filterParams.getMajorName().length() != 0 || filterParams.getUniversityName().length() != 0) {
             Map<Long, Boolean> map = new HashMap<>();
             String universityName = filterParams.getUniversityName();
@@ -268,6 +280,20 @@ public class AdviseServiceImpl implements AdviseService{
             return map;
         }
         return null;
+    }
+
+    private Map<Long, Boolean> getUserStarMap(Long userId){
+        Map<Long, Boolean> userStarMap = new HashMap<>();
+        UserStar userStars = userStarDao.getUserStars(userId);
+        if(userStars == null){
+            return null;
+        }
+        List<Long> userStarList = JSON.parseArray(userStars.getStars(),Long.class);
+        userStarList.forEach(userStarId ->{
+            userStarMap.put(userStarId, true);
+        });
+
+        return userStarMap;
     }
 
     private Integer findCommon(List<Integer> m, List<Integer> n){
@@ -402,9 +428,14 @@ public class AdviseServiceImpl implements AdviseService{
         }
 
         return true;
-
     }
 
+    private Boolean ifStar(Map<Long, Boolean> starMap, VolunteerVO volunteerVO){
+        if(starMap == null){
+            return false;
+        }
+        return starMap.containsKey(volunteerVO.getId());
+    }
 
     private List<AdviseVO> listAll(FilterParams filterParams){
         List<AdviseVO> adviseVOList = new ArrayList<>();
@@ -413,12 +444,19 @@ public class AdviseServiceImpl implements AdviseService{
 
         Map<Long, Boolean> schoolAndMajorMap = getSchoolAndMajorMap(filterParams);
 
+        Map<Long, Boolean> starMap = getUserStarMap(filterParams.getUserId());
+
         Integer rank = getUserRank(filterParams.getScore());
 
         List<VolunteerVO> volunteerVOList1 = volunteerVOList;
 
         volunteerVOList1.forEach(volunteerVO -> {
             if(filter(filterParams, conditionsMap, schoolAndMajorMap, volunteerVO)){
+                if(ifStar(starMap, volunteerVO)){
+                    volunteerVO.setMyStar(true);
+                }else {
+                    volunteerVO.setMyStar(false);
+                }
                 Integer rate = getRate(rank, volunteerVO.getPosition());
                 String rateDesc = "";
                 if(rate <= 50)

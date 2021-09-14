@@ -80,4 +80,5 @@ public class VolunteerVO {
 
     private Integer doctorPoint;
 
+    private Boolean myStar;
 }
