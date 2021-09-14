@@ -25,10 +25,22 @@ public class FilterParams {
 
     private Integer total;
 
-    /**
-     * 其他信息，包括填报批次、就读地区、大学类型、专业类型
-     */
-    private List<Integer> other;
+    //批次
+    private List<Integer> batch;
+    //地区
+    private List<Integer> region;
+    //大学类型
+    private List<Integer> schoolType;
+    //大学特色
+    private List<Integer> schoolTeSe;
+    //大学性质
+    private List<Integer> schoolXingZhi;
+
+    /*
+    * 暂时没有专业类型数据
+    * private List<Integer> majorType;
+    * */
+
 
     private String universityName;
 

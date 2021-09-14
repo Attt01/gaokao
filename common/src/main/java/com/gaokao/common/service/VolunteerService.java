@@ -29,4 +29,6 @@ public interface VolunteerService {
 
     FormVolunteer findByFormIdAndSectionAndVolunteerPosition(Long formId, Boolean section, Integer position);
 
+    Boolean queryExist(Long formId, Boolean volunteerSection, Integer position);
+
 }

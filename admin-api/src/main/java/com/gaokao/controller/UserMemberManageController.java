@@ -2,6 +2,7 @@ package com.gaokao.controller;
 
 import com.gaokao.common.meta.AjaxResult;
 import com.gaokao.common.meta.vo.user.UserMemberVO;
+import com.gaokao.common.meta.vo.user.UserMemberVO;
 import com.gaokao.common.service.UserMemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

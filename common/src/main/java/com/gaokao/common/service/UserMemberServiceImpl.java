@@ -102,6 +102,7 @@ public class UserMemberServiceImpl implements UserMemberService{
             throw new BusinessException("记录不存在");
         }
         BeanUtils.copyProperties(params, userMember);
+        userMember.setCreateTime(System.currentTimeMillis());
         return userMemberDao.save(userMember).getId();
     }
 

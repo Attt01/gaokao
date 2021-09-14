@@ -3,10 +3,7 @@ package com.gaokao.common.service;
 import com.alibaba.fastjson.JSON;
 import com.gaokao.common.dao.*;
 import com.gaokao.common.enums.Subject;
-import com.gaokao.common.meta.po.FormVolunteer;
-import com.gaokao.common.meta.po.ScoreRank;
-import com.gaokao.common.meta.po.UserForm;
-import com.gaokao.common.meta.po.Volunteer;
+import com.gaokao.common.meta.po.*;
 import com.gaokao.common.meta.vo.advise.AutoGenerateFormParams;
 import com.gaokao.common.meta.vo.advise.FilterParams;
 import com.gaokao.common.meta.vo.advise.AdviseVO;
@@ -19,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -49,6 +47,7 @@ public class AdviseServiceImpl implements AdviseService{
 
     private static List<VolunteerVO> volunteerVOList;
 
+    private static Map<String, List<FilterData>> filterDataS = new HashMap<>();
 
     @Override
     public Integer getUserRank(Integer score){
@@ -64,7 +63,6 @@ public class AdviseServiceImpl implements AdviseService{
         return totalNums;
     }
 
-    @Override
     public Integer getRate(Integer rank, Integer guess){
         Integer dif = Math.abs(rank - guess);
         Integer rate = 0;
@@ -87,6 +85,167 @@ public class AdviseServiceImpl implements AdviseService{
         return rate;
     }
 
+    private Map<String, Boolean> start(FilterParams filterParams){
+        if(volunteerVOList == null){
+            List<Volunteer> volunteerList = adviseDao.getAllVolunteer();
+            List<VolunteerVO> volunteerVOS = new ArrayList<>();
+            volunteerList.forEach(volunteer -> {
+                VolunteerVO volunteerVO = new VolunteerVO();
+                BeanUtils.copyProperties(volunteer, volunteerVO);
+                if(volunteer.getVolunteerSection() == 1){
+                    volunteerVO.setVolunteerSection(true);
+                }
+                else{
+                    volunteerVO.setVolunteerSection(false);
+                }
+                volunteerVO.setSubjectRestrictionDetail(JSON.parseArray(volunteer.getSubjectRestrictionDetail(), Integer.class));
+                volunteerVOS.add(volunteerVO);
+            });
+            volunteerVOList = volunteerVOS;
+        }
+
+        if(filterDataS.isEmpty()) {
+            for (int i = 1; i <= 4; i++) {
+                List<FilterData> secondList = filterDataDao.findSonsByFatherId(i);
+                if (i == 1) {
+                    filterDataS.put("批次", secondList);
+                    continue;
+                }
+                if(i == 2){
+                    List<FilterData> thirdList = new ArrayList<>();
+                    for (int j = 0; j < secondList.size(); j++) {
+                        thirdList.addAll(filterDataDao.findSonsByFatherId(secondList.get(j).getId()));
+                    }
+                    filterDataS.put("地区", thirdList);
+                    continue;
+                }
+                if(i == 3){
+                    for(int j = 0; j < secondList.size(); j++){
+                        String label = secondList.get(j).getLabel();
+                        if(label.equals("大学特色")){
+                            List<FilterData> teSeList = filterDataDao.findSonsByFatherId(secondList.get(j).getId());
+                            filterDataS.put(label, teSeList);
+                        }
+                        if(label.equals("办学性质")){
+                            List<FilterData> xingZhiList = filterDataDao.findSonsByFatherId(secondList.get(j).getId());
+                            filterDataS.put(label, xingZhiList);
+                        }
+                        if(label.equals("大学类型")){
+                            List<FilterData> typeList = filterDataDao.findSonsByFatherId(secondList.get(j).getId());
+                            filterDataS.put(label, typeList);
+                        }
+                    }
+                }
+            }
+        }
+
+        //接下来构造存储过滤条件的map
+        Map<String, Boolean> conditionsMap = new HashMap<>();
+        if(filterParams.getBatch().size() == 0){
+            conditionsMap.put("1",true);
+        }else {
+            for(int i = 0; i < filterParams.getBatch().size(); i++){
+                FilterData filterData = filterDataDao.getOneById(filterParams.getBatch().get(i));
+                String label = filterData.getLabel();
+                if(label.equals("普通一段")){
+                    conditionsMap.put("1", true);
+                }else{
+                    conditionsMap.put("2", true);
+                }
+            }
+        }
+
+        if(filterParams.getRegion().size() == 0){
+            conditionsMap.put("北京",true);
+            conditionsMap.put("南京",true);
+            conditionsMap.put("上海",true);
+            conditionsMap.put("天津",true);
+            conditionsMap.put("武汉",true);
+            conditionsMap.put("济南",true);
+            /*
+            List<FilterData> regionList = filterDataS.get("地区");
+            for(int i = 0; i < regionList.size(); i++){
+                String label = regionList.get(i).getLabel();
+                Integer j = label.indexOf("市");
+                if(j != -1) {
+                    label = label.substring(0, j);
+                    conditionsMap.put(label, true);
+                }
+                else{
+                    conditionsMap.put(label,true);
+                }
+            }
+            */
+        }else{
+            for(int i = 0; i < filterParams.getRegion().size(); i++){
+                FilterData filterData = filterDataDao.getOneById(filterParams.getRegion().get(i));
+                String label = filterData.getLabel();
+                Integer j = label.indexOf("市");
+                if(j != -1) {
+                    label = label.substring(0, j);
+                    conditionsMap.put(label, true);
+                }
+                else{
+                    conditionsMap.put(label,true);
+                }
+            }
+        }
+
+        if(filterParams.getSchoolTeSe().size() == 0){
+            conditionsMap.put("本科", true);
+            /*
+            List<FilterData> teSeList = filterDataS.get("大学特色");
+            for(int i = 0; i < teSeList.size(); i++){
+                String label = teSeList.get(i).getLabel();
+                conditionsMap.put(label, true);
+            }
+            */
+        }else{
+            for(int i = 0; i < filterParams.getSchoolTeSe().size(); i++){
+                FilterData filterData = filterDataDao.getOneById(filterParams.getSchoolTeSe().get(i));
+                String label = filterData.getLabel();
+                conditionsMap.put(label, true);
+            }
+        }
+
+        if(filterParams.getSchoolXingZhi().size() == 0){
+            conditionsMap.put("公办", true);
+            /*
+            List<FilterData> xingZhiList = filterDataS.get("办学性质");
+            for(int i = 0; i < xingZhiList.size(); i++){
+                String label = xingZhiList.get(i).getLabel();
+                conditionsMap.put(label, true);
+            }
+            */
+        }else{
+            for(int i = 0; i < filterParams.getSchoolXingZhi().size(); i++){
+                FilterData filterData = filterDataDao.getOneById(filterParams.getSchoolXingZhi().get(i));
+                String label = filterData.getLabel();
+                conditionsMap.put(label, true);
+            }
+        }
+
+        if(filterParams.getSchoolType().size() == 0){
+            conditionsMap.put("综合", true);
+            /*
+            List<FilterData> typeList = filterDataS.get("大学类型");
+            for(int i = 0; i < typeList.size(); i++){
+                String label = typeList.get(i).getLabel();
+                conditionsMap.put(label, true);
+            }
+            */
+        }else{
+            for(int i = 0; i < filterParams.getSchoolType().size(); i++){
+                FilterData filterData = filterDataDao.getOneById(filterParams.getSchoolType().get(i));
+                String label = filterData.getLabel();
+                conditionsMap.put(label, true);
+            }
+        }
+        return conditionsMap;
+    }
+
+
+
     private Integer findCommon(List<Integer> m, List<Integer> n){
         Integer res = 0;
         for(int i = 0; i < m.size(); i++){
@@ -99,8 +258,7 @@ public class AdviseServiceImpl implements AdviseService{
         return res;
     }
 
-    @Override
-    public boolean filter(FilterParams filterParams, VolunteerVO volunteerVO){
+    public boolean filter(FilterParams filterParams, Map<String, Boolean> conditionsMap, VolunteerVO volunteerVO){
 
         //首先判断选课是否符合
         List<Integer> voluntSubject = volunteerVO.getSubjectRestrictionDetail();
@@ -152,64 +310,80 @@ public class AdviseServiceImpl implements AdviseService{
                     return false;
                 }
         }
-/*
 
-        //接下来判断录取批次、地区、大学类型等是否符合条件
-        List<Integer> other = filterParams.getOther();d
-        for(int i = 0; i < other.size(); i++){
-            Integer fatherId = filterDataDao.findFatherIdBySonId(other.get(i));
-            //判断录取批次是否符合
-            if(fatherId == 1){
-                String label = filterDataDao.findLabelById(other.get(i));
-                if(volunteerVO.getVolunteerSection() && label == "普通二段"){
-                    return false;
-                }
-                if(!volunteerVO.getVolunteerSection() && label == "普通一段"){
-                    return false;
-                }
-                continue;
-            }
+        /*
+           接下来判断录取批次、地区、大学特色、办学性质、大学类型等是否符合条件
+                必须同时满足才可以返回true，只要一个不满足就返回false。
+        */
 
-            fatherId = filterDataDao.findFatherIdBySonId(fatherId);
-            switch (fatherId){
-                case 2:
-                    //就读地区
-                case 3:
-                    //大学类型
-                case 4:
-                    //专业类别
-            }
-
+        //判断录取批次是否符合
+        Integer section;
+        if(volunteerVO.getVolunteerSection()){
+            section = 1;
         }
-*/
+        else {
+            section = 2;
+        }
+        if(!conditionsMap.containsKey(section + "")){
+            return false;
+        }
+
+        //判断地区是否符合
+        String city = volunteerVO.getCity();
+        if(!conditionsMap.containsKey(city)){
+            return false;
+        }
+
+        //判断大学特色（985、211、本科、专科）是否符合
+        if(conditionsMap.containsKey("985") && conditionsMap.containsKey("211") && conditionsMap.containsKey("本科") && conditionsMap.containsKey("专科")){
+
+        }else{
+            if(conditionsMap.containsKey("985") && !volunteerVO.getIs985()){
+                return false;
+            }
+            if(conditionsMap.containsKey("211") && !volunteerVO.getIs211()){
+
+                return false;
+            }
+            if(conditionsMap.containsKey("本科") && !volunteerVO.getUndergraduateSchoolIsOrNot()){
+                return false;
+            }
+            if(conditionsMap.containsKey("专科") && !volunteerVO.getJuniorSchoolIsOrNot()){
+                return false;
+            }
+        }
+
+        //判断办学性质（公办、民办）是否符合
+        if(conditionsMap.containsKey("公办") && conditionsMap.containsKey("民办")){
+
+        }else{
+            if(conditionsMap.containsKey("公办") && volunteerVO.getPrivateIsOrNot()){
+                return false;
+            }
+            if(conditionsMap.containsKey("民办") && volunteerVO.getPublicIsOrNot()){
+                return false;
+            }
+        }
+
+        //判读大学类型是否符合
+        String category = volunteerVO.getCategory();
+        if(!conditionsMap.containsKey(category)){
+            return false;
+        }
 
         return true;
+
     }
 
 
-    @Override
     public List<AdviseVO> listAll(FilterParams filterParams){
         List<AdviseVO> adviseVOList = new ArrayList<>();
-        if(volunteerVOList == null){
-            List<Volunteer> volunteerList = adviseDao.getAllVolunteer();
-            List<VolunteerVO> volunteerVOS = new ArrayList<>();
-            volunteerList.forEach(volunteer -> {
-                VolunteerVO volunteerVO = new VolunteerVO();
-                BeanUtils.copyProperties(volunteer, volunteerVO);
-                if(volunteer.getVolunteerSection() == 1){
-                    volunteerVO.setVolunteerSection(true);
-                }
-                else{
-                    volunteerVO.setVolunteerSection(false);
-                }
-                volunteerVO.setSubjectRestrictionDetail(JSON.parseArray(volunteer.getSubjectRestrictionDetail(), Integer.class));
-                volunteerVOS.add(volunteerVO);
-            });
-            volunteerVOList = volunteerVOS;
-        }
+
+        Map<String, Boolean> conditionsMap = start(filterParams);
+
         Integer rank = getUserRank(filterParams.getScore());
         volunteerVOList.forEach(volunteerVO -> {
-            if(filter(filterParams, volunteerVO)){
+            if(filter(filterParams, conditionsMap,volunteerVO)){
                 Integer rate = getRate(rank, volunteerVO.getPosition());
                 String rateDesc = "";
                 if(rate <= 50)
@@ -228,7 +402,6 @@ public class AdviseServiceImpl implements AdviseService{
                 adviseVO.setVolunteerVO(volunteerVO);
                 adviseVOList.add(adviseVO);
             }
-
         });
         return adviseVOList.stream().sorted(Comparator.comparing(AdviseVO::getRate))
                 .collect(Collectors.toList());
@@ -238,7 +411,14 @@ public class AdviseServiceImpl implements AdviseService{
     public Page<AdviseVO> list(FilterParams filterParams){
         List<AdviseVO> adviseVOS = listAll(filterParams);
         if(filterParams.getType() == 0){
-            return new PageImpl<>(adviseVOS, PageRequest.of(filterParams.getPage() - 1, filterParams.getLimit()), adviseVOS.size());
+            Pageable pageable = PageRequest.of(filterParams.getPage() - 1, filterParams.getLimit());
+            Integer fromIndex = (filterParams.getPage() - 1) * filterParams.getLimit();
+            Integer toIndex = fromIndex + filterParams.getLimit();
+            if(toIndex >= adviseVOS.size()){
+                toIndex = adviseVOS.size();
+            }
+            List<AdviseVO> adviseVOS1 = adviseVOS.subList(fromIndex, toIndex);
+            return new PageImpl<>(adviseVOS1, pageable, adviseVOS.size());
         }
         Map<String, List<AdviseVO>> map = new HashMap<>();
         List<AdviseVO> adviseVOList = new ArrayList<>();
@@ -257,8 +437,18 @@ public class AdviseServiceImpl implements AdviseService{
             default:
                 adviseVOList = adviseVOS;
             }
+            if(adviseVOList == null){
+                adviseVOList = new ArrayList<>();
+            }
             adviseVOList.sort(Comparator.comparing(AdviseVO::getRate).reversed());
-        return new PageImpl<>(adviseVOList, PageRequest.of(filterParams.getPage() - 1, filterParams.getLimit()), adviseVOList.size());
+
+        Integer fromIndex = (filterParams.getPage() - 1) * filterParams.getLimit();
+        Integer toIndex = fromIndex + filterParams.getLimit();
+        if(toIndex >= adviseVOList.size()){
+            toIndex = adviseVOList.size();
+        }
+        List<AdviseVO> adviseVOList1 = adviseVOList.subList(fromIndex, toIndex);
+        return new PageImpl<>(adviseVOList1, PageRequest.of(filterParams.getPage() - 1, filterParams.getLimit()), adviseVOList.size());
     }
 
     @Override
@@ -293,7 +483,28 @@ public class AdviseServiceImpl implements AdviseService{
         List<AdviseVO> chongList = map.get("可冲击");
         List<AdviseVO> wenList = map.get("较稳妥");
         List<AdviseVO> baoList = map.get("可保底");
+        List<AdviseVO> hardList = map.get("难录取");
+        List<AdviseVO> wasteList = map.get("浪费分");
+        if(chongList == null){
+            chongList = new ArrayList<>();
+        }
+        if(wenList == null){
+            wenList = new ArrayList<>();
+        }
+        if(baoList == null){
+            baoList = new ArrayList<>();
+        }
+        if(hardList == null){
+            hardList = new ArrayList<>();
+        }
+        if(wasteList == null){
+            wasteList = new ArrayList<>();
+        }
         List<VolunteerVO> volunteerVOList = new ArrayList<>();
+        //接下来构造96个志愿的列表，共分为四种情况
+        /*
+        * 第一种情况，筛选后的冲、稳、保数量均足够。
+        * */
         if(chongList.size() > autoGenerateFormParams.getChongRate() && baoList.size() > autoGenerateFormParams.getBaoRate()
             && wenList.size() > autoGenerateFormParams.getWenRate()){
             for(int i = 0; i < autoGenerateFormParams.getChongRate(); i++){
@@ -304,6 +515,130 @@ public class AdviseServiceImpl implements AdviseService{
             }
             for(int i = 0; i < autoGenerateFormParams.getBaoRate(); i++){
                 volunteerVOList.add(baoList.get(i).getVolunteerVO());
+            }
+        }
+        /*
+        * 第二种情况：筛选后冲、稳、保某一个或两个数量不够，但三者总数够96个。
+        * 处理方案为：先按照筛选后的向志愿表中添加，然后用数量多的list去填够96个，优先顺序为保、稳、冲
+        * */
+        else if(chongList.size() + wenList.size() + baoList.size() >= 96){
+            int c = 0, w = 0, b = 0;
+            boolean isFull = false;
+            for(c = 0; c < chongList.size() && c < autoGenerateFormParams.getChongRate(); c++){
+                volunteerVOList.add(chongList.get(c).getVolunteerVO());
+            }
+            for(w = 0; w < wenList.size() && w < autoGenerateFormParams.getWenRate(); w++){
+                volunteerVOList.add(wenList.get(w).getVolunteerVO());
+            }
+            for(b = 0; b < baoList.size() && b < autoGenerateFormParams.getBaoRate(); b++){
+                volunteerVOList.add(baoList.get(b).getVolunteerVO());
+            }
+            if(b < baoList.size()){
+                for(b = b; b < baoList.size(); b++){
+                    volunteerVOList.add(baoList.get(b).getVolunteerVO());
+                    if(volunteerVOList.size() == 96){
+                        isFull = true;
+                        break;
+                    }
+                }
+            }
+            if(!isFull && w < wenList.size()){
+                for(w = w; w < wenList.size(); w++){
+                    volunteerVOList.add(c + b, wenList.get(w).getVolunteerVO());
+                    if(volunteerVOList.size() == 96){
+                        isFull = true;
+                        break;
+                    }
+                }
+            }
+            if(!isFull && c < chongList.size()){
+                for(c = c; c < chongList.size(); c++){
+                    volunteerVOList.add(c, chongList.get(c).getVolunteerVO());
+                    if(volunteerVOList.size() == 96){
+                        isFull = true;
+                        break;
+                    }
+                }
+            }
+
+        }
+        /*
+        * 第三种情况：筛选后冲、稳、保总数不够96个但加上浪费分和难录取的数量够96个。
+        * 处理方案为：先用筛选后的浪费分的志愿当作保底的去补充，数量还不够则用筛选后的难录取的志愿当作冲击的志愿去补充。
+        * */
+        else if(chongList.size() + wenList.size() + baoList.size() + hardList.size() + wasteList.size() >= 96){
+            boolean isFull = false;
+            for(int i = 0; i < chongList.size(); i++){
+                volunteerVOList.add(chongList.get(i).getVolunteerVO());
+            }
+            for(int i = 0; i < wenList.size(); i++){
+                volunteerVOList.add(wenList.get(i).getVolunteerVO());
+            }
+            for(int i = 0; i < baoList.size(); i++){
+                volunteerVOList.add(baoList.get(i).getVolunteerVO());
+            }
+            for(int i = 0; i < wasteList.size(); i++){
+                volunteerVOList.add(wasteList.get(i).getVolunteerVO());
+                if(volunteerVOList.size() == 96){
+                    isFull = true;
+                    break;
+                }
+            }
+            if(!isFull){
+                for(int i = 0; i < hardList.size(); i++){
+                    volunteerVOList.add(0, hardList.get(i).getVolunteerVO());
+                    if(volunteerVOList.size() == 96){
+                        isFull = true;
+                        break;
+                    }
+                }
+            }
+        }
+        /*
+        * 第四种情况：筛选后的 冲、稳、保、浪费分、难录取加起来总数还不够96个。
+        * 处理方案为：先将满足筛选条件的加入进去，然后清空筛选条件重新获得志愿的list，补充至96个。
+        * */
+        else{
+            for(int i = 0; i < hardList.size(); i++){
+                volunteerVOList.add(hardList.get(i).getVolunteerVO());
+            }
+            for(int i = 0; i < chongList.size(); i++){
+                volunteerVOList.add(chongList.get(i).getVolunteerVO());
+            }
+            for(int i = 0; i < wenList.size(); i++){
+                volunteerVOList.add(wenList.get(i).getVolunteerVO());
+            }
+            for(int i = 0; i < baoList.size(); i++){
+                volunteerVOList.add(baoList.get(i).getVolunteerVO());
+            }
+            for(int i = 0; i < wasteList.size(); i++){
+                volunteerVOList.add(wasteList.get(i).getVolunteerVO());
+            }
+
+            List<Integer> integerList = new ArrayList<>();
+            FilterParams filterParams = new FilterParams();
+            filterParams.setBatch(integerList);
+            filterParams.setRegion(integerList);
+            filterParams.setSchoolTeSe(integerList);
+            filterParams.setSchoolType(integerList);
+            filterParams.setSchoolXingZhi(integerList);
+            filterParams.setType(0);
+            filterParams.setScore(autoGenerateFormParams.getScore());
+            filterParams.setSubject(autoGenerateFormParams.getSubject());
+            filterParams.setLimit(autoGenerateFormParams.getLimit());
+            filterParams.setPage(autoGenerateFormParams.getPage());
+            filterParams.setTotal(autoGenerateFormParams.getTotal());
+
+            List<AdviseVO> adviseVOList1 = list(filterParams).getContent();
+            Integer i = 0;
+            while(true){
+                if(!volunteerVOList.contains(adviseVOList1.get(i).getVolunteerVO())){
+                    volunteerVOList.add(adviseVOList1.get(i).getVolunteerVO());
+                }
+                i ++;
+                if(volunteerVOList.size() == 96){
+                    break;
+                }
             }
         }
         List<FormVolunteer> formVolunteerList = new ArrayList<>();
@@ -323,13 +658,12 @@ public class AdviseServiceImpl implements AdviseService{
         BeanUtils.copyProperties(userForm, userFormDetailVO);
         userFormDetailVO.setVolunteerList(volunteerVOList);
         userFormDetailVO.setScore(autoGenerateFormParams.getScore());
-        List<String> subject = new ArrayList<>();
+        List<Long> subject = new ArrayList<>();
         for(int i = 0; i < userForm.getSubject().length(); i += 2){
-            subject.add(Subject.getDescByCode(Integer.parseInt(userForm.getSubject().substring(i, i + 1))));
+            subject.add(Long.valueOf(Integer.parseInt(userForm.getSubject().substring(i, i + 1))));
         }
         userFormDetailVO.setSubject(subject);
         return userFormDetailVO;
     }
-    
 
 }

@@ -28,7 +28,7 @@ public class UserFormDetailVO {
     private Integer score;
 
     //选课信息
-    private List<String> subject; // 用户的选课信息
+    private List<Long> subject; // 用户的选课信息
 
     //志愿id
     private List<VolunteerVO> volunteerList;
