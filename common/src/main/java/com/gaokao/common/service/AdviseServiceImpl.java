@@ -2,14 +2,12 @@ package com.gaokao.common.service;
 
 import com.alibaba.fastjson.JSON;
 import com.gaokao.common.dao.*;
-import com.gaokao.common.enums.Subject;
 import com.gaokao.common.meta.po.*;
 import com.gaokao.common.meta.vo.advise.AutoGenerateFormParams;
 import com.gaokao.common.meta.vo.advise.FilterParams;
 import com.gaokao.common.meta.vo.advise.AdviseVO;
 import com.gaokao.common.meta.vo.volunteer.UserFormDetailVO;
 import com.gaokao.common.meta.vo.volunteer.VolunteerVO;
-import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +61,7 @@ public class AdviseServiceImpl implements AdviseService{
         return totalNums;
     }
 
-    public Integer getRate(Integer rank, Integer guess){
+    private Integer getRate(Integer rank, Integer guess){
         Integer dif = Math.abs(rank - guess);
         Integer rate = 0;
         if(rank > guess){//用户排名大于预估最低录取名次
@@ -249,7 +247,7 @@ public class AdviseServiceImpl implements AdviseService{
         return conditionsMap;
     }
 
-    Map<Long, Boolean> getSchoolAndMajorMap(FilterParams filterParams){
+    private Map<Long, Boolean> getSchoolAndMajorMap(FilterParams filterParams){
         if(filterParams.getMajorName().length() != 0 || filterParams.getUniversityName().length() != 0) {
             Map<Long, Boolean> map = new HashMap<>();
             String universityName = filterParams.getUniversityName();
@@ -272,7 +270,6 @@ public class AdviseServiceImpl implements AdviseService{
         return null;
     }
 
-
     private Integer findCommon(List<Integer> m, List<Integer> n){
         Integer res = 0;
         for(int i = 0; i < m.size(); i++){
@@ -285,7 +282,7 @@ public class AdviseServiceImpl implements AdviseService{
         return res;
     }
 
-    public boolean filter(FilterParams filterParams, Map<String, Boolean> conditionsMap, Map<Long, Boolean> schoolAndmajorMap, VolunteerVO volunteerVO){
+    private boolean filter(FilterParams filterParams, Map<String, Boolean> conditionsMap, Map<Long, Boolean> schoolAndmajorMap, VolunteerVO volunteerVO){
 
         if(schoolAndmajorMap != null){
             if(!schoolAndmajorMap.containsKey(volunteerVO.getId())){
@@ -409,7 +406,7 @@ public class AdviseServiceImpl implements AdviseService{
     }
 
 
-    public List<AdviseVO> listAll(FilterParams filterParams){
+    private List<AdviseVO> listAll(FilterParams filterParams){
         List<AdviseVO> adviseVOList = new ArrayList<>();
 
         Map<String, Boolean> conditionsMap = start(filterParams);
@@ -508,7 +505,7 @@ public class AdviseServiceImpl implements AdviseService{
         }
         userForm.setSubject(s);
         userForm.setGeneratedType(true);
-        userForm.setCurrent(true);
+        userForm.setCurrent(false);
         userForm.setGeneratedTime(timestamp);
         userFormDao.save(userForm);
         UserForm userForm1 = userFormDao.findForm(autoGenerateFormParams.getUserId(), timestamp);  //获取刚生成的表的信息
