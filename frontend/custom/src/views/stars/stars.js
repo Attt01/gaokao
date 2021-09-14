@@ -1,7 +1,4 @@
-import {
-  changeStarStatus, submitVolunteer
-} from "../../api/screen";
-import {getStarsList} from "../../api/stars";
+import {changeStarStatus, getStars, submitVolunteer} from "../../api/screen";
 
 export default {
   data() {
@@ -27,7 +24,7 @@ export default {
       query: {
         page: 1,
         size: 10,
-        total: 0
+        total: 0,
       },
       //表单参数
       form: {
@@ -50,9 +47,8 @@ export default {
   methods: {
     //请求列表数据
     fetchData() {
-      // this.loading = true;
-      getStarsList(this.query).then(response => {
-        this.loading = false;
+      this.loading = true;
+      getStars(this.query).then(response => {
         this.responseList = [];
         this.responseList = response.data.content;
         this.starsList = [];
@@ -77,6 +73,7 @@ export default {
             "myStar": item.volunteerVO.myStar
           })
         })
+        this.loading = false;
         this.total = response.data.totalElements;
         this.query.total = response.data.totalPages;
       })
@@ -120,6 +117,7 @@ export default {
           type: 'success',
           message: '更新信息成功'
         })
+        this.fetchData();
       });
     },
     cancel() {

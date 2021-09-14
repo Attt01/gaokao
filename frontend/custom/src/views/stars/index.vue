@@ -1,18 +1,17 @@
 <template>
   <div class="app-container">
-    <el-button type="primary" icon="el-icon-search" @click.native="handleQuery()">搜索</el-button>
     <!--列表部分-->
     <el-table :data="starsList" v-loading="loading" border highlight-current-row stripe height="600"
               :header-cell-style="{'text-align':'center'}">
       <el-table-column label="录取概率" prop="rate" align="center">
         <template slot-scope="scope">
-          <el-tag type="danger" v-if="scope.row.rate<=50"><50%(难录取)</el-tag>
+          <el-tag type="danger" v-if="scope.row.rate<=50">&lt;50%(难录取)</el-tag>
           <el-tag type="warning" v-if="scope.row.rate>50 && scope.row.rate<=60">{{ scope.row.rate }}%(可冲击)
           </el-tag>
           <el-tag type="success" v-if="scope.row.rate>60 && scope.row.rate<=80">{{ scope.row.rate }}%(较稳妥)
           </el-tag>
           <el-tag v-if="scope.row.rate>80 && scope.row.rate<95">{{ scope.row.rate }}%(可保底)</el-tag>
-          <el-tag type="info" v-if="scope.row.rate>=95">>95%(浪费分)</el-tag>
+          <el-tag type="info" v-if="scope.row.rate>=95">&gt;95%(浪费分)</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="2021招生计划" align="center">
@@ -97,7 +96,7 @@
             </el-button>
           </el-row>
           <el-row :gutter="16">
-            <div v-if="scope.row.myStar===1" class="star-active">
+            <div v-if="scope.row.myStar===1">
               <el-button
                 size="mini"
                 type="text"
@@ -107,7 +106,7 @@
               >已收藏
               </el-button>
             </div>
-            <div v-else class="star-inactive">
+            <div v-else>
               <el-button
                 size="mini"
                 type="text"
@@ -146,7 +145,7 @@
     <!--工具条-->
     <el-col :span="24" class="toolbar">
       <el-pagination layout="prev, pager, next" @current-change="fetchPage" :page-size="query.size"
-                     :page-count="query.total" style="text-align:center;margin:10px">
+                      style="text-align:center;margin:10px">
       </el-pagination>
     </el-col>
   </div>
@@ -156,10 +155,6 @@
 
 
 <style>
-.app-container {
-
-}
-
 .important-text {
   font-size: 14px;
   font-weight: bold;
@@ -177,11 +172,5 @@
   font-size: smaller;
   font-family: 幼圆;
   font-weight: bold;
-}
-
-.star-active {
-  color: #67C23A;
-  font-size: smaller;
-
 }
 </style>

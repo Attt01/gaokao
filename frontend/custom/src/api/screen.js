@@ -12,6 +12,18 @@ export function getVOList(params) {
 }
 
 /**
+ * 获取收藏列表数据
+ */
+export function getStars(query) {
+  return request({
+    url: '/xhr/v1/stars/list',
+    method: 'get',
+    params: query
+  })
+}
+
+
+/**
  * 获取区域信息下拉框
  */
 export function getRegion() {

@@ -184,7 +184,7 @@
             </el-button>
           </el-row>
           <el-row :gutter="16">
-            <div v-if="scope.row.myStar===true" class="star-active">
+            <div v-if="scope.row.myStar===true">
               <el-button
                 size="mini"
                 type="text"
@@ -194,7 +194,7 @@
               >已收藏
               </el-button>
             </div>
-            <div v-else class="star-inactive">
+            <div v-else>
               <el-button
                 size="mini"
                 type="text"

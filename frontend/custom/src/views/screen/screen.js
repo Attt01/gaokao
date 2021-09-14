@@ -198,6 +198,7 @@ export default {
           type: 'success',
           message: '更新信息成功'
         })
+        this.fetchData();
       });
     },
     getCurrent() {
