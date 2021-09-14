@@ -98,8 +98,8 @@
           </el-tag>
           <el-tag type="success" v-if="scope.row.rate>60 && scope.row.rate<=80">{{ scope.row.rate }}%(较稳妥)
           </el-tag>
-          <el-tag v-if="scope.row.rate>80 && scope.row.rate<=95">{{ scope.row.rate }}%(可保底)</el-tag>
-          <el-tag type="info" v-if="scope.row.rate>95">&ge;95%(浪费分)</el-tag>
+          <el-tag v-if="scope.row.rate>80 && scope.row.rate<95">{{ scope.row.rate }}%(可保底)</el-tag>
+          <el-tag type="info" v-if="scope.row.rate>=95">&gt;95%(浪费分)</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="2021招生计划" align="center">
