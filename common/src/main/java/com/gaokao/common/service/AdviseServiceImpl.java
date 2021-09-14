@@ -2,14 +2,12 @@ package com.gaokao.common.service;
 
 import com.alibaba.fastjson.JSON;
 import com.gaokao.common.dao.*;
-import com.gaokao.common.enums.Subject;
 import com.gaokao.common.meta.po.*;
 import com.gaokao.common.meta.vo.advise.AutoGenerateFormParams;
 import com.gaokao.common.meta.vo.advise.FilterParams;
 import com.gaokao.common.meta.vo.advise.AdviseVO;
 import com.gaokao.common.meta.vo.volunteer.UserFormDetailVO;
 import com.gaokao.common.meta.vo.volunteer.VolunteerVO;
-import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +43,9 @@ public class AdviseServiceImpl implements AdviseService{
     @Autowired
     private FilterDataDao filterDataDao;
 
+    @Autowired
+    private UserStarDao userStarDao;
+
     private static List<VolunteerVO> volunteerVOList;
 
     private static Map<String, List<FilterData>> filterDataS = new HashMap<>();
@@ -63,7 +64,7 @@ public class AdviseServiceImpl implements AdviseService{
         return totalNums;
     }
 
-    public Integer getRate(Integer rank, Integer guess){
+    private Integer getRate(Integer rank, Integer guess){
         Integer dif = Math.abs(rank - guess);
         Integer rate = 0;
         if(rank > guess){//用户排名大于预估最低录取名次
@@ -99,6 +100,7 @@ public class AdviseServiceImpl implements AdviseService{
                     volunteerVO.setVolunteerSection(false);
                 }
                 volunteerVO.setSubjectRestrictionDetail(JSON.parseArray(volunteer.getSubjectRestrictionDetail(), Integer.class));
+                volunteerVO.setMyStar(false);
                 volunteerVOS.add(volunteerVO);
             });
             volunteerVOList = volunteerVOS;
@@ -249,7 +251,15 @@ public class AdviseServiceImpl implements AdviseService{
         return conditionsMap;
     }
 
-    Map<Long, Boolean> getSchoolAndMajorMap(FilterParams filterParams){
+    private Map<Long, Boolean> getSchoolAndMajorMap(FilterParams filterParams){
+
+        if(filterParams.getMajorName() == null){
+            filterParams.setMajorName("");
+        }
+        if(filterParams.getUniversityName() == null){
+            filterParams.setUniversityName("");
+        }
+
         if(filterParams.getMajorName().length() != 0 || filterParams.getUniversityName().length() != 0) {
             Map<Long, Boolean> map = new HashMap<>();
             String universityName = filterParams.getUniversityName();
@@ -272,6 +282,19 @@ public class AdviseServiceImpl implements AdviseService{
         return null;
     }
 
+    private Map<Long, Boolean> getUserStarMap(Long userId){
+        Map<Long, Boolean> userStarMap = new HashMap<>();
+        UserStar userStars = userStarDao.getUserStars(userId);
+        if(userStars == null){
+            return null;
+        }
+        List<Long> userStarList = JSON.parseArray(userStars.getStars(),Long.class);
+        userStarList.forEach(userStarId ->{
+            userStarMap.put(userStarId, true);
+        });
+
+        return userStarMap;
+    }
 
     private Integer findCommon(List<Integer> m, List<Integer> n){
         Integer res = 0;
@@ -285,7 +308,7 @@ public class AdviseServiceImpl implements AdviseService{
         return res;
     }
 
-    public boolean filter(FilterParams filterParams, Map<String, Boolean> conditionsMap, Map<Long, Boolean> schoolAndmajorMap, VolunteerVO volunteerVO){
+    private boolean filter(FilterParams filterParams, Map<String, Boolean> conditionsMap, Map<Long, Boolean> schoolAndmajorMap, VolunteerVO volunteerVO){
 
         if(schoolAndmajorMap != null){
             if(!schoolAndmajorMap.containsKey(volunteerVO.getId())){
@@ -405,16 +428,23 @@ public class AdviseServiceImpl implements AdviseService{
         }
 
         return true;
-
     }
 
+    private Boolean ifStar(Map<Long, Boolean> starMap, VolunteerVO volunteerVO){
+        if(starMap == null){
+            return false;
+        }
+        return starMap.containsKey(volunteerVO.getId());
+    }
 
-    public List<AdviseVO> listAll(FilterParams filterParams){
+    private List<AdviseVO> listAll(FilterParams filterParams){
         List<AdviseVO> adviseVOList = new ArrayList<>();
 
         Map<String, Boolean> conditionsMap = start(filterParams);
 
         Map<Long, Boolean> schoolAndMajorMap = getSchoolAndMajorMap(filterParams);
+
+        Map<Long, Boolean> starMap = getUserStarMap(filterParams.getUserId());
 
         Integer rank = getUserRank(filterParams.getScore());
 
@@ -422,6 +452,11 @@ public class AdviseServiceImpl implements AdviseService{
 
         volunteerVOList1.forEach(volunteerVO -> {
             if(filter(filterParams, conditionsMap, schoolAndMajorMap, volunteerVO)){
+                if(ifStar(starMap, volunteerVO)){
+                    volunteerVO.setMyStar(true);
+                }else {
+                    volunteerVO.setMyStar(false);
+                }
                 Integer rate = getRate(rank, volunteerVO.getPosition());
                 String rateDesc = "";
                 if(rate <= 50)
@@ -508,7 +543,7 @@ public class AdviseServiceImpl implements AdviseService{
         }
         userForm.setSubject(s);
         userForm.setGeneratedType(true);
-        userForm.setCurrent(true);
+        userForm.setCurrent(false);
         userForm.setGeneratedTime(timestamp);
         userFormDao.save(userForm);
         UserForm userForm1 = userFormDao.findForm(autoGenerateFormParams.getUserId(), timestamp);  //获取刚生成的表的信息
