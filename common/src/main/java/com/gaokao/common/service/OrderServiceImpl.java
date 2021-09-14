@@ -14,6 +14,7 @@ import com.gaokao.common.meta.po.OrderPay;
 import com.gaokao.common.meta.po.OrderRefund;
 import com.gaokao.common.meta.po.UserMember;
 import com.gaokao.common.meta.vo.order.*;
+import com.gaokao.common.meta.vo.user.UserMemberVO;
 import com.gaokao.common.utils.CreateSignUtils;
 import com.gaokao.common.utils.NumberUtils;
 import com.gaokao.common.utils.RandomUtils;
@@ -29,6 +30,9 @@ import com.github.binarywang.wxpay.service.WxPayService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -361,7 +365,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Long allOrderNum() {
-       return orderDao.count();
+
+        return orderDao.count();
     }
 
     @Override
@@ -381,5 +386,18 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(OrderStatus.REFUND_REJECT.getValue());
         order.setRefundReason(reasons);
         orderDao.save(order);
+    }
+
+    @Override
+    public Page<OrderVO> list(String keyword, Integer page, Integer size) {
+        List<Order> orders = orderDao.findByorderContaining(keyword, PageRequest.of(page - 1, size));
+        List<OrderVO> orderVOS = new ArrayList<>(orders.size());
+        orders.forEach(order -> {
+            OrderVO orderVO = new OrderVO();
+            BeanUtils.copyProperties(order, orderVO);
+            orderVOS.add(orderVO);
+            });
+            return new PageImpl<>(orderVOS, PageRequest.of(page - 1, size), orderVOS.size());
+
     }
 }
