@@ -1,7 +1,6 @@
 package com.gaokao.common.dao;
 
 import com.gaokao.common.meta.po.Order;
-import com.gaokao.common.meta.po.UserMember;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -18,10 +17,10 @@ public interface OrderDao extends PagingAndSortingRepository<Order, Long>  {
 
     Order findByOutTradeNo(String outTradeNo);
 
-    @Override
     Page<Order> findAll(Pageable pageable);
 
-    @Override
     void deleteById(Long orderId);
+
+    List<Order> findOrderByIdContaining(String keyword, Pageable pageable);
 }
 

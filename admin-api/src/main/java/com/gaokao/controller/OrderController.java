@@ -2,11 +2,14 @@ package com.gaokao.controller;
 
 import com.gaokao.common.meta.AjaxResult;
 import com.gaokao.common.meta.vo.order.*;
+import com.gaokao.common.meta.vo.user.UserMemberVO;
 import com.gaokao.common.service.OrderService;
 import com.gaokao.common.utils.IPUtils;
 import com.gaokao.common.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -78,5 +81,13 @@ public class OrderController {
     @PostMapping("/wxPayNotify")
     public String wxPayNotify(@RequestBody String xmlData) {
         return orderService.wxPayNotify(xmlData);
+    }
+
+    @GetMapping("/")
+    @PreAuthorize("hasPermission('admin','view')")
+    public AjaxResult<Page<OrderVO>> list(@RequestParam(required = false, defaultValue = "") String keyword,
+                                               @RequestParam(required = false, defaultValue = "1") Integer page,
+                                               @RequestParam(required = false, defaultValue = "10") Integer size) {
+        return AjaxResult.SUCCESS(orderService.list(keyword, page, size));
     }
 }
