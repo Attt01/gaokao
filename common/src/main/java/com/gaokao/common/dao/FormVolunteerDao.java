@@ -17,6 +17,8 @@ public interface FormVolunteerDao extends PagingAndSortingRepository<FormVolunte
 
     FormVolunteer findByFormIdAndVolunteerSectionAndVolunteerPosition(Long formId, Boolean volunteerSection, Integer volunteerPosition);
 
+    FormVolunteer findByFormIdAndVolunteerSectionAndVolunteerId(Long formId, Boolean volunteerSection, Long volunteerId);
+
     List<FormVolunteer> findAllByFormId(Long formId);
 
     @Transactional

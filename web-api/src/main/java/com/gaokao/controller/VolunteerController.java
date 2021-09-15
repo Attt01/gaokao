@@ -123,7 +123,7 @@ public class VolunteerController {
                 addVolunteerParams.getVolunteerId());
 
         if (result == -1L)
-            return AjaxResult.FAIL("操作失败");
+            return AjaxResult.FAIL("添加志愿失败或该志愿表下已有相同志愿");
         else
             return AjaxResult.SUCCESS(result);
     }

@@ -98,7 +98,10 @@ public class VolunteerServiceImpl implements VolunteerService{
     public Long setVolunteer(Long userId, Long formId, Boolean section, Integer position, Long volunteerId) {
 
         FormVolunteer formVolunteer = formVolunteerDao.findByFormIdAndVolunteerSectionAndVolunteerPosition(formId, section, position);
-
+        FormVolunteer formVolunteerRepeatCheck = formVolunteerDao.findByFormIdAndVolunteerSectionAndVolunteerId(formId, section, volunteerId);
+        if(formVolunteerRepeatCheck != null && formVolunteerRepeatCheck.getVolunteerPosition() != position) {
+            return -1L;
+        }
         if(formVolunteer == null) {
             if(volunteerId == VolunteerConstant.EMPTY_VOLUNTEER) {
                 return 0L;
