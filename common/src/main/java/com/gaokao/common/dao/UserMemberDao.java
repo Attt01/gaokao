@@ -29,4 +29,11 @@ public interface UserMemberDao extends PagingAndSortingRepository<UserMember, Lo
     UserMember findByUsernameContaining(String s);
 
     UserMember findByUsername(String s);
+
+   //  对手机号进行搜索
+    UserMember findByPhone(String s);
+
+    List<UserMember> findByPhoneContaining(String keyword, Pageable pageable);
+
+
 }

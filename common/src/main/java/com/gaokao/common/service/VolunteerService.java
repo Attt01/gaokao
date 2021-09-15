@@ -23,7 +23,7 @@ public interface VolunteerService {
 
     UserFormDetailVO listCurrentForm(Long userId);
 
-    Long changeCurrentForm(Long userId, Long preFormId, Long newFormId);
+    Long changeCurrentForm(Long userId, Long newFormId);
 
     Long deleteForm(Long formId);
 

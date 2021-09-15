@@ -11,11 +11,6 @@ import lombok.Data;
 public class ChangeCurrentFormParams {
 
     /**
-     * 之前的志愿表id
-     */
-    private Long preFormId;
-
-    /**
      * 新的当前志愿表id
      */
     private Long newFormId;

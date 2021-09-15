@@ -21,6 +21,6 @@ public interface OrderDao extends PagingAndSortingRepository<Order, Long>  {
 
     void deleteById(Long orderId);
 
-    List<Order> findByorderContaining(String keyword, Pageable pageable);
+    List<Order> findOrderByIdContaining(String keyword, Pageable pageable);
 }
 

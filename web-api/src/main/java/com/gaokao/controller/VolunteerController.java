@@ -6,7 +6,7 @@ import com.gaokao.common.meta.po.FormVolunteer;
 import com.gaokao.common.meta.vo.volunteer.*;
 import com.gaokao.common.service.VolunteerService;
 import com.gaokao.common.utils.UserUtils;
-import com.sun.org.apache.xpath.internal.operations.Bool;
+//import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -60,7 +60,6 @@ public class VolunteerController {
     @PostMapping("/changeCurrentForm")
     public AjaxResult<Long> changeCurrentForm(@RequestBody ChangeCurrentFormParams changeCurrentFormParams) {
         return AjaxResult.SUCCESS(volunteerService.changeCurrentForm(UserUtils.getUserId(),
-                changeCurrentFormParams.getPreFormId(),
                 changeCurrentFormParams.getNewFormId()));
     }
 

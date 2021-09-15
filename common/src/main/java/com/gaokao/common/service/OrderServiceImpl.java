@@ -390,7 +390,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Page<OrderVO> list(String keyword, Integer page, Integer size) {
-        List<Order> orders = orderDao.findByorderContaining(keyword, PageRequest.of(page - 1, size));
+        List<Order> orders = orderDao.findOrderByIdContaining(keyword, PageRequest.of(page - 1, size));
         List<OrderVO> orderVOS = new ArrayList<>(orders.size());
         orders.forEach(order -> {
             OrderVO orderVO = new OrderVO();
