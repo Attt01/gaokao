@@ -389,15 +389,18 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Page<OrderVO> list(String keyword, Integer page, Integer size) {
-        List<Order> orders = orderDao.findOrderByIdContaining(keyword, PageRequest.of(page - 1, size));
-        List<OrderVO> orderVOS = new ArrayList<>(orders.size());
-        orders.forEach(order -> {
-            OrderVO orderVO = new OrderVO();
-            BeanUtils.copyProperties(order, orderVO);
-            orderVOS.add(orderVO);
-            });
-            return new PageImpl<>(orderVOS, PageRequest.of(page - 1, size), orderVOS.size());
 
+    public Page<OrderVO> list(Long orderId, Long userId, int page, int size) {
+        Page<Order> result;
+        result =orderDao.findAllByIdAndUserId(orderId,userId, PageRequest.of((page - 1), size));
+        List<OrderVO> orderVOS = new ArrayList<>(result.getNumberOfElements());
+        result.forEach(item -> {
+            OrderVO orderVO = new OrderVO();
+            BeanUtils.copyProperties(item, orderVO);
+            orderVO.setRealPrice(NumberUtils.priceFormatToYuan(item.getRealPrice()));
+            orderVO.setTotalPrice(NumberUtils.priceFormatToYuan(item.getTotalPrice()));
+            orderVOS.add(orderVO);
+        });
+        return new PageImpl<>(orderVOS, PageRequest.of((page - 1), size), orderVOS.size());
     }
 }

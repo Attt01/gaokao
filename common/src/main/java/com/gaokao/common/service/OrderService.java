@@ -80,11 +80,10 @@ public interface OrderService {
 
     /**
      * 查询所有订单
-     * @param keyword
-     * @param page
-     * @param size
-     * @return
+     * @param
      */
-    Page<OrderVO> list(String keyword, Integer page, Integer size);
+
+    Page<OrderVO> list(Long orderId,  Long userId, int page, int size);
+
 
 }

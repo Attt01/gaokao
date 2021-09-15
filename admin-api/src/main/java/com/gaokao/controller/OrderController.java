@@ -85,9 +85,10 @@ public class OrderController {
 
     @GetMapping("/")
     @PreAuthorize("hasPermission('admin','view')")
-    public AjaxResult<Page<OrderVO>> list(@RequestParam(required = false, defaultValue = "") String keyword,
+    public AjaxResult<Page<OrderVO>> list(@RequestParam(required = false,defaultValue = "") Long orderId,
+                                              @RequestParam(required = false, defaultValue = "") Long userId,
                                                @RequestParam(required = false, defaultValue = "1") Integer page,
                                                @RequestParam(required = false, defaultValue = "10") Integer size) {
-        return AjaxResult.SUCCESS(orderService.list(keyword, page, size));
+        return AjaxResult.SUCCESS(orderService.list(orderId, userId, page, size));
     }
 }
