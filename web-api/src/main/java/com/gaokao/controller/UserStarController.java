@@ -23,13 +23,13 @@ public class UserStarController {
     private UserStarService userStarService;
 
     @GetMapping("/list")
-    public AjaxResult<Page<AdviseVO>> getUserStars(@RequestParam(required = false, defaultValue = "1")Integer page,
-                                                   @RequestParam(required = false, defaultValue = "5") Integer size){
+    public AjaxResult<Page<AdviseVO>> getUserStars(@RequestParam(required = false, defaultValue = "1") Integer page,
+                                                   @RequestParam(required = false, defaultValue = "5") Integer size) {
         return AjaxResult.SUCCESS(userStarService.getUserStarList(page, size));
     }
 
-    @GetMapping("/star")
-    public AjaxResult<Boolean> star(@RequestParam Long volunteerId){
+    @GetMapping("/star/{volunteerId}")
+    public AjaxResult<Boolean> star(@PathVariable Long volunteerId) {
         return AjaxResult.SUCCESS(userStarService.star(volunteerId));
     }
 
