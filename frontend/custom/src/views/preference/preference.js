@@ -12,6 +12,7 @@ import { STATUS_CODE } from "@/api/statusCode";
 export default {
   data() {
     return {
+      loading: true,
       isExist: false,
       dialogVisible: false,
       //新建和修改表名称共用一个对话框，mode为true时表示新建
@@ -49,6 +50,7 @@ export default {
   },
   methods: {
     initData() {
+      this.loading = true;
       this.userInfo = JSON.parse(localStorage.getItem("userGaoKaoInfo"));
       this.createData.score = this.userInfo.score;
       this.createData.subject = this.userInfo.subject;
@@ -57,11 +59,11 @@ export default {
       for (let index = 1; index <= 96; ++index) {
         this.tableData.push({
             num: '志愿' + index,
-            school: '',
-            profession: '',
+            name: '',
+            professionalName: '',
             isExist: false,
             id: 0,
-            swapVisible: false
+            swapVisible: false,
           });
       }
       //console.log('crdt', this.createData);
@@ -75,16 +77,28 @@ export default {
           this.userInfo.score = res.data.score;
           this.userInfo.subject = res.data.subject;
           res.data.volunteerList.forEach(volunteer => {
-            console.log(volunteer);
-            this.tableData[volunteer.volunteerPosition - 1].school = volunteer.name;
-            this.tableData[volunteer.volunteerPosition - 1].profession = volunteer.professionalName;
-            this.tableData[volunteer.volunteerPosition - 1].isExist = true;
-            this.tableData[volunteer.volunteerPosition - 1].id = volunteer.id;
+            //console.log(volunteer);
+            // this.tableData[volunteer.volunteerPosition - 1] = {
+            //   school: volunteer.name,
+            //   profession: volunteer.professionalName,
+            //   isExist: true,
+            //   id: volunteer.id,
+            //   universityCode: volunteer.universityCode,
+            //   fee: volunteer.fee,
+            //   time: volunteer.time,
+            //   lowestScore: volunteer.lowestScore,
+            //   lowestPosition: volunteer.lowestPosition,
+            //   enrollment: volunteer.enrollment
+            // }
+            this.tableData[volunteer.volunteerPosition - 1] = Object.assign(this.tableData[volunteer.volunteerPosition - 1], volunteer);
+            this.tableData[volunteer.volunteerPosition - 1].isExist = 1;
           });
+          this.loading = false;
         }
       }).catch(res => {
         if (res.code === STATUS_CODE.FAIL) {
           this.isExist = false;
+          this.loading = false;
         }
       });
     },
@@ -212,8 +226,9 @@ export default {
       });
     },
     deleteVol(index) {
+      console.log(this.formId);
       deleteVolunteer({
-        formId: this.formId,
+        id: this.formId,
         section: true,
         volunteerPosition: index + 1
       }).then(res => {
