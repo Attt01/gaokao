@@ -11,14 +11,6 @@ import java.util.List;
 @Data
 public class FilterParams {
 
-    private Long userId;
-
-    //成绩
-    private Integer score;
-
-    //选课信息
-    private List<Integer> subject;
-
     private Integer page;
 
     private Integer limit;

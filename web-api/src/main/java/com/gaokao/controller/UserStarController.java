@@ -1,6 +1,7 @@
 package com.gaokao.controller;
 
 import com.gaokao.common.meta.AjaxResult;
+import com.gaokao.common.meta.vo.advise.AdviseVO;
 import com.gaokao.common.meta.vo.volunteer.VolunteerVO;
 import com.gaokao.common.service.UserStarService;
 import lombok.extern.slf4j.Slf4j;
@@ -22,16 +23,14 @@ public class UserStarController {
     private UserStarService userStarService;
 
     @GetMapping("/list")
-    public AjaxResult<Page<VolunteerVO>> getUserStars(@RequestParam Long userId,
-                                                      @RequestParam(required = false, defaultValue = "1")Integer page,
-                                                      @RequestParam(required = false, defaultValue = "5") Integer size){
-        return AjaxResult.SUCCESS(userStarService.getUserStarList(userId, page, size));
+    public AjaxResult<Page<AdviseVO>> getUserStars(@RequestParam(required = false, defaultValue = "1")Integer page,
+                                                   @RequestParam(required = false, defaultValue = "5") Integer size){
+        return AjaxResult.SUCCESS(userStarService.getUserStarList(page, size));
     }
 
     @GetMapping("/star")
-    public AjaxResult<Boolean> star(@RequestParam Long userId,
-                                    @RequestParam Long volunteerId){
-        return AjaxResult.SUCCESS(userStarService.star(userId, volunteerId));
+    public AjaxResult<Boolean> star(@RequestParam Long volunteerId){
+        return AjaxResult.SUCCESS(userStarService.star(volunteerId));
     }
 
 }

@@ -38,5 +38,4 @@ public class AdviseController {
         return AjaxResult.SUCCESS(adviseService.generateVoluntForm(autoGenerateFormParams));
     }
 
-
 }
