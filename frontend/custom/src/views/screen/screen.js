@@ -67,6 +67,7 @@ export default {
     this.selectRegion();
     this.selectSchoolType();
     this.selectMajorType();
+    this.getCurrent();
     this.fetchData();
   },
 
@@ -87,13 +88,7 @@ export default {
       if (!this.listQuery.majorName) {
         this.listQuery.majorName = "";
       }
-      this.getCurrent();
-      console.log("this.listQuery1")
-      console.log(this.listQuery)
-
       getVOList(this.listQuery).then(response => {
-        console.log("this.listQuery2")
-        console.log(this.listQuery)
         this.loading = false;
         this.responseList = [];
         this.responseList = response.data.content;
@@ -212,8 +207,6 @@ export default {
           this.form.formId = response.data.id;
           console.log("this.form.formId")
           console.log(this.form.formId)
-
-
         }
       })
     },

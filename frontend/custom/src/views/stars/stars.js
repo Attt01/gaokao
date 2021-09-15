@@ -1,11 +1,10 @@
-import {changeStarStatus, getStars, submitVolunteer} from "../../api/screen";
+import {changeStarStatus, getCurrentInfo, getStars, submitVolunteer} from "../../api/screen";
 
 export default {
   data() {
     return {
       // 遮罩层
-      // loading: true,
-      loading: false,
+      loading: true,
       // 显示搜索条件
       showSearch: true,
       //收藏列表
@@ -29,6 +28,7 @@ export default {
       //表单参数
       form: {
         formId: undefined,
+        volunteerId: undefined,
         volunteerPosition: undefined,
         name: undefined,
         professionalName: undefined,
@@ -41,6 +41,7 @@ export default {
   },
 
   created() {
+    this.getCurrent();
     this.fetchData();
   },
 
@@ -78,6 +79,15 @@ export default {
         this.query.total = response.data.totalPages;
       })
     },
+    getCurrent() {
+      getCurrentInfo().then(response => {
+        if (response) {
+          this.form.formId = response.data.id;
+          console.log("this.form.formId")
+          console.log(this.form.formId)
+        }
+      })
+    },
     /** 搜索按钮操作 */
     handleQuery() {
       this.query.page = 1;
@@ -97,10 +107,11 @@ export default {
       this.dialogFormVisible = true;
       this.form.name = row.name;
       this.form.professionalName = row.professionalName;
+      this.form.volunteerId = row.volunteerId;
     },
     handleStar(row) {
       let text = undefined;
-      if (row.myStar === 0) {
+      if (row.myStar === false) {
         text = "收藏";
       } else {
         text = "取消收藏";
