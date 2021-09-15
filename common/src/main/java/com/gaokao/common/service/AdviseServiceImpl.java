@@ -8,6 +8,7 @@ import com.gaokao.common.meta.vo.advise.FilterParams;
 import com.gaokao.common.meta.vo.advise.AdviseVO;
 import com.gaokao.common.meta.vo.volunteer.UserFormDetailVO;
 import com.gaokao.common.meta.vo.volunteer.VolunteerVO;
+import com.gaokao.common.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -27,6 +29,9 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class AdviseServiceImpl implements AdviseService{
+
+    @Autowired
+    private UserMemberDao userMemberDao;
 
     @Autowired
     private ScoreRankDao scoreRankDao;
@@ -308,7 +313,7 @@ public class AdviseServiceImpl implements AdviseService{
         return res;
     }
 
-    private boolean filter(FilterParams filterParams, Map<String, Boolean> conditionsMap, Map<Long, Boolean> schoolAndmajorMap, VolunteerVO volunteerVO){
+    private boolean filter(FilterParams filterParams, Map<String, Boolean> conditionsMap, Map<Long, Boolean> schoolAndmajorMap,List<Integer> subject, VolunteerVO volunteerVO){
 
         if(schoolAndmajorMap != null){
             if(!schoolAndmajorMap.containsKey(volunteerVO.getId())){
@@ -318,7 +323,6 @@ public class AdviseServiceImpl implements AdviseService{
 
         //首先判断选课是否符合
         List<Integer> voluntSubject = volunteerVO.getSubjectRestrictionDetail();
-        List<Integer> subject = filterParams.getSubject();
         Integer commom = findCommon(voluntSubject, subject);
         switch(volunteerVO.getSubjectRestrictionType()){
             case 0:
@@ -437,21 +441,21 @@ public class AdviseServiceImpl implements AdviseService{
         return starMap.containsKey(volunteerVO.getId());
     }
 
-    private List<AdviseVO> listAll(FilterParams filterParams){
+    private List<AdviseVO> listAll(FilterParams filterParams, Integer score, List<Integer> subject){
         List<AdviseVO> adviseVOList = new ArrayList<>();
 
         Map<String, Boolean> conditionsMap = start(filterParams);
 
         Map<Long, Boolean> schoolAndMajorMap = getSchoolAndMajorMap(filterParams);
 
-        Map<Long, Boolean> starMap = getUserStarMap(filterParams.getUserId());
+        Map<Long, Boolean> starMap = getUserStarMap(UserUtils.getUserId());
 
-        Integer rank = getUserRank(filterParams.getScore());
+        Integer rank = getUserRank(score);
 
         List<VolunteerVO> volunteerVOList1 = volunteerVOList;
 
         volunteerVOList1.forEach(volunteerVO -> {
-            if(filter(filterParams, conditionsMap, schoolAndMajorMap, volunteerVO)){
+            if(filter(filterParams, conditionsMap, schoolAndMajorMap, subject, volunteerVO)){
                 if(ifStar(starMap, volunteerVO)){
                     volunteerVO.setMyStar(true);
                 }else {
@@ -482,7 +486,11 @@ public class AdviseServiceImpl implements AdviseService{
 
     @Override
     public Page<AdviseVO> list(FilterParams filterParams){
-        List<AdviseVO> adviseVOS = listAll(filterParams);
+        Long userId = UserUtils.getUserId();
+        UserMember userMember = userMemberDao.findUserMemberById(userId);
+        Integer score = userMember.getScore();
+        List<Integer> subject = JSON.parseArray(userMember.getSubject(), Integer.class);
+        List<AdviseVO> adviseVOS = listAll(filterParams, score, subject);
         if(filterParams.getType() == 0){
             Pageable pageable = PageRequest.of(filterParams.getPage() - 1, filterParams.getLimit());
             Integer fromIndex = (filterParams.getPage() - 1) * filterParams.getLimit();
@@ -526,30 +534,26 @@ public class AdviseServiceImpl implements AdviseService{
 
     @Override
     public UserFormDetailVO generateVoluntForm(AutoGenerateFormParams autoGenerateFormParams){
+        Long userId = UserUtils.getUserId();
+        UserMember userMember = userMemberDao.findUserMemberById(userId);
         //首先向tb_user_form中添加一条数据，表示生成一张表
         Date date = new Date();
         Long timestamp = date.getTime();
         UserForm userForm = new UserForm();
-        userForm.setUserId(autoGenerateFormParams.getUserId());
-        userForm.setName(autoGenerateFormParams.getScore() + "-新建志愿表");
-        userForm.setScore(autoGenerateFormParams.getScore());
-        List<Integer> subject1 = autoGenerateFormParams.getSubject();
-        String s = "";
-        for(int i = 0; i < 3; i++){
-            s += subject1.get(i);
-            if(i != 2){
-                s += ";";
-            }
-        }
+        userForm.setUserId(userId);
+        userForm.setName(userMember.getScore() + "-新建志愿表");
+        userForm.setScore(userMember.getScore());
+        List<Integer> subject1 = JSON.parseArray(userMember.getSubject(), Integer.class);
+        String s = JSON.toJSONString(subject1);
         userForm.setSubject(s);
         userForm.setGeneratedType(true);
         userForm.setCurrent(false);
         userForm.setGeneratedTime(timestamp);
         userFormDao.save(userForm);
-        UserForm userForm1 = userFormDao.findForm(autoGenerateFormParams.getUserId(), timestamp);  //获取刚生成的表的信息
+        UserForm userForm1 = userFormDao.findForm(userId, timestamp);  //获取刚生成的表的信息
 
         //接下来向tb_form_volunteer表中插入新自动生成的表的志愿
-        List<AdviseVO> adviseVOList = listAll(autoGenerateFormParams);
+        List<AdviseVO> adviseVOList = listAll(autoGenerateFormParams, userMember.getScore(), subject1);
         Map<String, List<AdviseVO>> map = new HashMap<>();
         adviseVOList.stream().collect(Collectors.groupingBy(AdviseVO::getRateDesc,Collectors.toList()))
                 .forEach(map::put);
@@ -575,9 +579,10 @@ public class AdviseServiceImpl implements AdviseService{
         }
         List<VolunteerVO> volunteerVOList = new ArrayList<>();
         //接下来构造96个志愿的列表，共分为四种情况
+
         /*
-        * 第一种情况，筛选后的冲、稳、保数量均足够。
-        * */
+        第一种情况，筛选后的冲、稳、保数量均足够。
+         */
         if(chongList.size() > autoGenerateFormParams.getChongRate() && baoList.size() > autoGenerateFormParams.getBaoRate()
             && wenList.size() > autoGenerateFormParams.getWenRate()){
             for(int i = 0; i < autoGenerateFormParams.getChongRate(); i++){
@@ -590,10 +595,10 @@ public class AdviseServiceImpl implements AdviseService{
                 volunteerVOList.add(baoList.get(i).getVolunteerVO());
             }
         }
-        /*
+       /* *
         * 第二种情况：筛选后冲、稳、保某一个或两个数量不够，但三者总数够96个。
         * 处理方案为：先按照筛选后的向志愿表中添加，然后用数量多的list去填够96个，优先顺序为保、稳、冲
-        * */
+       */
         else if(chongList.size() + wenList.size() + baoList.size() >= 96){
             int c = 0, w = 0, b = 0;
             boolean isFull = false;
@@ -638,7 +643,7 @@ public class AdviseServiceImpl implements AdviseService{
         /*
         * 第三种情况：筛选后冲、稳、保总数不够96个但加上浪费分和难录取的数量够96个。
         * 处理方案为：先用筛选后的浪费分的志愿当作保底的去补充，数量还不够则用筛选后的难录取的志愿当作冲击的志愿去补充。
-        * */
+        **/
         else if(chongList.size() + wenList.size() + baoList.size() + hardList.size() + wasteList.size() >= 96){
             boolean isFull = false;
             for(int i = 0; i < chongList.size(); i++){
@@ -670,7 +675,7 @@ public class AdviseServiceImpl implements AdviseService{
         /*
         * 第四种情况：筛选后的 冲、稳、保、浪费分、难录取加起来总数还不够96个。
         * 处理方案为：先将满足筛选条件的加入进去，然后清空筛选条件重新获得志愿的list，补充至96个。
-        * */
+        **/
         else{
             for(int i = 0; i < hardList.size(); i++){
                 volunteerVOList.add(hardList.get(i).getVolunteerVO());
@@ -696,8 +701,6 @@ public class AdviseServiceImpl implements AdviseService{
             filterParams.setSchoolType(integerList);
             filterParams.setSchoolXingZhi(integerList);
             filterParams.setType(0);
-            filterParams.setScore(autoGenerateFormParams.getScore());
-            filterParams.setSubject(autoGenerateFormParams.getSubject());
             filterParams.setLimit(autoGenerateFormParams.getLimit());
             filterParams.setPage(autoGenerateFormParams.getPage());
             filterParams.setTotal(autoGenerateFormParams.getTotal());
@@ -730,11 +733,11 @@ public class AdviseServiceImpl implements AdviseService{
         UserFormDetailVO userFormDetailVO = new UserFormDetailVO();
         BeanUtils.copyProperties(userForm, userFormDetailVO);
         userFormDetailVO.setVolunteerList(volunteerVOList);
-        userFormDetailVO.setScore(autoGenerateFormParams.getScore());
+        userFormDetailVO.setScore(userMember.getScore());
         List<Long> subject = new ArrayList<>();
-        for(int i = 0; i < userForm.getSubject().length(); i += 2){
-            subject.add(Long.valueOf(Integer.parseInt(userForm.getSubject().substring(i, i + 1))));
-        }
+
+        String s1 = userForm.getSubject();
+        subject = JSON.parseArray(s1, Long.class);
         userFormDetailVO.setSubject(subject);
         return userFormDetailVO;
     }
