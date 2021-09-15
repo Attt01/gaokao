@@ -22,7 +22,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="register-container" auto-complete="on"
              label-position="left">
 
-      <h3 class="register-title"> 高考志愿推荐系统 </h3>
+      <h3 class="register-title"> 高考志愿推荐系统登录 </h3>
       <!-- <lang-select class="set-language"/> -->
 
       <el-form-item prop="username">
