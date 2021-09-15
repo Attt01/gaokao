@@ -22,8 +22,6 @@ export default {
       multiProps: {multiple: true},
       //请求参数
       listQuery: {
-        subject: [1, 2, 3],
-        score: 600,
         page: 1,
         limit: 10,
         total: 0,
@@ -52,6 +50,7 @@ export default {
       //表单参数
       form: {
         formId: undefined,
+        volunteerId: undefined,
         volunteerPosition: undefined,
         name: undefined,
         professionalName: undefined,
@@ -68,7 +67,6 @@ export default {
     this.selectRegion();
     this.selectSchoolType();
     this.selectMajorType();
-    //this.getCurrent();
     this.fetchData();
   },
 
@@ -89,7 +87,13 @@ export default {
       if (!this.listQuery.majorName) {
         this.listQuery.majorName = "";
       }
+      this.getCurrent();
+      console.log("this.listQuery1")
+      console.log(this.listQuery)
+
       getVOList(this.listQuery).then(response => {
+        console.log("this.listQuery2")
+        console.log(this.listQuery)
         this.loading = false;
         this.responseList = [];
         this.responseList = response.data.content;
@@ -178,6 +182,7 @@ export default {
       this.dialogFormVisible = true;
       this.form.name = row.name;
       this.form.professionalName = row.professionalName;
+      this.form.volunteerId = row.volunteerId;
     },
     handleStar(row) {
       let text = undefined;
@@ -205,8 +210,10 @@ export default {
       getCurrentInfo().then(response => {
         if (response) {
           this.form.formId = response.data.id;
-          this.listQuery.score = response.data.score;
-          this.listQuery.subject = response.data.subject;
+          console.log("this.form.formId")
+          console.log(this.form.formId)
+
+
         }
       })
     },

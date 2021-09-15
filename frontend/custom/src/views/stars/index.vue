@@ -96,7 +96,7 @@
             </el-button>
           </el-row>
           <el-row :gutter="16">
-            <div v-if="scope.row.myStar===1">
+            <div v-if="scope.row.myStar===true">
               <el-button
                 size="mini"
                 type="text"
@@ -145,7 +145,7 @@
     <!--工具条-->
     <el-col :span="24" class="toolbar">
       <el-pagination layout="prev, pager, next" @current-change="fetchPage" :page-size="query.size"
-                      style="text-align:center;margin:10px">
+                     :page-count="query.total" style="text-align:center;margin:10px">
       </el-pagination>
     </el-col>
   </div>
