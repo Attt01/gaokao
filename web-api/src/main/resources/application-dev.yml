@@ -26,6 +26,21 @@ spring:
   servlet:
     multipart:
       max-file-size: 10MB
+wx:
+  #支付
+  pay:
+    # 小程序appid
+    appId: wxfd24dcdd82129aaa
+    # 商户号
+    mchId: 1613925940
+    # api密钥
+    mchKey: Ljmswxfd24dcdd82129aaa0123456789
+    # 证书路径
+    keyPath: classpath:cert/apiclient_cert.p12
+    # 微信支付异步回调地址
+    payCallbackUrl:
+    sanbox: true
+
 
 server:
   port: 9090

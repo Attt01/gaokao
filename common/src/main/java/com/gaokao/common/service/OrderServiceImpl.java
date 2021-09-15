@@ -14,8 +14,13 @@ import com.gaokao.common.meta.po.OrderPay;
 import com.gaokao.common.meta.po.OrderRefund;
 import com.gaokao.common.meta.po.UserMember;
 import com.gaokao.common.meta.vo.order.*;
+import com.gaokao.common.meta.vo.user.UserMemberVO;
 import com.gaokao.common.utils.CreateSignUtils;
+import com.gaokao.common.utils.NumberUtils;
 import com.gaokao.common.utils.RandomUtils;
+import com.github.binarywang.wxpay.bean.notify.WxPayNotifyResponse;
+import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyResult;
+import com.github.binarywang.wxpay.bean.notify.WxPayRefundNotifyResult;
 import com.github.binarywang.wxpay.bean.request.WxPayOrderCloseRequest;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
 import com.github.binarywang.wxpay.bean.result.WxPayOrderCloseResult;
@@ -23,13 +28,15 @@ import com.github.binarywang.wxpay.bean.result.WxPayUnifiedOrderResult;
 import com.github.binarywang.wxpay.constant.WxPayConstants;
 import com.github.binarywang.wxpay.service.WxPayService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -171,7 +178,32 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public String wxPayNotify(String content) {
-        return null;
+        try {
+            WxPayOrderNotifyResult notifyResult = this.wxService.parseOrderNotifyResult(content);
+            String outTradeNo = notifyResult.getOutTradeNo();
+            Order order = orderDao.findByOutTradeNo(outTradeNo);
+            if (order == null) {
+                throw new BusinessException("订单不存在");
+            }
+            if (order.getStatus() != OrderStatus.READY_FOR_PAY.getValue()) {
+                throw new BusinessException("订单状态不对");
+            }
+            order.setStatus(OrderStatus.PAID_SUCCESS.getValue());
+            orderDao.save(order);
+
+            OrderPay orderPay = orderPayDao.findByOrderId(order.getId());
+            if (orderPay == null) {
+                throw new BusinessException("订单不存在");
+            }
+            if (orderPay.getStatus() != OrderStatus.READY_FOR_PAY.getValue()) {
+                throw new BusinessException("订单状态不对");
+            }
+            orderPay.setStatus(OrderStatus.PAID_SUCCESS.getValue());
+            orderPayDao.save(orderPay);
+        } catch (Exception e) {
+            throw new BusinessException("回调失败:", e);
+        }
+        return WxPayNotifyResponse.success("成功");
     }
 
     @Override
@@ -249,7 +281,42 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public String refundCallback(String content) {
-        return null;
+        try {
+            WxPayRefundNotifyResult notifyResult = this.wxService.parseRefundNotifyResult(content);
+            String outTradeNo = notifyResult.getReqInfo().getOutTradeNo();
+            Order order = orderDao.findByOutTradeNo(outTradeNo);
+            if (order == null) {
+                throw new BusinessException("订单不存在");
+            }
+            if (order.getStatus() != OrderStatus.REFUND_WAITING_NOTIFY.getValue()) {
+                throw new BusinessException("订单状态不对");
+            }
+            order.setStatus(OrderStatus.REFUND_SUCCESS.getValue());
+            orderDao.save(order);
+
+            OrderPay orderPay = orderPayDao.findByOrderId(order.getId());
+            if (orderPay == null) {
+                throw new BusinessException("订单不存在");
+            }
+            if (orderPay.getStatus() != OrderStatus.REFUND_WAITING_NOTIFY.getValue()) {
+                throw new BusinessException("订单状态不对");
+            }
+            orderPay.setStatus(OrderStatus.REFUND_SUCCESS.getValue());
+            orderPayDao.save(orderPay);
+
+            OrderRefund orderRefund = orderRefundDao.findByOrderId(order.getId());
+            if (orderRefund == null) {
+                throw new BusinessException("订单不存在");
+            }
+            if (orderRefund.getStatus() != OrderStatus.REFUND_WAITING_NOTIFY.getValue()) {
+                throw new BusinessException("订单状态不对");
+            }
+            orderRefund.setStatus(OrderStatus.REFUND_SUCCESS.getValue());
+            orderRefundDao.save(orderRefund);
+        } catch (Exception e) {
+            throw new BusinessException("微信退款回调失败:", e);
+        }
+        return "SUCCESS";
     }
 
     @Override
@@ -285,12 +352,21 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderVO getByOrderId(Long id, Long userId) {
-        return null;
+        Order order = orderDao.findById(id).orElse(null);
+        if (order == null || !order.getUserId().equals(userId)) {
+            throw new BusinessException("该订单不存在");
+        }
+        OrderVO orderVO = new OrderVO();
+        BeanUtils.copyProperties(order, orderVO);
+        orderVO.setRealPrice(NumberUtils.priceFormatToYuan(order.getRealPrice()));
+        orderVO.setTotalPrice(NumberUtils.priceFormatToYuan(order.getTotalPrice()));
+        return orderVO;
     }
 
     @Override
     public Long allOrderNum() {
-        return null;
+
+        return orderDao.count();
     }
 
     @Override
@@ -310,5 +386,20 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(OrderStatus.REFUND_REJECT.getValue());
         order.setRefundReason(reasons);
         orderDao.save(order);
+    }
+
+    @Override
+    public Page<OrderVO> list(Long orderId, Long userId, int page, int size) {
+        Page<Order> result;
+        result =orderDao.findAllByIdAndUserId(orderId,userId, PageRequest.of((page - 1), size));
+        List<OrderVO> orderVOS = new ArrayList<>(result.getNumberOfElements());
+        result.forEach(item -> {
+            OrderVO orderVO = new OrderVO();
+            BeanUtils.copyProperties(item, orderVO);
+            orderVO.setRealPrice(NumberUtils.priceFormatToYuan(item.getRealPrice()));
+            orderVO.setTotalPrice(NumberUtils.priceFormatToYuan(item.getTotalPrice()));
+            orderVOS.add(orderVO);
+        });
+        return new PageImpl<>(orderVOS, PageRequest.of((page - 1), size), orderVOS.size());
     }
 }

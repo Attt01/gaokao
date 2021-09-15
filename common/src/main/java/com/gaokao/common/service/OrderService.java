@@ -2,6 +2,7 @@ package com.gaokao.common.service;
 
 import com.gaokao.common.meta.po.OrderRefund;
 import com.gaokao.common.meta.vo.order.*;
+import com.gaokao.common.meta.vo.user.UserMemberVO;
 import org.springframework.data.domain.Page;
 
 /**
@@ -76,5 +77,14 @@ public interface OrderService {
      * 拒绝退款
      */
     void rejectRefund(Long orderId, String reasons);
+
+    /**
+     * 查询所有订单
+     * @param
+     * @param page
+     * @param size
+     * @return
+     */
+    Page<OrderVO> list(Long orderId,  Long userId, int page, int size);
 
 }
