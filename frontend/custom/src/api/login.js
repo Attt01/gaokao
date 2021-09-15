@@ -44,7 +44,10 @@ export function updateUserInfo(params) {
     data: {
       nickname: params.nickname,
       phone: params.phone,
-      username: params.username
+      username: params.username,
+      provinceRank: params.provinceRank,
+      score: params.score,
+      subject: params.subject
     }
   })
 }

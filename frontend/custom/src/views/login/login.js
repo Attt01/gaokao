@@ -57,6 +57,9 @@ export default {
               getInfo().then((res) => {
                 if (res.code === STATUS_CODE.SUCCESS) {
                   //console.log("userInfo:", res.data);
+                  for (let index in res.data.subject) {
+                    res.data.subject[index] = res.data.subject[index].toString();
+                  }
                   localStorage.setItem('userGaoKaoInfo', JSON.stringify(res.data));
                   //setUserInfo(res.data);
                   this.$router.push({path: '/'});

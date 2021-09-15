@@ -81,10 +81,9 @@ public interface OrderService {
     /**
      * 查询所有订单
      * @param
-     * @param page
-     * @param size
-     * @return
      */
+
     Page<OrderVO> list(Long orderId,  Long userId, int page, int size);
+
 
 }

@@ -5,6 +5,8 @@
       :visible.sync="dialogVisible"
       width="30%"
       :show-close="false"
+      :lock-scroll="false"
+      :modal-append-to-body='false'
       :close-on-click-modal="false"
       :close-on-press-escape="false"
     >
@@ -17,20 +19,6 @@
               maxlength="3"
               placeholder="请输入高考分数"
             >
-            </el-input>
-          </el-form-item>
-          <el-form-item label="高考排名" prop="provinceRank">
-            <el-input
-              v-model.number="userInfo.provinceRank"
-              type="text"
-              maxlength="7"
-              placeholder="请输入高考排名"
-            >
-              <i slot="suffix">
-                <el-button type="primary" @click="getPredictedRank">
-                  获取预测排名
-                </el-button>
-              </i>
             </el-input>
           </el-form-item>
           <el-form-item label="选考科目" prop="subject">
@@ -46,6 +34,20 @@
               <el-checkbox label="6">政治</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
+          <el-form-item label="高考排名" prop="provinceRank">
+            <el-input
+              v-model.number="userInfo.provinceRank"
+              type="text"
+              maxlength="7"
+              placeholder="请输入高考排名"
+            >
+              <i slot="suffix">
+                <el-button type="primary" @click="getPredictedRank">
+                  获取预测排名
+                </el-button>
+              </i>
+            </el-input>
+          </el-form-item>
           <el-form-item>
             <div style="float: right;">
               <el-button type="primary" @click="submitForm(userInfo)">确 定</el-button>
@@ -58,7 +60,7 @@
 </template>
 
 <script>
-import { getRank } from '@/api/recommand.js';
+import {getRank} from '@/api/recommand.js';
 import {STATUS_CODE} from "@/api/statusCode";
 import store from '@/store';
 
@@ -72,15 +74,15 @@ export default {
       },
       rules: {
         score: [
-          { required: true, message: '请输入高考分数', trigger: 'blur' },
-          { type: 'number', min: 100, max: 750, message: '必须是100~750的整数', trigger: 'blur'}
+          {required: true, message: '请输入高考分数', trigger: 'blur'},
+          {type: 'number', min: 100, max: 750, message: '必须是100~750的整数', trigger: 'blur'}
         ],
         provinceRank: [
-          { type: 'number', message: '必须是整数', trigger: 'blur'}
+          {type: 'number', message: '必须是整数', trigger: 'blur'}
         ],
         subject: [
-          { required: true, message: '请选择科目' },
-          { type: 'array', len: 3, message: '选择三项', trigger: 'blur'}
+          {required: true, message: '请选择科目'},
+          {type: 'array', len: 3, message: '选择三项', trigger: 'blur'}
         ]
       }
     };
@@ -97,14 +99,18 @@ export default {
           //console.log('submit!');
           //console.log(userInfo);
           localStorage.setItem('userGaoKaoInfo', JSON.stringify(userInfo));
-          console.log(localStorage.getItem('userGaoKaoInfo'));
+          //console.log(localStorage.getItem('userGaoKaoInfo'));
           store.commit('SHOW_DIALOG', false);
-          this.$router.replace({
-            path: '/refresh',
-            query: {
-              path: this.$route.path
-            }
-          });
+          if (this.$route.path == '/recommand') {
+            this.$router.replace({
+              path: '/refresh',
+              query: {
+                path: this.$route.path
+              }
+            });
+          } else {
+            this.$emit('refresh');
+          }
         } else {
           //console.log('error submit!!');
           return false;

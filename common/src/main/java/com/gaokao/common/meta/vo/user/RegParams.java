@@ -39,6 +39,6 @@ public class RegParams {
     private List<Long> subject;
 
     @NotNull(message = "排名不能为空")
-    private Long province_rank;
+    private Long provinceRank;
 
 }

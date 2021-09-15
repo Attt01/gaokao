@@ -15,10 +15,7 @@ public interface FilterDataDao extends PagingAndSortingRepository<FilterData, In
     @Query(value = "select * from tb_filter_conditions where father_id = ?;", nativeQuery = true)
     List<FilterData> findSonsByFatherId(Integer fatherId);
 
-    @Query(value = "select father_id from tb_filter_conditions where id = ? ", nativeQuery = true)
-    Integer findFatherIdBySonId(Integer sonId);
-
-    @Query(value = "select label from tb_filter_conditions where id = ? ", nativeQuery = true)
-    String findLabelById(Integer id);
+    @Query(value = "select * from tb_filter_conditions where id = ? ;", nativeQuery = true)
+    FilterData getOneById(Integer id);
 
 }

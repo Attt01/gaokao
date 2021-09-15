@@ -23,11 +23,13 @@ export default {
     const validatePhone = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('手机号不能为空'));
-      } else if (value.length !== 11) {
-        //是不是要拿正则验证手机号qwq?
-        callback(new Error('请输入正确的手机号'));
       } else {
-        callback();
+        let regexp = /^[1][3,4,5,7,8][0-9]{9}$/;
+        if (!regexp.test(value)) {
+          callback(new Error('请输入正确的手机号'));
+        } else {
+          callback();
+        }
       }
     }
     return {
@@ -110,7 +112,6 @@ export default {
           return false;
         }
       })
-      
     }
   },
   computed: {

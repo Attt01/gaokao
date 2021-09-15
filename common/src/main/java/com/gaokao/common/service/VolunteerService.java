@@ -23,10 +23,12 @@ public interface VolunteerService {
 
     UserFormDetailVO listCurrentForm(Long userId);
 
-    Long changeCurrentForm(Long userId, Long preFormId, Long newFormId);
+    Long changeCurrentForm(Long userId, Long newFormId);
 
     Long deleteForm(Long formId);
 
     FormVolunteer findByFormIdAndSectionAndVolunteerPosition(Long formId, Boolean section, Integer position);
+
+    Boolean queryExist(Long formId, Boolean volunteerSection, Integer position);
 
 }

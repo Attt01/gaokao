@@ -45,13 +45,13 @@ export function createVolunteerForm(formData) {
   })
 }
 
-export function updateVolunteerName(formId, name) {
+export function updateVolunteerName(param) {
   return request({
     url: '/xhr/v1/volunteer/updateName',
     method: 'post',
     data: {
-      formId,
-      name
+      formId: param.formId,
+      name: param.name
     }
   })
 }
@@ -94,4 +94,10 @@ export function swapVolunteer(data) {
   })
 }
 
+export function deleteVolunteerForm(id) {
+  return request({
+    url: '/xhr/v1/volunteer/delete/' + id,
+    method: 'get'
+  })
+}
 

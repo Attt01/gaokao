@@ -27,6 +27,8 @@ public class Volunteer {
 
     private String province;
 
+    private String city;
+
     private String address;
 
     @Column(name = "is_undergraduate_school")

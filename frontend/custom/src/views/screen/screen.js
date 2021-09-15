@@ -1,11 +1,13 @@
-import {getBatch, getMajorType, getRegion, getSchoolType, getVOList} from "../../api/screen";
+import {
+  changeStarStatus,
+  getBatch, getCurrentInfo, getMajorType, getRegion, getSchoolType, getVOList, submitVolunteer
+} from "../../api/screen";
 
 export default {
   data() {
     return {
       // 遮罩层
-      // loading: true,
-      loading: false,
+      loading: true,
       // 显示搜索条件
       showSearch: true,
       //志愿列表
@@ -20,18 +22,21 @@ export default {
       multiProps: {multiple: true},
       //请求参数
       listQuery: {
-        userId: 3,
-        subject: [1,2,3],
+        subject: [1, 2, 3],
         score: 600,
         page: 1,
-        limit: 5,
-        total: 10,
-        other: undefined,
+        limit: 10,
+        total: 0,
+        batch: [],
+        region: [],
+        schoolType: [],
+        schoolTeSe: [],
+        schoolXingZhi: [],
         universityName: undefined,
         majorName: undefined,
         type: 0,
       },
-      level: undefined,
+      level: 8,
       location: undefined,
       classification: undefined,
       majorType: undefined,
@@ -39,10 +44,15 @@ export default {
       locationOptions: [],
       majorOptions: [],
       classifyOptions: [],
+      responseList:
+        {
+          rate: undefined,
+          volunteerVO: {}
+        },
       //表单参数
       form: {
         formId: undefined,
-        volunteerPosition: 1,
+        volunteerPosition: undefined,
         name: undefined,
         professionalName: undefined,
       },
@@ -58,82 +68,107 @@ export default {
     this.selectRegion();
     this.selectSchoolType();
     this.selectMajorType();
+    //this.getCurrent();
     this.fetchData();
   },
 
   methods: {
     //请求列表数据
     fetchData() {
-      this.handleArray();
+      this.loading = true;
+      this.getArrayBatch();
+      this.getArrayRegion();
+      this.getClassification();
       //默认加载全部数据
       if (!this.listQuery.type) {
         this.listQuery.type = 0;
       }
-      console.log("this.listQuery.type");
-      console.log(this.listQuery.type);
-      console.log("！！！！！！！！！！！！");
-      //获取列表
+      if (!this.listQuery.universityName) {
+        this.listQuery.universityName = "";
+      }
+      if (!this.listQuery.majorName) {
+        this.listQuery.majorName = "";
+      }
       getVOList(this.listQuery).then(response => {
-        console.log("okkkkkkkkkkkkkkk");
         this.loading = false;
-        /*this.total = response.data.totalElements;
-        this.listQuery.total = response.data.totalPages;*/
+        this.responseList = [];
+        this.responseList = response.data.content;
+        this.volunteerList = [];
+        this.responseList.forEach(item => {
+          this.volunteerList.push({
+            "rate": item.rate,
+            "volunteerId": item.volunteerVO.id,
+            "name": item.volunteerVO.name,
+            "province": item.volunteerVO.province,
+            "lowestScore": item.volunteerVO.lowestScore,
+            "lowestPosition": item.volunteerVO.lowestPosition,
+            "professionalName": item.volunteerVO.professionalName,
+            "category": item.volunteerVO.category,
+            "enrollment": item.volunteerVO.enrollment,
+            "time": item.volunteerVO.time,
+            "fee": item.volunteerVO.fee,
+            "universityCode": item.volunteerVO.universityCode,
+            "privateIsOrNot": item.volunteerVO.privateIsOrNot,
+            "publicIsOrNot": item.volunteerVO.publicIsOrNot,
+            "majorCode": item.volunteerVO.majorCode,
+            "subjectRestrictionType": item.volunteerVO.subjectRestrictionType,
+            "myStar": item.volunteerVO.myStar
+          })
+        })
+        this.total = response.data.totalElements;
+        this.listQuery.total = response.data.totalPages;
       })
     },
-    handleArray(){
-      //合并数组
-      let allInfo1=[];
+    getArrayBatch() {
+      if (this.level) {
+        let a = [this.level];
+        this.listQuery.batch = [].concat(a);
+      } else {
+        this.listQuery.batch = []
+      }
+    },
+    getArrayRegion() {
+      let j;
+      let info = this.location;
+      if (this.location) {
+        this.listQuery.region = [];
+        for (j = 0; j < info.length; j++) {
+          let array = info[j][1];
+          this.listQuery.region.push(array);
+        }
+      } else {
+        this.listQuery.region = [];
+      }
+    },
+    getClassification() {
+      let i;
       let info1 = this.classification;
-      let i,j,z;
-      const newInfo1 = [];
-      if(this.classification){
+      const newInfo = [];
+      if (this.classification) {
         for (i = 0; i < info1.length; i++) {
           let array1 = info1[i][1];
-          newInfo1.push(array1);
-          allInfo1=newInfo1;
+          newInfo.push(array1);
         }
-      }else{
-        allInfo1=[];
       }
-      let info2 = this.majorType;
-      const newInfo2 = [];
-      if(this.majorType){
-        for (j = 0; j < info2.length; j++) {
-          let  array2 = info2[j][1];
-          newInfo2.push(array2);
-          allInfo1=newInfo2.concat(newInfo1);
-        }
-      }else{
-        allInfo1=newInfo2;
-      }
-      let allInfo2=[];
-      let info3 = this.location;
-      const newInfo3 = [];
-      if(this.location){
-        for (z = 0; z < info3.length; z++) {
-          let array3 = info3[z][1];
-          newInfo3.push(array3);
-          allInfo2=newInfo3;
-        }
-      }else{
-        allInfo2=[];
-      }
-      let info4=[this.level];
-      if(info4){
-        allInfo2=newInfo3.concat(info4)
-      }else{
-        allInfo2=newInfo3;
-      }
-      let data=allInfo2.concat(allInfo1);
-      this.listQuery.other= data.filter(Boolean);
-      console.log("this.listQuery.other");
-      console.log(this.listQuery.other);
+      let feature, character, genre = [];
+      feature = newInfo.filter(function (value) {
+        return value >= 609 && value <= 612
+      });
+      this.listQuery.schoolTeSe = feature;
+      character = newInfo.filter(function (value) {
+        return value >= 616 && value <= 617
+      });
+      this.listQuery.schoolXingZhi = character;
+      genre = newInfo.filter(function (value) {
+        return value >= 619 && value <= 631
+      });
+      this.listQuery.schoolType = genre;
     },
     reset() {
       this.form = {
         universityName: undefined,
         majorName: undefined,
-        volunteerPosition: 1
+        volunteerPosition: undefined
       };
       this.formReset("form");
     },
@@ -141,13 +176,39 @@ export default {
       this.title = "填报志愿";
       this.edit = true;
       this.dialogFormVisible = true;
-      //TODO:获取默认志愿表序号的方法
-      this.form.formId = this.getFormId();
-      this.form.universityName = row.universityName;
-      this.form.majorName = row.majorName;
+      this.form.name = row.name;
+      this.form.professionalName = row.professionalName;
     },
-    getFormId() {
-
+    handleStar(row) {
+      let text = undefined;
+      if (row.myStar === false) {
+        text = "收藏";
+      } else {
+        text = "取消收藏";
+      }
+      let id = row.volunteerId;
+      this.$confirm('确认' + text + '吗?', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function () {
+        return changeStarStatus(id);
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '更新信息成功'
+        })
+        this.fetchData();
+      });
+    },
+    getCurrent() {
+      getCurrentInfo().then(response => {
+        if (response) {
+          this.form.formId = response.data.id;
+          this.listQuery.score = response.data.score;
+          this.listQuery.subject = response.data.subject;
+        }
+      })
     },
     cancel() {
       this.dialogFormVisible = false;
@@ -155,26 +216,29 @@ export default {
     },
     submitForm: function () {
       this.$refs.form.validate(valid => {
-        //后续调用新增志愿表的接口,新增序号为volunteerPosition的志愿记录
-        submit(this.form.volunteerPosition, this.form).then(response => {
-          if (response.code === 200) {
-            this.$message({
-              type: 'success',
-              message: '已保存为第' + this.form.volunteerPosition + '志愿！'
-            })
-          }
-          if (response) {
-            this.$refs.form.resetFields()
-          }
-          this.dialogFormVisible = false;
-          this.fetchData();
-        });
+        if (valid) {
+          submitVolunteer(this.form).then(response => {
+            if (response.code === 200) {
+              this.$message({
+                type: 'success',
+                message: '已保存为第' + this.form.volunteerPosition + '志愿！'
+              })
+            }
+            if (response) {
+              this.$refs.form.resetFields()
+            }
+            this.dialogFormVisible = false;
+            this.fetchData();
+          });
+        }
       });
     },
     changeLocation(value) {
+      this.$forceUpdate();
       console.log(value)
     },
     changeClassify(value) {
+      this.$forceUpdate();
       console.log(value)
     },
     selectBatch() {
@@ -210,6 +274,23 @@ export default {
       this.listQuery.page = 1;
       this.listQuery.type = type;
       this.fetchData();
+    },
+    // 分页方法
+    fetchNext() {
+      this.listQuery.page = this.listQuery.page + 1
+      this.fetchData()
+    },
+    fetchPrev() {
+      this.listQuery.page = this.listQuery.page - 1
+      this.fetchData()
+    },
+    fetchPage(page) {
+      this.listQuery.page = page
+      this.fetchData(page)
+    },
+    changeSize(limit) {
+      this.listQuery.limit = limit
+      this.fetchData()
     },
   }
 

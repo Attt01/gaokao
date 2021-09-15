@@ -1,3 +1,4 @@
+
 env: DEV
 spring:
   datasource:
@@ -44,3 +45,4 @@ wx:
 
 server:
   port: 9090
+

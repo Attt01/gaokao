@@ -20,9 +20,9 @@ public interface AdviseDao extends PagingAndSortingRepository<Volunteer, Long> {
     @Query(value = "select * from tb_volunteer; ", nativeQuery = true)
     List<Volunteer> getAllVolunteer();
 
-    @Query(value = "select count(*) from tb_volunteer; ", nativeQuery = true)
-    Integer getCount();
+    @Query(value = "select * from tb_volunteer where name LIKE ?1 AND professional_name LIKE ?2 ;", nativeQuery = true)
+    List<Volunteer> getVolunteerByMajorAndSchool(String schoolParm, String majorParm);
 
-    @Query(value = "select * from tb_volunteer LIMIT ? , 1; ", nativeQuery = true)
-    Volunteer getOne(Integer i);
+    @Query(value = "select * from tb_volunteer where id = ?1 ; ", nativeQuery = true)
+    Volunteer getVolunteer(Long id);
 }

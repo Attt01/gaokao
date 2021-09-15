@@ -26,6 +26,20 @@ public class UserMemberVO {
      */
     private Boolean vipIsOrNot;
     /**
+     * 锁定状态
+     */
+    private Integer status;
+    /**
+     * 注册时间
+     */
+    private long createTime;
+
+    /**
+     * 更新时间
+     */
+    private long updateTime;
+
+    /**
      * 分数
      */
     private Integer score;

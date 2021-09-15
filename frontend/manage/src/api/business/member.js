@@ -5,7 +5,7 @@ import request from '@/utils/request'
  */
 export function getMemberList(params) {
   return request({
-    url: '/xhr/v1/members/',
+    url: '/xhr/v1/usermembers/',
     method: 'get',
     params: params
   })
@@ -16,7 +16,7 @@ export function getMemberList(params) {
  */
 export function lockMember(id) {
   return request({
-    url: '/xhr/v1/members/lock/'+id,
+    url: '/xhr/v1/usermembers/lock/'+id,
     method: 'post'
   })
 }
@@ -26,7 +26,7 @@ export function lockMember(id) {
  */
 export function unlockMember(id) {
   return request({
-    url: '/xhr/v1/members/unlock/'+id,
+    url: '/xhr/v1/usermembers/unlock/'+id,
     method: 'post'
   })
 }
