@@ -78,11 +78,12 @@ export default {
           {type: 'number', min: 100, max: 750, message: '必须是100~750的整数', trigger: 'blur'}
         ],
         provinceRank: [
-          {type: 'number', message: '必须是整数', trigger: 'blur'}
+          {required: true, message: '输入排名或点击预测', trigger: 'none'},
+          {type: 'number', message: '必须是整数', trigger: 'none'}
         ],
         subject: [
-          {required: true, message: '请选择科目'},
-          {type: 'array', len: 3, message: '选择三项', trigger: 'blur'}
+          {required: true, message: '请选择科目', trigger: 'none'},
+          {type: 'array', len: 3, message: '选择三项', trigger: 'none'}
         ]
       }
     };
@@ -118,16 +119,18 @@ export default {
       });
     },
     getPredictedRank() {
-      //这里按理说不选科目也能获取排名，似乎要把表单拆成两个然后只验证前一个?
-      this.$refs.userInfo.validate((isValid) => {
-        if (isValid) {
-          getRank(this.userInfo.score).then((res) => {
-            if (res.code === STATUS_CODE.SUCCESS) {
-              this.userInfo.provinceRank = res.data;
-            }
-          });
-        }
-      })
+      if (typeof(this.userInfo.score) === 'number' && 100 <= this.userInfo.score && this.userInfo.score <= 750) {
+        getRank(this.userInfo.score).then((res) => {
+          if (res.code === STATUS_CODE.SUCCESS) {
+            this.userInfo.provinceRank = res.data;
+          }
+        });
+      } else {
+        this.$message({
+          type: 'error',
+          message: '请输入正确的高考分数(> _ <)'
+        });
+      }
     }
   },
   computed: {
