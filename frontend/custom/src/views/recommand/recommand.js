@@ -126,7 +126,7 @@ export default {
                 type: 'success',
                 message: '智能推荐生成志愿表成功'
               });
-              changeCurrentForm(res.data.id).then(res => {
+              changeCurrentForm({newFormId: res.data.id}).then(res => {
                 if (res.code === STATUS_CODE.SUCCESS) {
                   this.$router.push('/preference');
                 }
