@@ -23,9 +23,7 @@ export function changeCurrentForm(params) {
     url: '/xhr/v1/volunteer/changeCurrentForm',
     method: 'post',
     data: {
-      newFormId: params.newFormId,
-      preFormId: params.preFormId,
-      userId: params.userId
+      newFormId: params.newFormId
     }
   })
 }

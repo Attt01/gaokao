@@ -119,7 +119,7 @@ export default {
           autoGenerateForm(totalForm).then(res => {
             //console.log(res);
             if (res.code === STATUS_CODE.SUCCESS) {
-              changeCurrentForm(res.data.id).then(res => {
+              changeCurrentForm({newFormId: res.data.id}).then(res => {
                 if (res.code === STATUS_CODE.SUCCESS) {
                   this.$message({
                     type: 'success',
