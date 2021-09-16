@@ -157,6 +157,18 @@ public class VolunteerController {
             return AjaxResult.FAIL("需要交换志愿的边界出现异常");
         }
 
+
+        volunteerService.setVolunteer(UserUtils.getUserId(),
+                swapVolunteerParams.getFormId(),
+                swapVolunteerParams.getSection(),
+                swapVolunteerParams.getFirstVolunteerPosition(),
+                VolunteerConstant.EMPTY_VOLUNTEER);
+        volunteerService.setVolunteer(UserUtils.getUserId(),
+                swapVolunteerParams.getFormId(),
+                swapVolunteerParams.getSection(),
+                swapVolunteerParams.getSecondVolunteerPosition(),
+                VolunteerConstant.EMPTY_VOLUNTEER);
+
         volunteerService.setVolunteer(UserUtils.getUserId(),
                 swapVolunteerParams.getFormId(),
                 swapVolunteerParams.getSection(),
