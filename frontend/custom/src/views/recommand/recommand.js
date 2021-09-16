@@ -18,6 +18,7 @@ export default {
       }
     };
     return {
+      //selectAllLocation: false,
       userInfo: {
         score: 0,
         subject: [],
@@ -36,13 +37,15 @@ export default {
       //多选参数
       multiProps: {multiple: true},
       levelOptions: [],
-      majorOptions: [],
+      //majorOptions: [],
       locationOptions: [],
+      //totalLocationLength: 0,
       classifyOptions: [],
       plan: [],
       isAutoRecommand: true,
       validateRules: {
-        plan: [{ validator: validatePlan, trigger: 'blur' }]
+        plan: [{ validator: validatePlan, trigger: 'blur' }],
+        batch: [{ required: true, message: '请选择填报批次', trigger: 'blur'}]
       }
     }
   },
@@ -54,7 +57,7 @@ export default {
       this.selectBatch();
       this.selectRegion();
       this.selectSchoolType();
-      this.selectMajorType();
+      //this.selectMajorType();
     },
     getArrayRegion() {
       let j;
@@ -119,12 +122,12 @@ export default {
           autoGenerateForm(totalForm).then(res => {
             //console.log(res);
             if (res.code === STATUS_CODE.SUCCESS) {
+              this.$message({
+                type: 'success',
+                message: '智能推荐生成志愿表成功'
+              });
               changeCurrentForm(res.data.id).then(res => {
                 if (res.code === STATUS_CODE.SUCCESS) {
-                  this.$message({
-                    type: 'success',
-                    message: '智能推荐生成志愿表成功'
-                  });
                   this.$router.push('/preference');
                 }
               });
@@ -145,7 +148,18 @@ export default {
     selectRegion() {
       getRegion().then(response => {
         if (response) {
-          this.locationOptions = response.data;
+          // this.locationOptions.push({
+          //   label: '全选',
+          //   value: '-1'
+          // })
+          this.locationOptions.push.apply(this.locationOptions, response.data);
+          // for (let index in this.locationOptions) {
+          //   if (index == 0) {
+          //     continue;
+          //   }
+          //   //console.log(this.locationOptions[index]);
+          //   this.totalLocationLength += this.locationOptions[index].children.length;
+          // }
         }
       })
     },
@@ -156,12 +170,55 @@ export default {
         }
       })
     },
-    selectMajorType() {
-      getMajorType().then(response => {
-        if (response) {
-          this.majorOptions = response.data;
-        }
-      })
+    //蜜汁全选功能，好像不能用QAQ
+    // changeLocation(value) {
+    //   console.log(value);
+    //   //console.log(this.form.region);
+    //   if (value[0][0] == -1) {
+    //     if (this.selectAllLocation) {
+    //       console.log('owo', this.totalLocationLength + 1, this.form.region.length);
+    //       if (this.form.region.length != this.totalLocationLength + 1) {
+    //         //console.log('before', this.form.region);
+    //         this.form.region.splice(0, 1);
+    //         //value.splice(0, 1);
+    //         this.$forceUpdate();
+    //         console.log('after', this.form.region);
+    //         this.selectAllLocation = false;
+    //         return this.form.region;
+    //       }
+    //     } else {
+    //       this.form.region = [];
+    //       for (let regionIndex in this.locationOptions) {
+    //         if (regionIndex == 0) {
+    //           this.form.region.push([-1]);
+    //         } else {
+    //           //console.log('qwq', this.locationOptions[regionIndex].children);
+    //           for (let cityIndex in this.locationOptions[regionIndex].children) {
+    //             this.form.region.push([
+    //               this.locationOptions[regionIndex].value,
+    //               this.locationOptions[regionIndex].children[cityIndex].value
+    //             ]);
+    //           }
+    //         }
+    //       }
+    //       //console.log(this.form.region);
+    //       this.selectAllLocation = true;
+    //     }
+    //   } else {
+    //     if (this.selectAllLocation) {
+    //       this.form.region = [];
+    //       this.selectAllLocation = false;
+    //     } else {
+    //       if (this.form.region.length != this.totalLocationLength + 1) {
+    //         this.form.region.unshift([-1]);
+    //         this.selectAllLocation = true;
+    //       }
+    //     }
+    //   }
+    // },
+    changeClassify(value) {
+      // this.$forceUpdate();
+      console.log(value)
     }
   },
   computed: {

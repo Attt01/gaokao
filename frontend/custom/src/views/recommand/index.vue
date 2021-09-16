@@ -39,6 +39,7 @@
                       clearable
                       filterable
                       collapse-tags
+                      placeholder="默认全选"
                     ></el-cascader>
                   </el-form-item>
 
@@ -50,6 +51,7 @@
                       :options="locationOptions"
                       :props="multiProps"
                       collapse-tags
+                      placeholder="默认全选"
                     >
                     </el-cascader>
                   </el-form-item>
