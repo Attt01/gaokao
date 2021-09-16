@@ -5,6 +5,8 @@ import com.gaokao.common.meta.vo.order.*;
 import com.gaokao.common.meta.vo.user.UserMemberVO;
 import org.springframework.data.domain.Page;
 
+import java.io.InputStream;
+
 /**
  * @author wyc-0705
  * date: 2021/8/23
@@ -14,17 +16,19 @@ public interface OrderService {
     /**
      * 0：预下单
      */
-    PreOrderResult preOrder(PreOrderParam param, Long userId);
+    PreOrderResult preOrder(String out_trade_no, String total_fee);
+
+    PayResult getWxPayResult(InputStream inStream) throws Exception;
 
     /**
      * 1: 提交订单
      */
     Long submit(SubmitOrderParam param, Long userId);
 
-    /**
-     * 2: 支付订单
-     */
-    PayResult pay(PayParam param, String clientIp, Long userId);
+//    /**
+//     * 2: 支付订单
+//     */
+//    PayResult pay(PayParam param, String clientIp, Long userId);
 
     /**
      * 2.1: 支付回调
