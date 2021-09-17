@@ -6,12 +6,9 @@
         <el-input v-model="page.orderId" size="small" placeholder="订单Id" clearable/>
       </el-form-item>
       <el-form-item>
-        <el-input v-model="page.goodName" size="small" placeholder="服务名称" clearable/>
+        <el-input v-model="page.userId" size="small" placeholder="会员Id" clearable/>
       </el-form-item>
-      <el-form-item>
-        <el-input v-model="page.memberName" size="small" placeholder="会员名" clearable/>
-      </el-form-item>
-      <el-form-item label="类型" prop="orderType">
+      <!-- <el-form-item label="类型" prop="orderType">
         <el-select
           v-model="page.orderType"
           placeholder="请选择服务类型"
@@ -23,8 +20,8 @@
             :label="item.desc"
             :value="item.code"/>
         </el-select>
-      </el-form-item>
-      <el-form-item label="状态" prop="status">
+      </el-form-item> -->
+      <!-- <el-form-item label="状态" prop="status">
         <el-select
           v-model="page.status"
           placeholder="请选择状态"
@@ -36,7 +33,7 @@
             :label="item.desc"
             :value="item.value"/>
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <el-button type="primary" size="mini" icon="el-icon-search" @click="listOrderByPage(1)">搜索</el-button>
       </el-form-item>
@@ -46,20 +43,12 @@
       <el-table :data="dataList" highlight-current-row v-loading="listLoading" border height="calc(100vh - 250px)"
                 style="width: 100%;">
         <el-table-column prop="id" align="center" label="订单Id" width="120"/>
-        <el-table-column prop="goodsNames" label="服务" align="center" width="120" show-overflow-tooltip/>
-        <el-table-column prop="skuDesc" label="规格" align="center" width="120"/>
-        <el-table-column prop="type" label="服务类型" align="center" width="120">
-          <template slot-scope="scope">
-            <el-tag v-if="scope.row.type === 'TO_SHOP'">到店</el-tag>
-            <el-tag type="success" v-else-if="scope.row.type === 'TO_DOOR'">上门</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column prop="appointmentPeriod" label="预约时间" :formatter="formatAppointmentTime" align="center"
-                         width="200">
-        </el-table-column>
-        <el-table-column prop="totalPrice" label="总金额(元)" align="center" width="120"/>
-        <el-table-column prop="realPrice" label="实付金额(元)" align="center" width="120"/>
-        <el-table-column prop="status" label="订单状态" align="center" width="120">
+        <el-table-column prop="userId" label="用户Id" align="center" width="120"/>
+        <!-- <el-table-column prop="goodsNames" label="服务" align="center" width="120" show-overflow-tooltip/>
+        <el-table-column prop="skuDesc" label="规格" align="center" width="120"/>-->
+        <el-table-column prop="totalPrice" label="总金额(元)" align="center" width="150"/>
+        <el-table-column prop="realPrice" label="实付金额(元)" align="center" width="150"/>
+        <el-table-column prop="status" label="订单状态" align="center" width="150">
           <template slot-scope="scope">
             <span v-if="scope.row.status=== 1">待支付</span>
             <span v-if="scope.row.status=== 2">已取消</span>
@@ -76,64 +65,29 @@
             <span v-if="scope.row.status=== 35">已评价</span>
           </template>
         </el-table-column>
-        <el-table-column prop="receiverName" label="用户姓名" align="center" width="120">
-        </el-table-column>
-        <el-table-column prop="receiverPhone" label="用户电话" align="center" width="120">
-        </el-table-column>
-        <el-table-column prop="receiverAddress" label="用户地址" align="center" width="120">
-        </el-table-column>
-        <el-table-column prop="note" label="备注" align="center" width="120">
-        </el-table-column>
-        <el-table-column prop="createTime" label="创建时间" :formatter="formatCreateTime" align="center" width="120">
-        </el-table-column>
-        <el-table-column prop="payType" label="支付方式" align="center" width="120">
+        <!-- <el-table-column prop="receiverName" label="用户姓名" align="center" width="120"/>
+        <el-table-column prop="receiverPhone" label="用户电话" align="center" width="120"/>
+        <el-table-column prop="receiverAddress" label="用户地址" align="center" width="120"/>
+        <el-table-column prop="note" label="备注" align="center" width="120"/> -->
+        <el-table-column prop="payType" label="支付方式" align="center">
           <template slot-scope="scope">
             <span v-if="scope.row.payType=== 1">微信支付</span>
             <span v-else>未支付</span>
           </template>
         </el-table-column>
-        <el-table-column prop="payTime" label="支付时间" :formatter="formatPayTime" align="center" width="120">
-        </el-table-column>
-        <el-table-column prop="rejectReason" label="拒绝接单理由" align="center" width="120">
-        </el-table-column>
-        <el-table-column label="操作" align="center" width="120">
+        <el-table-column prop="createTime" label="创建时间" :formatter="formatCreateTime" align="center"/>
+        <el-table-column prop="payTime" label="支付时间" :formatter="formatPayTime" align="center"/>
+        <!-- <el-table-column label="操作" align="center" width="120">
           <template slot-scope="scope">
-            <el-button type="text" size="small" @click.native.prevent="manageOrder(scope.row)"
-                       v-perm="'order:changeStatus'" v-if="scope.row.status === 5">接单管理
-            </el-button>
             <el-button type="text" size="small" @click.native.prevent="manageRefund(scope.row)"
                        v-perm="'order:changeStatus'" v-if="scope.row.status === 14">退款管理
             </el-button>
-            <el-button type="text" size="small" @click.native.prevent="toDelivery(scope.row)"
-                       v-perm="'order:changeStatus'" v-if="scope.row.status === 11 || scope.row.status === 17">开始服务
-            </el-button>
           </template>
-        </el-table-column>
+        </el-table-column> -->
       </el-table>
     </el-card>
 
-    <el-dialog title="接单管理"
-               :visible.sync="manageOrderRejectVisible">
-      <el-form ref="form" :model="form" label-width="100px">
-        <el-radio v-model="form.opt" label="YES">接单</el-radio>
-        <el-radio v-model="form.opt" label="NO">不接单</el-radio>
-        <br>
-        <el-input v-if="form.opt === 'NO'"
-                  :close-on-click-modal="false"
-                  :rows="5"
-                  type="textarea"
-                  placeholder="请输入拒接理由"
-                  v-model="form.reasons">
-        </el-input>
-      </el-form>
-      <div slot="footer" class="dialog-footer" align="center">
-        <el-button @click.native="manageOrderRejectVisible = false">取消</el-button>
-        <el-button type="primary" @click.native="handleOrder" :loading="setOrderStatusLoading">提交
-        </el-button>
-      </div>
-    </el-dialog>
-
-    <el-dialog title="退款管理"
+    <!-- <el-dialog title="退款管理"
                :visible.sync="manageOrderRefundVisible">
       <el-form ref="form" :model="form" label-width="100px">
         <el-radio v-model="form.opt" label="YES">允许退款</el-radio>
@@ -152,13 +106,22 @@
         <el-button type="primary" @click.native="rejectRefund" :loading="setOrderRefundStatusLoading">提交
         </el-button>
       </div>
-    </el-dialog>
+    </el-dialog> -->
 
     <!--工具条-->
     <el-col :span="24" class="toolbar">
-      <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="page.size"
+      <!-- <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="page.size"
                      :page-count="page.total" style="text-align:center;margin:10px">
-      </el-pagination>
+      </el-pagination> -->
+      <el-pagination
+        @size-change="listOrderByPage(1)"
+        @current-change="handleCurrentChange"
+        :current-page.sync="page.page"
+        :page-sizes="[10, 20, 50]"
+        :page-size="page.size"
+        layout="sizes, prev, pager, next"
+        :total="totalOrders"
+        style="text-align:center;margin:10px"/>
     </el-col>
   </div>
 </template>

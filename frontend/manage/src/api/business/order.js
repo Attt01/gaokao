@@ -1,8 +1,9 @@
 import request from '@/utils/request'
 
 export function search(params) {
+  console.log(params);
   return request({
-    url: '/xhr/v1/orders/search',
+    url: '/xhr/v1/orders/',
     method: 'get',
     params
   })
