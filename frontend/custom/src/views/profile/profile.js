@@ -1,7 +1,7 @@
 import { updatePwd } from '@/api/login'
 import { getInfo, updateUserInfo } from '@/api/login'
 import { SUBJECT_TYPE } from '../../consts/Subject'
-
+import { getRank } from '@/api/recommand'
 export default {
   data() {
     return {
@@ -59,17 +59,24 @@ export default {
           this.$refs.username.focus()
           return
         }
-        if (this.user.phone === '' || this.user.phone.length !== 11) {
-          this.$message({
-            message: '手机号码输入有误',
-            type: 'error'
-          })
-          this.$refs.phone.focus()
-          return
-        }
+        // if (this.user.phone === '' || this.user.phone.length !== 11) {
+        //   this.$message({
+        //     message: '手机号码输入有误',
+        //     type: 'error'
+        //   })
+        //   this.$refs.phone.focus()
+        //   return
+        // }
         if (!this.user.vipIsOrNot && this.subjectList.length < 3) {
           this.$message({
             message: '选课不够三门',
+            type: 'error'
+          })
+          return
+        }
+        if (this.user.score < 100 || this.user.score > 750) {
+          this.$message({
+            message: '请输入正确分数！',
             type: 'error'
           })
           return
@@ -111,6 +118,20 @@ export default {
           }
         })
       }
-    }// edit结束
+    }, // edit结束
+    getRank(score) {
+      if (score > 100 && score < 750) {
+        getRank(score).then(res => {
+          if (res === 200) {
+            this.user.provinceRank = res.data
+            this.$message({
+              message: '预测排名获取成功！',
+              type: 'success',
+              duration: 700
+            })
+          }
+        })
+      }
+    }
   }
 }

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Cookies from 'js-cookie'
 import ECharts from 'vue-echarts/components/ECharts.vue'
 import ElementUI from 'element-ui'
+import vip from '@/components/Vip/index'
 
 import 'element-ui/lib/theme-chalk/index.css'
 import '@/styles/index.scss'
@@ -22,6 +23,7 @@ Vue.use(ElementUI, {
   i18n: (key, value) => i18n.t(key, value)
 })
 Vue.component('v-chart', ECharts)
+Vue.component('vip', vip)
 Vue.directive('perm', {
   inserted(el, binding, vnode) {
     const {value} = binding
