@@ -33,7 +33,7 @@
         <el-form class="form1"  label-width="80px">
           <h4>基本信息</h4>
           <el-form-item label="高考分数">
-            <el-input v-if="!user.vipIsOrNot && edit" v-model="user.score" ref="score"></el-input>
+            <el-input v-if="!user.vipIsOrNot && edit" v-model="user.score" ref="score" @blur="getRank(user.score)"></el-input>
             <span v-else>{{ user.score }}</span>
           </el-form-item>
           <el-form-item label="排名预测">
@@ -57,8 +57,7 @@
         <el-form class="form2" label-width="80px">
           <h4>额外信息</h4>
           <el-form-item label="手机">
-            <el-input v-if="edit" v-model="user.phone" ref="phone"></el-input>
-            <span v-else>{{ user.phone }}</span>
+            <span>{{ user.phone }}</span>
           </el-form-item>
           <el-form-item label="邮箱">
             <span>{{ user.email }}</span>

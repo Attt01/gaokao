@@ -1,4 +1,8 @@
 import request from '@/utils/request'
+/**
+ * 获取全部志愿表信息
+ * @returns {*}
+ */
 export function getVolunteer() {
   return request({
     url: '/xhr/v1/volunteer/getAll/',
@@ -18,6 +22,11 @@ export function deleteVolunteer(params) {
   })
 }
 
+/**
+ * 更改当前志愿表
+ * @param params
+ * @returns {*}
+ */
 export function changeCurrentForm(params) {
   return request({
     url: '/xhr/v1/volunteer/changeCurrentForm',
@@ -28,6 +37,10 @@ export function changeCurrentForm(params) {
   })
 }
 
+/**
+ * 获取当前志愿表
+ * @returns {*}
+ */
 export function getCurrentVolunteer() {
   return request({
     url: '/xhr/v1/volunteer/getCurrent/',
@@ -43,6 +56,11 @@ export function createVolunteerForm(formData) {
   })
 }
 
+/**
+ * 更改志愿表名称
+ * @param param
+ * @returns {*}
+ */
 export function updateVolunteerName(param) {
   return request({
     url: '/xhr/v1/volunteer/updateName',
@@ -92,6 +110,9 @@ export function swapVolunteer(data) {
   })
 }
 
+/*
+ * 删除志愿表
+ */
 export function deleteVolunteerForm(id) {
   return request({
     url: '/xhr/v1/volunteer/delete/' + id,
