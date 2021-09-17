@@ -40,6 +40,19 @@ wx:
     keyPath: classpath:cert/apiclient_cert.p12
     # 微信支付异步回调地址
     payCallbackUrl:
+    # 微信支付二维码key
+    qrcodeKey: wxpay_qrcode
+    # 微信支付二维码过期时间为 < 2小时（微信二维码code_url有效期为2小时）
+    qrcodeExpire: 7000
+    # 支付方式，取值如下：JSAPI，NATIVE，APP
+    tradeType: NATIVE
+    # 商户秘钥
+    secrectKey:
+    #统一下单地址
+    placeOrderUrl:
+    # APP和网页支付提交用户端ip，Native支付填调用微信支付API的机器IP
+    spbillCreateIp:
+
     sanbox: true
 
 
