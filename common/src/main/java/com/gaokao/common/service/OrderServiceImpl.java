@@ -419,15 +419,30 @@ public class OrderServiceImpl implements OrderService {
             throw new BusinessException("订单状态不对");
         }
         order.setStatus(OrderStatus.REFUND_REJECT.getValue());
-        order.setRefundReason(reasons);
+        //order.setRefundReason(reasons);
         orderDao.save(order);
     }
 
+    /**
+     * Rewrite by Eru, 前端也正好方便，就把几个查询合并成一个接口了
+     * @param orderId 订单id
+     * @param userId 用户id
+     * @param page 第几页
+     * @param size 每页几条
+     * @return 返回对应订单信息
+     */
     @Override
-
     public Page<OrderVO> list(Long orderId, Long userId, int page, int size) {
         Page<Order> result;
-        result =orderDao.findAllByIdAndUserId(orderId,userId, PageRequest.of((page - 1), size));
+        if (orderId == null && userId == null) {
+            result = orderDao.findAll(PageRequest.of((page - 1), size));
+        } else if (orderId == null) {
+            result = orderDao.findAllByUserId(userId, PageRequest.of((page - 1), size));
+        } else if (userId == null) {
+            result = orderDao.findAllById(orderId, PageRequest.of((page - 1), size));
+        } else {
+            result = orderDao.findAllByIdAndUserId(orderId, userId, PageRequest.of((page - 1), size));
+        }
         List<OrderVO> orderVOS = new ArrayList<>(result.getNumberOfElements());
         result.forEach(item -> {
             OrderVO orderVO = new OrderVO();
