@@ -20,9 +20,8 @@ import javax.persistence.*;
 @DynamicInsert
 @DynamicUpdate
 @Table(name = "tb_order")
-public class Order extends BaseEntity{
+public class Order{
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Long userId;
@@ -45,9 +44,4 @@ public class Order extends BaseEntity{
 
     private Integer status;
 
-    private String rejectReason;
-
-    private String refundReason;
-
-    private Integer payMoney;
 }

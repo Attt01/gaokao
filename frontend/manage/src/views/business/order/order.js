@@ -10,6 +10,7 @@ export default {
       ORDER_STATUS,
       OrderType,
       listLoading: false,
+      totalOrders: 0,
       dataList: [],
       step: 0,
       manageOrderRejectVisible: false,
@@ -39,11 +40,7 @@ export default {
       },
       page: {
         orderId: null,
-        goodName: '',
-        memberName: '',
-        status: -1,
-        orderType: -1,
-        total: 0,
+        userId: null,
         size: 30,
         page: 1
       }
@@ -184,8 +181,9 @@ export default {
       }
       this.listLoading = true
       search(this.page).then(res => {
+        console.log(res);
         if (res) {
-          this.page.total = res.data.totalPages
+          this.totalOrders = res.data.totalElements;
           this.dataList = res.data.content
           this.dataList.forEach((item) => {
             item.receiverAddress = item.receiverProvince + item.receiverCity + item.receiverRegion + item.receiverDetailAddress

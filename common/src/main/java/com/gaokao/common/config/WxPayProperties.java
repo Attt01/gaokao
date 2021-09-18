@@ -26,23 +26,35 @@ public class WxPayProperties {
 
 
     /**
-     * 服务商模式下的子商户号，普通模式请不要配置，最好是请在配置文件中将对应项删除
-     */
-    private String subMchId;
-
-    /**
      * apiclient_cert.p12文件的绝对路径，或者如果放在项目中，请以classpath:开头指定
      */
     private String keyPath;
 
-    private String wapUrl;
-
-    private String wapName;
 
     private String payCallbackUrl;
 
-    private String refundCallbackUrl;
 
     private boolean sanbox;
 
+    /**
+     * 二维码key和过期时间
+     */
+    private String qrcodeKey;
+    private long qrcodeExpire;
+
+
+    private String spbillCreateIp;
+
+    /**
+     * 交易方式
+     */
+    private String tradeType;
+    /**
+     * 统一下单地址
+     */
+    private String placeOrderUrl;
+    /**
+     * 商户秘钥
+     */
+    private String SecretKey;
 }

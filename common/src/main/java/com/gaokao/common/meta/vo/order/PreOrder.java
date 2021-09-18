@@ -3,16 +3,10 @@ package com.gaokao.common.meta.vo.order;
 import lombok.Data;
 
 /**
- * @author wyc-0705
- * date: 2021/8/23
- * desc: 预下单参数
+ * 统一下单
  */
 @Data
-public class PreOrderParam {
-    private Integer totalPrice=300;
-
-    private long userId;
-
+public class PreOrder {
     private String appid;// 公众账号ID
     private String mch_id;// 商户号
     private String nonce_str;// 随机字符串
@@ -25,3 +19,4 @@ public class PreOrderParam {
     private String trade_type;// 取值如下：JSAPI，NATIVE，APP
 
 }
+

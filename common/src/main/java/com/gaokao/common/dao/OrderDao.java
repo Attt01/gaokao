@@ -10,9 +10,6 @@ import java.util.List;
 @Repository
 public interface OrderDao extends PagingAndSortingRepository<Order, Long>  {
 
-    List<Order> findAllByUserId(Long userId,Pageable pageable);
-
-
     Order findByIdAndGoodsId(Long id, Long shopId);
 
     Page<Order> findAllByStatus(int status, Pageable pageable);
@@ -24,6 +21,10 @@ public interface OrderDao extends PagingAndSortingRepository<Order, Long>  {
     void deleteById(Long orderId);
 
     Page<Order> findAllByIdAndUserId(Long Id,  Long userId, Pageable pageable);
+
+    Page<Order> findAllByUserId(Long userId, Pageable pageable);
+
+    Page<Order> findAllById(Long Id,  Pageable pageable);
 
 }
 

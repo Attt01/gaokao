@@ -9,15 +9,10 @@ import com.gaokao.common.dao.UserMemberDao;
 import com.gaokao.common.enums.OrderStatus;
 import com.gaokao.common.exceptions.BusinessException;
 import com.gaokao.common.meta.bo.H5SceneInfo;
-import com.gaokao.common.meta.po.Order;
-import com.gaokao.common.meta.po.OrderPay;
-import com.gaokao.common.meta.po.OrderRefund;
-import com.gaokao.common.meta.po.UserMember;
+import com.gaokao.common.meta.po.*;
 import com.gaokao.common.meta.vo.order.*;
 import com.gaokao.common.meta.vo.user.UserMemberVO;
-import com.gaokao.common.utils.CreateSignUtils;
-import com.gaokao.common.utils.NumberUtils;
-import com.gaokao.common.utils.RandomUtils;
+import com.gaokao.common.utils.*;
 import com.github.binarywang.wxpay.bean.notify.WxPayNotifyResponse;
 import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyResult;
 import com.github.binarywang.wxpay.bean.notify.WxPayRefundNotifyResult;
@@ -27,6 +22,7 @@ import com.github.binarywang.wxpay.bean.result.WxPayOrderCloseResult;
 import com.github.binarywang.wxpay.bean.result.WxPayUnifiedOrderResult;
 import com.github.binarywang.wxpay.constant.WxPayConstants;
 import com.github.binarywang.wxpay.service.WxPayService;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +32,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.*;
 
 @Slf4j
@@ -69,19 +68,61 @@ public class OrderServiceImpl implements OrderService {
 
     private final static String NOT_RECEIVE_ORDER = "NO";
 
+    @SneakyThrows
     @Override
-    public PreOrderResult preOrder(PreOrderParam param, Long userId) {
-        PreOrderResult preOrderResult = new PreOrderResult();
-        UserMember userMember= userMemberDao.findUserMemberById(userId);
-        if (userMember != null) {
-            preOrderResult.setUserId(userMember.getId());
-            preOrderResult.setTotalPrice(param.getTotalPrice());
+    public PreOrderResult preOrder(String out_trade_no, String total_fee) {
+        // 生成预付订单对象
+        PreOrder o = new PreOrder();
+        // 生成随机字符串
+        String nonce_str = UUID.randomUUID().toString().trim().replaceAll("-", "");
+        o.setAppid(wxPayProperties.getAppId());
+        o.setMch_id(wxPayProperties.getMchId());
+        o.setOut_trade_no(out_trade_no);
+        if (total_fee != null && !total_fee.equals("")) {
+            o.setTotal_fee(Integer.parseInt(total_fee));
+        } else {
+            o.setTotal_fee(1);
         }
-        else {
-            throw new UsernameNotFoundException("用户不存在");
-        }
+        o.setNonce_str(nonce_str);
+        o.setTrade_type(wxPayProperties.getTradeType());
+        o.setSpbill_create_ip(wxPayProperties.getSpbillCreateIp());
+        SortedMap<Object, Object> p = new TreeMap<Object, Object>();
+        p.put("appid", wxPayProperties.getAppId());
+        p.put("mch_id", wxPayProperties.getMchId());
+        p.put("nonce_str", nonce_str);
+        p.put("out_trade_no", out_trade_no);
+        p.put("total_fee", total_fee);
+        p.put("spbill_create_ip", wxPayProperties.getSpbillCreateIp());
+        p.put("trade_type", wxPayProperties.getTradeType());
+        // 获得签名
+        String sign = Sign.createSign("utf-8", p, wxPayProperties.getSecretKey());
+        o.setSign(sign);
+        // Object转换为XML
+        String xml = XmlUtils.XmlUtil.object2Xml(o,PreOrder.class);
+        // 统一下单地址
+        String url = wxPayProperties.getPlaceOrderUrl();
+        // 调用微信统一下单地址
+        String returnXml = HttpUtil.sendPost(url, xml);
+
+        // XML转换为Object
+        PreOrderResult preOrderResult = (PreOrderResult) XmlUtils.XmlUtil.xml2Object(returnXml, PreOrderResult.class);
+
         return preOrderResult;
     }
+
+    @Override
+    public PayResult getWxPayResult(InputStream inStream) throws Exception {
+        BufferedReader in = null;
+        String result = "";
+        in = new BufferedReader(new InputStreamReader(inStream));
+        String line;
+        while ((line = in.readLine()) != null) {
+            result += line;
+        }
+        PayResult pr = (PayResult) XmlUtils.XmlUtil.xml2Object(result, PayResult.class);
+        return pr;
+    }
+
 
     @Override
     public Long submit(SubmitOrderParam param, Long userId) {
@@ -96,85 +137,79 @@ public class OrderServiceImpl implements OrderService {
         return orderId;
     }
 
-        @Override
-    public PayResult pay(PayParam param, String clientIp, Long userId) {
-        Order order = orderDao.findById(param.getOrderId()).orElse(null);
-        if (order == null || !order.getUserId().equals(userId)) {
-            throw new BusinessException("订单不存在");
-        }
+//    上一个项目使用的h5支付方法
 
-        if (order.getStatus() != OrderStatus.READY_FOR_PAY.getValue()) {
-            throw new BusinessException("订单状态不对");
-        }
-
-        H5SceneInfo sceneInfo = new H5SceneInfo();
-        H5SceneInfo.H5 h5_info = new H5SceneInfo.H5();
-        h5_info.setType("Wap");
-        h5_info.setWapUrl(wxPayProperties.getWapUrl());
-        h5_info.setWapName(wxPayProperties.getWapName());
-        sceneInfo.setH5Info(h5_info);
-
-
-        String outTradeNo = RandomUtils.randomUUID();
-        UserMember userMember = userMemberDao.findUserMemberById(userId);
-
-        //https://pay.weixin.qq.com/wiki/doc/api/H5.php?chapter=9_20&index=1
-        WxPayUnifiedOrderRequest request = WxPayUnifiedOrderRequest.newBuilder()
-                .body("收银台-会员订单支付")
-                .outTradeNo(outTradeNo)
-                .totalFee(order.getRealPrice())
-                .spbillCreateIp(clientIp)
-                .notifyUrl(wxPayProperties.getPayCallbackUrl())
-                .tradeType(WxPayConstants.TradeType.JSAPI)
-                .openid(userMember.getWxOpenId())
-                .sceneInfo(JSON.toJSONString(sceneInfo))
-                .build();
-
-        WxPayUnifiedOrderResult payUnifiedOrderResult;
-        try {
-            payUnifiedOrderResult = this.wxService.unifiedOrder(request);
-        } catch (Exception e) {
-            log.error("[pay] pay failed.request={}", request, e);
-            throw new BusinessException("微信支付失败");
-        }
-
-        order.setPayType(param.getPayType().getValue());
-        order.setPayMoney(order.getRealPrice());
-        order.setPayTime(System.currentTimeMillis());
-        order.setOutTradeNo(outTradeNo);
-        orderDao.save(order);
-        OrderPay orderPay = orderPayDao.findByOrderId(order.getId());
-        if (orderPay == null) {
-            orderPay = new OrderPay();
-            orderPay.setId(idService.genOrderPayId(param.getOrderId()));
-        }
-        orderPay.setStatus(OrderStatus.READY_FOR_PAY.getValue());
-        orderPay.setOrderId(param.getOrderId());
-        orderPay.setPayType(param.getPayType().getValue());
-        orderPay.setPayMoney(order.getRealPrice());
-        orderPay.setPayTime(System.currentTimeMillis());
-        orderPay.setOutTradeNo(outTradeNo);
-        orderPayDao.save(orderPay);
-        // 使用MD5加密prepay_id等字段返回前端供发起支付
-        SortedMap<String, String> finalPackage = new TreeMap<>();
-        String packages = "prepay_id=" + payUnifiedOrderResult.getPrepayId();
-        String timeStamp = String.valueOf(System.currentTimeMillis());
-        finalPackage.put("appId", wxPayProperties.getAppId());
-        finalPackage.put("timeStamp", timeStamp);
-        finalPackage.put("nonceStr", payUnifiedOrderResult.getNonceStr());
-        finalPackage.put("package", packages);
-        finalPackage.put("signType", "MD5");
-        String paySign = CreateSignUtils.createSign(finalPackage, wxPayProperties.getMchKey());
-
-        PayResult payResult = new PayResult();
-        payResult.setPayType(param.getPayType());
-        payResult.setNonceStr(finalPackage.get("nonceStr"));
-        payResult.setTimeStamp(finalPackage.get("timeStamp"));
-        payResult.setPrepayId(payUnifiedOrderResult.getPrepayId());
-        payResult.setSignType("MD5");
-        payResult.setPaySign(paySign);
-        return payResult;
-    }
+//        @Override
+//    public PayResult pay(PayParam param, String clientIp, Long userId) {
+//        Order order = orderDao.findById(param.getOrderId()).orElse(null);
+//        if (order == null || !order.getUserId().equals(userId)) {
+//            throw new BusinessException("订单不存在");
+//        }
+//
+//        if (order.getStatus() != OrderStatus.READY_FOR_PAY.getValue()) {
+//            throw new BusinessException("订单状态不对");
+//        }
+//
+//
+//        String outTradeNo = RandomUtils.randomUUID();
+//        UserMember userMember = userMemberDao.findUserMemberById(userId);
+//
+//        //https://pay.weixin.qq.com/wiki/doc/api/H5.php?chapter=9_20&index=1
+//        WxPayUnifiedOrderRequest request = WxPayUnifiedOrderRequest.newBuilder()
+//                .body("收银台-会员订单支付")
+//                .outTradeNo(outTradeNo)
+//                .totalFee(order.getRealPrice())
+//                .spbillCreateIp(clientIp)
+//                .notifyUrl(wxPayProperties.getPayCallbackUrl())
+//                .tradeType(WxPayConstants.TradeType.JSAPI)
+//                .openid(userMember.getWxOpenId())
+//                .build();
+//
+//        WxPayUnifiedOrderResult payUnifiedOrderResult;
+//        try {
+//            payUnifiedOrderResult = this.wxService.unifiedOrder(request);
+//        } catch (Exception e) {
+//            log.error("[pay] pay failed.request={}", request, e);
+//            throw new BusinessException("微信支付失败");
+//        }
+//
+//        order.setPayType(param.getPayType().getValue());
+//        order.setPayMoney(order.getRealPrice());
+//        order.setPayTime(System.currentTimeMillis());
+//        order.setOutTradeNo(outTradeNo);
+//        orderDao.save(order);
+//        OrderPay orderPay = orderPayDao.findByOrderId(order.getId());
+//        if (orderPay == null) {
+//            orderPay = new OrderPay();
+//            orderPay.setId(idService.genOrderPayId(param.getOrderId()));
+//        }
+//        orderPay.setStatus(OrderStatus.READY_FOR_PAY.getValue());
+//        orderPay.setOrderId(param.getOrderId());
+//        orderPay.setPayType(param.getPayType().getValue());
+//        orderPay.setPayMoney(order.getRealPrice());
+//        orderPay.setPayTime(System.currentTimeMillis());
+//        orderPay.setOutTradeNo(outTradeNo);
+//        orderPayDao.save(orderPay);
+//        // 使用MD5加密prepay_id等字段返回前端供发起支付
+//        SortedMap<String, String> finalPackage = new TreeMap<>();
+//        String packages = "prepay_id=" + payUnifiedOrderResult.getPrepayId();
+//        String timeStamp = String.valueOf(System.currentTimeMillis());
+//        finalPackage.put("appId", wxPayProperties.getAppId());
+//        finalPackage.put("timeStamp", timeStamp);
+//        finalPackage.put("nonceStr", payUnifiedOrderResult.getNonceStr());
+//        finalPackage.put("package", packages);
+//        finalPackage.put("signType", "MD5");
+//        String paySign = Sign.createSign(finalPackage, wxPayProperties.getMchKey());
+//
+//        PayResult payResult = new PayResult();
+//        payResult.setPayType(param.getPayType());
+//        payResult.setNonceStr(finalPackage.get("nonceStr"));
+//        payResult.setTimeStamp(finalPackage.get("timeStamp"));
+//        payResult.setPrepayId(payUnifiedOrderResult.getPrepayId());
+//        payResult.setSignType("MD5");
+//        payResult.setPaySign(paySign);
+//        return payResult;
+//    }
 
     @Override
     public String wxPayNotify(String content) {
@@ -384,15 +419,30 @@ public class OrderServiceImpl implements OrderService {
             throw new BusinessException("订单状态不对");
         }
         order.setStatus(OrderStatus.REFUND_REJECT.getValue());
-        order.setRefundReason(reasons);
+        //order.setRefundReason(reasons);
         orderDao.save(order);
     }
 
+    /**
+     * Rewrite by Eru, 前端也正好方便，就把几个查询合并成一个接口了
+     * @param orderId 订单id
+     * @param userId 用户id
+     * @param page 第几页
+     * @param size 每页几条
+     * @return 返回对应订单信息
+     */
     @Override
-
     public Page<OrderVO> list(Long orderId, Long userId, int page, int size) {
         Page<Order> result;
-        result =orderDao.findAllByIdAndUserId(orderId,userId, PageRequest.of((page - 1), size));
+        if (orderId == null && userId == null) {
+            result = orderDao.findAll(PageRequest.of((page - 1), size));
+        } else if (orderId == null) {
+            result = orderDao.findAllByUserId(userId, PageRequest.of((page - 1), size));
+        } else if (userId == null) {
+            result = orderDao.findAllById(orderId, PageRequest.of((page - 1), size));
+        } else {
+            result = orderDao.findAllByIdAndUserId(orderId, userId, PageRequest.of((page - 1), size));
+        }
         List<OrderVO> orderVOS = new ArrayList<>(result.getNumberOfElements());
         result.forEach(item -> {
             OrderVO orderVO = new OrderVO();
