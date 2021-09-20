@@ -6,6 +6,7 @@ export default {
   data() {
     return {
       activeName: 'profile',
+      dialogVisible: false,
       user: {
         id: 0,
         username: '',
@@ -46,6 +47,7 @@ export default {
       this.$router.push({path: '/account/' + tab.name})
     },
     onClickEdit() {
+      this.dialogVisible = true
       if (!this.edit) {
         // 进入修改页面
         this.edit = !this.edit

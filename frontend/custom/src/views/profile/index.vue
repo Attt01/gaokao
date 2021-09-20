@@ -22,6 +22,7 @@
           </el-form-item>
           <el-form-item label="VIP">
             <span class="form-vip">{{ user.vipIsOrNot ? "会员用户" : "您还不是会员" }}</span>
+            <vip :visible="dialogVisible"></vip>
           </el-form-item>
           <el-button v-if="edit" class="base-info-button" plain @click="onClickEdit()">保存修改</el-button>
           <el-button v-else class="base-info-button" plain @click="onClickEdit()">完善信息</el-button>
