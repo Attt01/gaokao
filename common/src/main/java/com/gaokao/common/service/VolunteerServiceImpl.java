@@ -97,11 +97,11 @@ public class VolunteerServiceImpl implements VolunteerService{
     @Override
     public Long setVolunteer(Long userId, Long formId, Boolean section, Integer position, Long volunteerId) {
         if(section == null) {
-            section = new Boolean(Boolean.FALSE);
+            section = new Boolean(Boolean.TRUE);
         }
         FormVolunteer formVolunteer = formVolunteerDao.findByFormIdAndVolunteerSectionAndVolunteerPosition(formId, section, position);
         FormVolunteer formVolunteerRepeatCheck = formVolunteerDao.findByFormIdAndVolunteerSectionAndVolunteerId(formId, section, volunteerId);
-        if(formVolunteerRepeatCheck != null) {
+        if(formVolunteerRepeatCheck != null && formVolunteerRepeatCheck.getVolunteerPosition() != position) {
             return -1L;
         }
         if(formVolunteer == null) {
