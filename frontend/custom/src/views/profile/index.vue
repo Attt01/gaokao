@@ -69,8 +69,14 @@
         </el-form>
       </el-col>
     </el-row>
+  
   </div>
+      <div style="margin-left: 35%">
+        <div>Copyright@2021-2021</div>
+        <div>山东鲁济名师教育科技股份有限公司</div>
+      </div>
 </div>
+
 </template>
 
 <script src="./profile.js">
