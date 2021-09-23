@@ -50,7 +50,7 @@ export default {
     size: 'Global Size'
   },
   login: {
-    title: 'ShangJia ManagePlatform',
+    title: 'Gaokao ManagePlatform',
     logIn: 'Log in',
     username: 'Username',
     password: 'Password'

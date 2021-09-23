@@ -50,6 +50,9 @@
     </el-col>
 
 
+    <div v-if='mask' class="offline-mask">
+      <h2 class="offline-mask-title"> {{ offlineTitle }} </h2>
+    </div>
   </div>
 </template>
 
