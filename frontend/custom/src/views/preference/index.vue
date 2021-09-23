@@ -32,6 +32,10 @@
     </el-row>
     <br />
     <el-row v-if="isExist">
+      <el-tabs v-model="activeTable" type="card" @tab-click="changeCurrentData">
+        <el-tab-pane label="一段志愿表" name="first"></el-tab-pane>
+        <el-tab-pane label="二段志愿表" name="second"></el-tab-pane>
+      </el-tabs>
       <el-table :data="tableData" border style="width: 100%" v-loading="loading">
         <el-table-column prop="num" label="志愿序号" align="center">
         </el-table-column>
