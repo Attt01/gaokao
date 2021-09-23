@@ -49,15 +49,15 @@ export default {
         if (valid) {
           this.loading = true;
           login(this.loginForm.username, this.loginForm.password).then((res) => {
-            this.loading = false;
+            this.loading = false
             console.log(this.loading)
             if (res.code === STATUS_CODE.SUCCESS) {
-              console.log("登陆成功");
+              console.log('登陆成功')
               setToken(res.data)
               getInfo().then((res) => {
                 if (res.code === STATUS_CODE.SUCCESS) {
                   setUserInfo(res.data)
-                  this.$router.push({path: '/'})
+                  this.$router.push({ path: '/' })
                 } else {
                   this.$message({
                     message: res.msg,
