@@ -217,6 +217,19 @@
         <el-form-item label="招生专业" prop="professionalName">
           <el-input v-model="form.professionalName" :disabled="edit" style="width: 360px"/>
         </el-form-item>
+        <el-form-item label="志愿批次" prop="section">
+          <el-select
+            v-model="form.section"
+            placeholder="请选择志愿批次"
+            style="width: 360px">
+            <el-option
+              v-for="item in boolOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
         <el-form-item label="志愿序号" prop="volunteerPosition">
           <el-tooltip class="item" effect="light" content="志愿序号：指填报为第几志愿"
                       placement="bottom">

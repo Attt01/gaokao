@@ -47,17 +47,28 @@ export default {
           rate: undefined,
           volunteerVO: {}
         },
+      boolOptions: [
+        {
+          value: 1,
+          label: '一段志愿'
+        }, {
+          value: 0,
+          label: '二段志愿'
+        }
+      ],
       //表单参数
       form: {
         formId: undefined,
         volunteerId: undefined,
         volunteerPosition: undefined,
+        section: undefined,
         name: undefined,
         professionalName: undefined,
       },
       // 表单校验
       rules: {
-        volunteerPosition: {required: true, message: "志愿序号不能为空", trigger: "blur"}
+        volunteerPosition: {required: true, message: "志愿序号不能为空", trigger: "blur"},
+        section: {required: true, message: "志愿批次不能为空", trigger: "blur"},
       }
     }
   },
