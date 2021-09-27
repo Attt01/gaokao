@@ -32,6 +32,7 @@ export default {
     category: 'Category',
     tag: 'Tag',
     service: 'Service',
+    spider: 'Spider',
     specAttr: 'SpecAttr',
     shop: 'Shop',
     settled: 'Settled',

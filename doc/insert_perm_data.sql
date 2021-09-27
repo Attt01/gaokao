@@ -7,6 +7,7 @@ INSERT INTO `tb_sys_perm` VALUES (2010, 20, 'perm', '权限管理', 161865288000
 INSERT INTO `tb_sys_perm` VALUES (2020, 20, 'user', '用户管理', 1618652880000, 'system', 1618652880000, 'system');
 INSERT INTO `tb_sys_perm` VALUES (2030, 20, 'role', '角色管理', 1618652880000, 'system', 1618652880000, 'system');
 INSERT INTO `tb_sys_perm` VALUES (2040, 20, 'task', '任务管理', 1618652880000, 'system', 1618652880000, 'system');
+INSERT INTO `tb_sys_perm` VALUES (3010, 30, 'spider', '爬虫管理', 1618652880000, 'system', 1618652880000, 'system');
 INSERT INTO `tb_sys_perm` VALUES (3030, 30, 'goods', '大学管理', 1618652880000, 'system', 1618652880000, 'system');
 INSERT INTO `tb_sys_perm` VALUES (3060, 30, 'order', '订单管理', 1618652880000, 'system', 1618652880000, 'system');
 INSERT INTO `tb_sys_perm` VALUES (3070, 30, 'usermember', '会员管理', 1618652880000, 'system', 1618652880000, 'system');
@@ -26,6 +27,8 @@ INSERT INTO `tb_sys_perm` VALUES (204010, 2040, 'task:add', '任务新增', 1618
 INSERT INTO `tb_sys_perm` VALUES (204020, 2040, 'task:update', '任务修改', 1618652880000, 'system', 1618652880000, 'system');
 INSERT INTO `tb_sys_perm` VALUES (204030, 2040, 'task:delete', '任务删除', 1618652880000, 'system', 1618652880000, 'system');
 INSERT INTO `tb_sys_perm` VALUES (204040, 2040, 'task:view', '任务列表', 1618652880000, 'system', 1618652880000, 'system');
+INSERT INTO `tb_sys_perm` VALUES (301010, 3010, 'spider:view', '爬虫列表', 1618652880000, 'system', 1618652880000, 'system');
+INSERT INTO `tb_sys_perm` VALUES (301020, 3010, 'spider:start', '爬虫调用', 1618652880000, 'system', 1618652880000, 'system');
 INSERT INTO `tb_sys_perm` VALUES (303010, 3030, 'goods:add', '服务新增', 1618652880000, 'system', 1618652880000, 'system');
 INSERT INTO `tb_sys_perm` VALUES (303020, 3030, 'goods:update', '服务修改', 1618652880000, 'system', 1618652880000, 'system');
 INSERT INTO `tb_sys_perm` VALUES (303030, 3030, 'goods:delete', '服务删除', 1618652880000, 'system', 1618652880000, 'system');
@@ -115,6 +118,12 @@ insert into tb_sys_role_perm
 values (35, 100, 307030);
 insert into tb_sys_role_perm
 values (36, 100, 307040);
+insert into tb_sys_role_perm
+values (37, 100, 3010);
+insert into tb_sys_role_perm
+values (38, 100, 301010);
+insert into tb_sys_role_perm
+values (39, 100, 301020);
 
 insert into tb_sys_user
 values (1, 0, 'admin', 15557182659, '$2a$10$ABk.ZnK/vImt/v9WlHLRxOuUcEoPDPtAA8r3SulY5e0khGr6MIxPK', 0, 1618652880000,

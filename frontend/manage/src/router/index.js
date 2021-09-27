@@ -76,6 +76,12 @@ export const asyncRouterMap = [
     },
     children: [
       {
+        path: 'spider',
+        name: 'spider',
+        component: () => import('@/views/business/spider/index'),
+        meta: {title: '爬虫管理', permCode: 'spider'}
+      },
+      {
         path: 'service',
         name: 'service',
         component: () => import('@/views/business/good/index'),
