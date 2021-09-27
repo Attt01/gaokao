@@ -1,10 +1,13 @@
 package com.gaokao.controller;
 
 import com.gaokao.common.meta.AjaxResult;
+import com.gaokao.common.meta.vo.spider.SpiderMissions;
 import com.gaokao.common.service.SpiderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -32,5 +35,16 @@ public class SpiderController {
         }
 
     }
+
+    @RequestMapping("/getAllMissions")
+    public AjaxResult<Page<SpiderMissions>> getAllMissions(@RequestParam(required = false, defaultValue = "1") Integer page,
+                                                           @RequestParam(required = false, defaultValue = "10") Integer size) {
+
+        return AjaxResult.SUCCESS(spiderService.getAllMissions(page, size));
+
+    }
+
+
+
 
 }
