@@ -10,9 +10,15 @@
 
     <!--列表部分-->
     <el-table :data="spiderList" v-loading="loading"  border highlight-current-row>
-      <el-table-column label="开始时间" align="center" prop="startTime" :formatter='formatDate1'>
+      <el-table-column label="开始时间" align="center" prop="startTime">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.startTime) }}</span>
+        </template>
       </el-table-column>
-      <el-table-column label="结束时间" align="center" prop="endTime" :formatter='formatDate2'>
+      <el-table-column label="结束时间" align="center" prop="endTime" >
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.endTime) }}</span>
+        </template>
       </el-table-column>
 
       <el-table-column prop="state" label="状态" align="center">
