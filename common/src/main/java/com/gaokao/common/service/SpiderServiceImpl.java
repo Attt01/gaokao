@@ -30,7 +30,7 @@ public class SpiderServiceImpl implements SpiderService{
     @Override
     public Long startSpiderMission() {
         try {
-            String data = SpiderHttpClientUtil.doPost("http://123.60.99.51/index", "null");
+            String data = SpiderHttpClientUtil.doGet("http://127.0.0.1:8000/index/");
         } catch (Exception e) {
             return -1L;
         }
