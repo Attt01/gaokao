@@ -694,7 +694,7 @@ public class AdviseServiceImpl implements AdviseService{
 
             List<Integer> integerList = new ArrayList<>();
             FilterParams filterParams = new FilterParams();
-            filterParams.setBatch(integerList);
+            filterParams.setBatch(autoGenerateFormParams.getBatch());
             filterParams.setRegion(integerList);
             filterParams.setSchoolTeSe(integerList);
             filterParams.setSchoolType(integerList);
