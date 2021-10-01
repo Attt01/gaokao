@@ -57,14 +57,23 @@
                   </el-form-item>
 
                   <el-form-item label="填报方案" prop="plan">
+                    <el-form-item>
+                      <el-button type="primary" @click="Click1">冲击型</el-button>
+                      <el-button @click="Click2">稳妥型</el-button>
+                      <el-button type="primary" plain @click="Click3">保底型</el-button>
+                      <el-button plain @click="Click4">自定义</el-button>
+                    </el-form-item>
+                  </el-form-item>
+
+                  <el-form-item>
                     <el-form-item label="冲击">
-                      <el-input v-model="plan[0]" type="number" placeholder="请输入冲击数"></el-input>
+                      <el-input v-model="plan[0]" type="number" placeholder="请输入冲击数" v-bind:disabled="disabled"></el-input>
                     </el-form-item>
                     <el-form-item label="稳妥">
-                      <el-input v-model="plan[1]" type="number" placeholder="请输入稳妥数"></el-input>
+                      <el-input v-model="plan[1]" type="number" placeholder="请输入稳妥数" v-bind:disabled="disabled"></el-input>
                     </el-form-item>
                     <el-form-item label="保底">
-                      <el-input v-model="plan[2]" type="number" placeholder="请输入保底数"></el-input>
+                      <el-input v-model="plan[2]" type="number" placeholder="请输入保底数" v-bind:disabled="disabled"></el-input>
                     </el-form-item>
                   </el-form-item>
 
@@ -110,6 +119,21 @@
       </el-col>
       <el-col :span="0.5"></el-col>
     </el-row>
+
+    <!----自定义对话框--->
+    <el-dialog title="自定义填报方案" :close-on-click-modal="false" :visible.sync="dialogFormVisible" width="400px">
+      <el-form :model="Input_form" ref="Input_form">
+        <el-form-item v-for="(item,index) in Input_form.PlanArr" :key="index" :label="item.title"
+                      :prop="'PlanArr.'+index+'.value'" :rules="checkRules">
+          <el-input type="number" v-model.trim="item.value" :placeholder="item.placeholder" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="resetForm('Input_form')">取 消</el-button>
+        <el-button type="primary" @click="submitForm('Input_form')">确 定</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 

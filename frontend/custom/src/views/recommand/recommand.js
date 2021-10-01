@@ -17,7 +17,21 @@ export default {
         callback();
       }
     };
+    const validateInput = (rule, value, callback) => {
+      let total = 0;
+      for(let i = 0; i < this.Input_form.PlanArr.length; ++i) {
+        total += (parseInt(this.Input_form.PlanArr[i].value))
+      };
+      //console.log(total);
+      if(total != 96) {
+        callback(new Error('三个志愿总和应该是96'));
+      } else {
+        callback();
+      }
+    };
     return {
+      dialogFormVisible: false,
+      disabled: true,
       //selectAllLocation: false,
       userInfo: {
         score: 0,
@@ -45,9 +59,31 @@ export default {
       isAutoRecommand: true,
       validateRules: {
         plan: [{ validator: validatePlan, trigger: 'blur' }],
-        batch: [{ required: true, message: '请选择填报批次', trigger: 'blur'}]
-      }
-    }
+        batch: [{ required: true, message: '请选择填报批次', trigger: 'blur'}],
+      },
+
+      Input_form: {
+        PlanArr: [
+          {
+            title: "冲击",
+            placeholder: "请输入冲击数",
+            value: '',
+          },
+          {
+            title: "稳妥",
+            placeholder: "请输入稳妥数",
+            value: '',
+          },
+          {
+            title: "保底",
+            placeholder: "请输入保底数",
+            value: '',
+          }
+        ],
+      },
+      checkRules: [{ validator: validateInput, trigger: 'blur'}],
+
+    };
   },
   methods: {
     initData() {
@@ -219,8 +255,46 @@ export default {
     changeClassify(value) {
       // this.$forceUpdate();
       console.log(value)
-    }
+    },
+    Click1() {
+      this.$forceUpdate();
+      this.plan[0]=40;
+      this.plan[1]=30;
+      this.plan[2]=26;
+    },
+    Click2() {
+      this.$forceUpdate();
+      this.plan[0]=25;
+      this.plan[1]=46;
+      this.plan[2]=25;
+    },
+    Click3() {
+      this.$forceUpdate();
+      this.plan[0]=20;
+      this.plan[1]=30;
+      this.plan[2]=46;
+    },
+    Click4() {
+      this.$forceUpdate();
+      this.dialogFormVisible = true;
+    },
+    submitForm(formName) {
+      this.dialogFormVisible = false;
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          alert('自定义填报成功');
+        } else {
+          alert('自定义填报错误');
+          return false;
+        }
+      });
+    },
+    resetForm(formName) {
+      this.dialogFormVisible = false;
+      this.$refs[formName].resetFields();
+    },
   },
+
   computed: {
     userInfoStr() {
       const subjects = ['', '物理', '化学', '生物', '历史', '地理', '政治']
