@@ -16,7 +16,7 @@ steps:
     image: node:my12
     volumes:
       # node构建缓存1
-      - name: node_cache
+      - name: node_cache_manage
         path: /drone/src/frontend/manage/node_modules
       # 挂载宿主机的目录manage
       - name: front_end_manage
@@ -35,7 +35,7 @@ steps:
     image: node:my12
     volumes:
       # node构建缓存2
-      - name: node_cache
+      - name: node_cache_custom
         path: /drone/src/frontend/custom/node_modules
       # 挂载宿主机的目录custom
       - name: front_end_custom
@@ -118,23 +118,26 @@ steps:
       - maven_compile
       # 挂载的主机卷，可以映射到docker容器中
 volumes:
-  - name: node_cache
+  - name: node_cache_manage
     host:
-      path: /home/webedit/node/node_modules
+      path: /root/node/mnode/node_modules
+  - name: node_cache_custom
+    host:
+      path: /root/node/cnode/node_modules
   - name: front_end_manage
     host:
-      path: /home/webedit/node/manage
+      path: /root/node/manage
   - name: front_end_custom
     host:
-      path: /home/webedit/node/custom
+      path: /root/node/custom
   # maven构建缓存
   - name: cache
     host:
-      path: /home/webedit/maven/m2
+      path: /root/maven/m2
   # maven构建后与宿主机通信的共享目录
   - name: data
     host:
-      path: /home/webedit/maven/art
+      path: /root/maven/art
   - name: docker
     host:
       path: /var/run/docker.sock
@@ -143,6 +146,7 @@ volumes:
 trigger:
   branch:
     - feature_ci*
+    - feature-ci*
     - dev
 node:
   BUILD: A
