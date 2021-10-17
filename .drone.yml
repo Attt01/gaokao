@@ -49,7 +49,7 @@ steps:
       - npm run build
 
   #1.maven打包
-  - name: maven_compile_manage
+  - name: maven_compile
     pull: if-not-exists
     image: maven:3.8-adoptopenjdk-8
     volumes:
