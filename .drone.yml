@@ -67,7 +67,7 @@ steps:
     commands:
       # 开始打包maven工程
       - ls -l /drone/src/admin-api/src/main/resources/static
-      - mvn clean package -Dmaven.test.skip=true
+      - mvn clean package -e -X -Dmaven.test.skip=true
       - cp /drone/src/admin-api/target/*.jar /drone/src/
       - cp /drone/src/deploy/admin/admin-$PROFILES_ACTIVE.sh  /drone/src/admin.sh
       - cp /drone/src/web-api/target/*.jar /drone/src/
