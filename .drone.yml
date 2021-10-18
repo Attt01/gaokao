@@ -67,6 +67,9 @@ steps:
     commands:
       # 开始打包maven工程
       - ls -l /drone/src/admin-api/src/main/resources/static
+      - ls -l /drone/src/admin-api/src/main/resources/static/static/img
+      - ls -l /drone/src/web-api/src/main/resources/static
+      - ls -l /drone/src/web-api/src/main/resources/static/static/img
       - mvn clean package -Dmaven.test.skip=true
       - cp /drone/src/admin-api/target/*.jar /drone/src/
       - cp /drone/src/admin-api/target/*.jar /home/art/
