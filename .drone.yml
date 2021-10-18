@@ -96,8 +96,8 @@ steps:
         from_secret: dockername
       password:
         from_secret: dockerpass
-      repo: registry-vpc.cn-zhangjiakou.aliyuncs.com/shangjia/admin
-      registry: registry-vpc.cn-zhangjiakou.aliyuncs.com
+      repo: swr.cn-east-3.myhuaweicloud.com/ljms/manage
+      registry: swr.cn-east-3.myhuaweicloud.com
       dockerfile: /drone/src/admin-api/Dockerfile
     depends_on:
       - maven_compile
@@ -113,9 +113,9 @@ steps:
         from_secret: dockername
       password:
         from_secret: dockerpass
-      repo: registry-vpc.cn-zhangjiakou.aliyuncs.com/shangjia/mobile
-      registry: registry-vpc.cn-zhangjiakou.aliyuncs.com
-      dockerfile: /drone/src/mobile-api/Dockerfile
+      repo: swr.cn-east-3.myhuaweicloud.com/ljms/custom
+      registry:  swr.cn-east-3.myhuaweicloud.com
+      dockerfile: /drone/src/web-api/Dockerfile
     depends_on:
       - maven_compile
       # 挂载的主机卷，可以映射到docker容器中
