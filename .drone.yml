@@ -88,7 +88,7 @@ steps:
       - node_compile_manage
       - node_compile_custom
       # 2.docker build admin
-  - name: docker build admin
+  - name: docker_build_admin
     pull: if-not-exists
     image: plugins/docker
     volumes:
@@ -120,7 +120,7 @@ steps:
       registry:  swr.cn-east-3.myhuaweicloud.com
       dockerfile: /drone/src/web-api/Dockerfile
     depends_on:
-      - maven_compile
+      - docker_build_admin
       # 挂载的主机卷，可以映射到docker容器中
 volumes:
   - name: node_cache_manage
