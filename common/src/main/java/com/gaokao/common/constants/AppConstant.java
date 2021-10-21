@@ -8,7 +8,7 @@ package com.gaokao.common.constants;
 public class AppConstant {
     public static final Long BASE_PARENT_ID = 0L;
 
-    public static final Long ADMIN_CORP = -1L;
+    public static final Long ADMIN_CORP = 0L;
 
     public static final Long GENERAL_ADMIN_CORP = 0L;
 
