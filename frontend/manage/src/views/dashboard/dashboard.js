@@ -9,13 +9,13 @@ export default {
   },
   methods: {
     initData() {
-      getOverview().then(response => {
-        const vo = response.data
-        if (vo) {
-          this.allRegisteredUser = vo.allRegisteredUser
-          this.allRegisteredVip = vo.allRegisteredVip
-        }
-      })
+      // getOverview().then(response => {
+      //   const vo = response.data
+      //   if (vo) {
+      //     this.allRegisteredUser = vo.allRegisteredUser
+      //     this.allRegisteredVip = vo.allRegisteredVip
+      //   }
+      // })
     }
   },
   mounted() {
