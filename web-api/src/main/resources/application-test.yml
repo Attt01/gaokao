@@ -4,7 +4,7 @@ spring:
   datasource:
     url: jdbc:mysql://123.60.99.51:5006/mysql?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=GMT%2B8
     username: root
-    password: 123456
+    password: 12345678
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       pool-name: o2o
