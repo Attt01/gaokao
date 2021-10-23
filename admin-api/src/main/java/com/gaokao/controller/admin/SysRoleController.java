@@ -3,6 +3,7 @@ package com.gaokao.controller.admin;
 import com.gaokao.common.meta.AjaxResult;
 import com.gaokao.common.meta.vo.admin.SysRoleSaveParams;
 import com.gaokao.common.meta.vo.admin.SysRoleVO;
+import com.gaokao.common.meta.vo.common.NameValuePair;
 import com.gaokao.common.service.admin.SysRoleService;
 import com.gaokao.common.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author attack204
@@ -57,6 +59,13 @@ public class SysRoleController {
                                             @RequestParam(required = false, defaultValue = "10") Integer size) {
         Long operatorCorpId= UserUtils.getCorpId();
         return AjaxResult.SUCCESS(sysRoleService.list(keyword, UserUtils.getCorpId(), operatorCorpId, page, size));
+    }
+
+    @GetMapping("/dropdown")
+    @PreAuthorize("hasPermission('role','view')")
+    public AjaxResult<List<NameValuePair>> dropdown() {
+        Long corpId = UserUtils.getCorpId();
+        return AjaxResult.SUCCESS(sysRoleService.list(corpId));
     }
 
 }

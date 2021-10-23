@@ -59,9 +59,8 @@ public class Security extends WebSecurityConfigurerAdapter {
         http.addFilterAt(new JwtAuthenticationFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class);
 
         http.authorizeRequests()
-                .antMatchers("/",
-                        "/index.html",
-                        "/static/**",
+                .antMatchers(
+                    //    "/static/**",
                         "/xhr/v1/addresses/**",
                         "/xhr/v1/orders/**",
                         "/xhr/v1/users/findWxUser",

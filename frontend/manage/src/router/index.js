@@ -81,12 +81,12 @@ export const asyncRouterMap = [
         component: () => import('@/views/business/spider/index'),
         meta: {title: '爬虫管理', permCode: 'spider'}
       },
-      {
-        path: 'service',
-        name: 'service',
-        component: () => import('@/views/business/good/index'),
-        meta: {title: '大学管理', permCode: 'goods'}
-      },
+      // {
+      //   path: 'service',
+      //   name: 'service',
+      //   component: () => import('@/views/business/good/index'),
+      //   meta: {title: '大学管理', permCode: 'goods'}
+      // },
       {
         path: 'order',
         name: 'order',
@@ -141,12 +141,12 @@ export const asyncRouterMap = [
           title: 'menuMgr'
         }
       },
-      {
-        path: 'task',
-        name: 'Task',
-        component: () => import('@/views/system/task/index'),
-        meta: {permCode: 'task', title: 'taskMgr'}
-      }
+      // {
+      //   path: 'task',
+      //   name: 'Task',
+      //   component: () => import('@/views/system/task/index'),
+      //   meta: {permCode: 'task', title: 'taskMgr'}
+      // }
       // {
       //   path: 'taskLog',
       //   name: 'taskLog',

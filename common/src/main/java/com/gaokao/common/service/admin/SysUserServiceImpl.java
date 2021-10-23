@@ -119,15 +119,9 @@ public class SysUserServiceImpl implements SysUserService  {
     @Override
     public Page<UserVO> list(String keyword, Integer page, Integer size, Long corpId) {
         Page<SysUser> users;
-        if (UserUtils.isPlatformUser(corpId) && corpId == -1) {
-            //超管可以获取全部数据
-            users = sysUserDao.findByUsernameContaining(keyword, PageRequest.of(page - 1, size));
-        } else if (UserUtils.isPlatformUser(corpId) && corpId == 0) {
-            //普管可以获取商家用户数据
-            users = sysUserDao.findByUsernameContainingAndAndCorpAfter(keyword, corpId, PageRequest.of(page - 1, size));
-        } else {
-            throw new BusinessException("无权限访问！");
-        }
+
+        users = sysUserDao.findByUsernameContaining(keyword, PageRequest.of(page - 1, size));
+
         List<UserVO> userVOS = new ArrayList<>(users.getContent().size());
         for (SysUser user : users) {
             UserVO userVO = new UserVO();
