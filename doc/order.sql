@@ -12,6 +12,7 @@ CREATE TABLE `tb_order`
     pay_type     TINYINT(3) NOT NULL COMMENT '支付方式',
     third_pay_sn VARCHAR(64) CHARSET dec8 NOT NULL COMMENT '第三方支付流水号',
     `status`     INT NOT NULL DEFAULT 0 COMMENT '状态',
+    ip           varchar(60) not null comment 'ip地址',
     PRIMARY KEY (`id`)
 ) ENGINE=INNODB
   DEFAULT CHARSET = utf8mb4 comment '订单信息表';

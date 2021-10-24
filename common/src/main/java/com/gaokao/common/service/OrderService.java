@@ -4,6 +4,8 @@ import com.gaokao.common.meta.po.OrderRefund;
 import com.gaokao.common.meta.vo.order.*;
 import com.gaokao.common.meta.vo.user.UserMemberVO;
 import org.springframework.data.domain.Page;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.InputStream;
 
@@ -13,12 +15,10 @@ import java.io.InputStream;
  * desc: 订单
  */
 public interface OrderService {
-    /**
-     * 0：预下单
-     */
-    PreOrderResult preOrder(String out_trade_no, String total_fee);
 
-    PayResult getWxPayResult(InputStream inStream) throws Exception;
+
+    @Transactional(propagation = Propagation.REQUIRED)//默认隔离级别
+    String saveOrder(Long userId) throws Exception;
 
     /**
      * 1: 提交订单

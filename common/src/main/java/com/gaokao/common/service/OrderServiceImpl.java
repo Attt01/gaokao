@@ -7,6 +7,7 @@ import com.gaokao.common.dao.OrderPayDao;
 import com.gaokao.common.dao.OrderRefundDao;
 import com.gaokao.common.dao.UserMemberDao;
 import com.gaokao.common.enums.OrderStatus;
+import com.gaokao.common.enums.PayType;
 import com.gaokao.common.exceptions.BusinessException;
 import com.gaokao.common.meta.bo.H5SceneInfo;
 import com.gaokao.common.meta.po.*;
@@ -31,6 +32,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -68,59 +71,77 @@ public class OrderServiceImpl implements OrderService {
 
     private final static String NOT_RECEIVE_ORDER = "NO";
 
-    @SneakyThrows
     @Override
-    public PreOrderResult preOrder(String out_trade_no, String total_fee) {
-        // 生成预付订单对象
-        PreOrder o = new PreOrder();
-        // 生成随机字符串
-        String nonce_str = UUID.randomUUID().toString().trim().replaceAll("-", "");
-        o.setAppid(wxPayProperties.getAppId());
-        o.setMch_id(wxPayProperties.getMchId());
-        o.setOut_trade_no(out_trade_no);
-        if (total_fee != null && !total_fee.equals("")) {
-            o.setTotal_fee(Integer.parseInt(total_fee));
-        } else {
-            o.setTotal_fee(1);
+    @Transactional(propagation = Propagation.REQUIRED)//默认隔离级别
+    public String saveOrder(Long userId) throws Exception {
+        //获取ip 模拟一个假的ip
+        //String ip = IpUtils.getIpAddr(request);
+        String ip = "120.25.1.43";
+        Order order = new Order();
+        order.setIp(ip);
+        //查询用户信息
+        UserMember user = userMemberDao.findUserMemberById(userId);
+        if (user == null) {
+            return "用户不存在";
         }
-        o.setNonce_str(nonce_str);
-        o.setTrade_type(wxPayProperties.getTradeType());
-        o.setSpbill_create_ip(wxPayProperties.getSpbillCreateIp());
-        SortedMap<Object, Object> p = new TreeMap<Object, Object>();
-        p.put("appid", wxPayProperties.getAppId());
-        p.put("mch_id", wxPayProperties.getMchId());
-        p.put("nonce_str", nonce_str);
-        p.put("out_trade_no", out_trade_no);
-        p.put("total_fee", total_fee);
-        p.put("spbill_create_ip", wxPayProperties.getSpbillCreateIp());
-        p.put("trade_type", wxPayProperties.getTradeType());
-        // 获得签名
-        String sign = Sign.createSign("utf-8", p, wxPayProperties.getSecretKey());
-        o.setSign(sign);
-        // Object转换为XML
-        String xml = XmlUtils.XmlUtil.object2Xml(o,PreOrder.class);
-        // 统一下单地址
-        String url = wxPayProperties.getPlaceOrderUrl();
-        // 调用微信统一下单地址
-        String returnXml = HttpUtil.sendPost(url, xml);
-
-        // XML转换为Object
-        PreOrderResult preOrderResult = (PreOrderResult) XmlUtils.XmlUtil.xml2Object(returnXml, PreOrderResult.class);
-
-        return preOrderResult;
-    }
-
-    @Override
-    public PayResult getWxPayResult(InputStream inStream) throws Exception {
-        BufferedReader in = null;
-        String result = "";
-        in = new BufferedReader(new InputStreamReader(inStream));
-        String line;
-        while ((line = in.readLine()) != null) {
-            result += line;
+        //已经是vip
+        if (user.isVipIsOrNot() == true) {
+            return "您已经是vip";
         }
-        PayResult pr = (PayResult) XmlUtils.XmlUtil.xml2Object(result, PayResult.class);
-        return pr;
+        //生成订单
+        String outTradeNo = RandomUtils.randomUUID();
+        order.setUserId(userId);//用户
+        order.setStatus(OrderStatus.READY_FOR_PAY.getValue());//待支付
+        order.setId(1L);//订单号
+        order.setCreateTime(System.currentTimeMillis());//创建时间
+        order.setOutTradeNo(outTradeNo);//对外订单号
+        order.setPayType(PayType.WX_NATIVE_PAY.getValue());//支付方式为微信支付
+        order.setThirdPaySn("11");
+        order.setRealPrice(1);//todo
+        order.setGoodsId(1L);//todo
+        order.setPayTime(System.currentTimeMillis());
+        order.setTotalPrice(1);
+        //保存订单
+        orderDao.save(order);
+
+        //发送请求
+        WxPayUnifiedOrderRequest request = WxPayUnifiedOrderRequest.newBuilder().build();
+        request.setAppid("wx6c3f8b761f7a1e03");//公众号AppId
+        request.setMchId(wxPayProperties.getMchId());//商户ID
+        request.setOutTradeNo(order.getOutTradeNo());//订单流水号
+        request.setTradeType("NATIVE");//交易类型 扫码支付
+        request.setBody("鲁济名师助力每一位考生的梦想");//商品描述
+        request.setTotalFee(1);//商品金额
+        request.setSpbillCreateIp(order.getIp());//终端IP
+        request.setNotifyUrl(wxPayProperties.getNotify_url());//通知地址
+        request.setProductId("1");
+
+        //创建sign
+        SortedMap<String,String> params = new TreeMap<>();
+        params.put("appid","wx6c3f8b761f7a1e03");//公众号AppId
+        params.put("mch_id",wxPayProperties.getMchId());//商户ID
+        params.put("out_trade_no",order.getOutTradeNo());//订单流水号
+        params.put("trade_type",wxPayProperties.getTradeType());//交易类型 扫码支付
+        params.put("body","111");//商品描述
+        params.put("total_fee","1");//商品金额
+        params.put("spbill_create_ip",order.getIp());//终端IP
+        params.put("notify_url",wxPayProperties.getNotify_url());//通知地址
+        String sign = WXPayUtil.createSign(params,wxPayProperties.getMchKey());
+        params.put("sign",sign);
+
+
+
+        request.setSign(sign);
+        WxPayUnifiedOrderResult payUnifiedOrderResult;
+        try {
+            payUnifiedOrderResult = this.wxService.unifiedOrder(request);
+        } catch (Exception e) {
+            log.error("[pay] pay failed.request={}", request, e);
+            throw new BusinessException("微信支付失败");
+        }
+        //生成二维码
+        return payUnifiedOrderResult.getCodeURL();
+
     }
 
 

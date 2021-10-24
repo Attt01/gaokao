@@ -5,7 +5,7 @@ package com.gaokao.common.enums;
  * desc: 订单支付方式
  */
 public enum  PayType {
-    WX_JS_PAY(1, "微信JS支付");
+    WX_NATIVE_PAY(1, "微信NATIVE支付");
     private final int value;
     private final String desc;
 

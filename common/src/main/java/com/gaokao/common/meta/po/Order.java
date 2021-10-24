@@ -44,4 +44,6 @@ public class Order{
 
     private Integer status;
 
+    private String ip;
+
 }
