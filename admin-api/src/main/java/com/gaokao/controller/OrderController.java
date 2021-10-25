@@ -42,87 +42,12 @@ public class OrderController {
     @Autowired
     private WxPayProperties wxPayProperties;
 
-    @RequestMapping(value = "/notify/wxpay")
-    public void wxpay(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        log.info("支付成功后的微信支付异步通知");
-        // 获取微信支付结果
-        PayResult payResult = orderService.getWxPayResult(request.getInputStream());
 
-        boolean isPaid = payResult.getReturn_code().equals("SUCCESS") ? true : false;
-        // 查询该笔订单在微信那边是否成功支付
-        // 支付成功，处理后同步返回给微信参数
-        PrintWriter writer = response.getWriter();
-        if (isPaid) {
-            String merchantOrderId = payResult.getOut_trade_no();            // 商户订单号
-            String wxFlowId = payResult.getTransaction_id();
-            Integer paidAmount = payResult.getTotal_fee();
-
-            System.out.println("================================= 支付成功 =================================");
-            log.info("* 商户订单号: {}", merchantOrderId);
-            log.info("* 微信订单号: {}", wxFlowId);
-            log.info("* 实际支付金额: {}", paidAmount);
-            log.info("*****************************************************************************");
-            // 通知订单服务，该订单已支付
-            System.out.println("================================= 通知订单服务，该订单已支付 =================================");
-
-            // 通知微信已经收到消息，不要再给我发消息了，否则微信会10连击调用本接口
-            String noticeStr = setXML("SUCCESS", "");
-            writer.write(noticeStr);
-            writer.flush();
-        } else {
-            System.out.println("================================= 支付失败 =================================");
-
-            // 支付失败
-            String noticeStr = setXML("FAIL", "");
-            writer.write(noticeStr);
-            writer.flush();
-        }
-    }
-    public static String setXML(String return_code, String return_msg) {
-        return "<xml><return_code><![CDATA[" + return_code + "]]></return_code><return_msg><![CDATA[" + return_msg + "]]></return_msg></xml>";
+    @PostMapping("/wxPayNotify")
+    public String wxPayNotify(@RequestBody String xmlData) {
+        return orderService.wxPayNotify(xmlData);
     }
 
-    /**
-     * 微信扫码支付页面
-     * @return
-     */
-    @PostMapping(value = "/getWXPayQRCode")
-    public JsonResult getWXPayQRCode(String merchantUserId, String merchantOrderId) throws Exception {
-        // 根据订单ID和用户ID查询订单详情
-//        Orders waitPayOrder = paymentOrderService.queryOrderByStatus(merchantOrderId,merchantUserId,PaymentStatus.WAIT_PAY.type);
-        Order waitPayOrder = new Order();
-        // 商品描述
-        String body = "付款用户[" + merchantUserId + "]";
-        // 商户订单号
-        String out_trade_no = merchantOrderId;
-        // 使用map代替redis
-        Map<String, String> redisCacheMap = new HashMap<>();
-        // 从redis中去获得这笔订单的微信支付二维码，如果订单状态没有支付没有就放入，这样的做法防止用户频繁刷新而调用微信接口
-        if (waitPayOrder != null) {
-            String qrCodeUrl = redisCacheMap.get(wxPayProperties.getQrcodeKey() + ":" + merchantOrderId);
-
-            if (StringUtils.isEmpty(qrCodeUrl)) {
-                // 订单总金额，单位为分
-                String total_fee = "1"; // 测试金额
-                // 统一下单
-                PreOrderResult preOrderResult = orderService.preOrder(out_trade_no, total_fee);
-                qrCodeUrl = preOrderResult.getCode_url();
-            }
-
-            PaymentInfoVO paymentInfoVO = new PaymentInfoVO();
-            paymentInfoVO.setAmount(1);
-            paymentInfoVO.setMerchantOrderId(merchantOrderId);
-            paymentInfoVO.setMerchantUserId(merchantUserId);
-            paymentInfoVO.setQrCodeUrl(qrCodeUrl);
-
-            redisCacheMap.put(wxPayProperties.getQrcodeKey() + ":" + merchantOrderId, qrCodeUrl);
-
-
-            return JsonResult.ok(paymentInfoVO);
-        } else {
-            return JsonResult.errorMsg("该订单不存在，或已经支付");
-        }
-    }
 
     @PostMapping("/submit")
     public AjaxResult<String> submit(@RequestBody SubmitOrderParam param) {
@@ -131,14 +56,7 @@ public class OrderController {
         return AjaxResult.SUCCESS(String.valueOf(orderId));
     }
 
-//    h5支付使用 先注释掉
-//    @PostMapping("/pay")
-//    public AjaxResult<PayResult> pay(@RequestBody PayParam param, HttpServletRequest request) {
-//        Long userId = UserUtils.getUserId();
-//        String ip = IPUtils.getRequestClientRealIP(request);
-//        PayResult payResult = orderService.pay(param, ip, userId);
-//        return AjaxResult.SUCCESS(payResult);
-//    }
+
 
     @PostMapping("/success")
     public AjaxResult<Boolean> success(@RequestParam String orderId) {
@@ -164,11 +82,6 @@ public class OrderController {
         AjaxResult<Boolean> result = AjaxResult.SUCCESS(true);
         result.setMsg("取消成功");
         return result;
-    }
-
-    @PostMapping("/wxPayNotify")
-    public String wxPayNotify(@RequestBody String xmlData) {
-        return orderService.wxPayNotify(xmlData);
     }
 
     @GetMapping("/")

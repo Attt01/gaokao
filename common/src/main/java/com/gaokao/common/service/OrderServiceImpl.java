@@ -158,79 +158,7 @@ public class OrderServiceImpl implements OrderService {
         return orderId;
     }
 
-//    上一个项目使用的h5支付方法
 
-//        @Override
-//    public PayResult pay(PayParam param, String clientIp, Long userId) {
-//        Order order = orderDao.findById(param.getOrderId()).orElse(null);
-//        if (order == null || !order.getUserId().equals(userId)) {
-//            throw new BusinessException("订单不存在");
-//        }
-//
-//        if (order.getStatus() != OrderStatus.READY_FOR_PAY.getValue()) {
-//            throw new BusinessException("订单状态不对");
-//        }
-//
-//
-//        String outTradeNo = RandomUtils.randomUUID();
-//        UserMember userMember = userMemberDao.findUserMemberById(userId);
-//
-//        //https://pay.weixin.qq.com/wiki/doc/api/H5.php?chapter=9_20&index=1
-//        WxPayUnifiedOrderRequest request = WxPayUnifiedOrderRequest.newBuilder()
-//                .body("收银台-会员订单支付")
-//                .outTradeNo(outTradeNo)
-//                .totalFee(order.getRealPrice())
-//                .spbillCreateIp(clientIp)
-//                .notifyUrl(wxPayProperties.getPayCallbackUrl())
-//                .tradeType(WxPayConstants.TradeType.JSAPI)
-//                .openid(userMember.getWxOpenId())
-//                .build();
-//
-//        WxPayUnifiedOrderResult payUnifiedOrderResult;
-//        try {
-//            payUnifiedOrderResult = this.wxService.unifiedOrder(request);
-//        } catch (Exception e) {
-//            log.error("[pay] pay failed.request={}", request, e);
-//            throw new BusinessException("微信支付失败");
-//        }
-//
-//        order.setPayType(param.getPayType().getValue());
-//        order.setPayMoney(order.getRealPrice());
-//        order.setPayTime(System.currentTimeMillis());
-//        order.setOutTradeNo(outTradeNo);
-//        orderDao.save(order);
-//        OrderPay orderPay = orderPayDao.findByOrderId(order.getId());
-//        if (orderPay == null) {
-//            orderPay = new OrderPay();
-//            orderPay.setId(idService.genOrderPayId(param.getOrderId()));
-//        }
-//        orderPay.setStatus(OrderStatus.READY_FOR_PAY.getValue());
-//        orderPay.setOrderId(param.getOrderId());
-//        orderPay.setPayType(param.getPayType().getValue());
-//        orderPay.setPayMoney(order.getRealPrice());
-//        orderPay.setPayTime(System.currentTimeMillis());
-//        orderPay.setOutTradeNo(outTradeNo);
-//        orderPayDao.save(orderPay);
-//        // 使用MD5加密prepay_id等字段返回前端供发起支付
-//        SortedMap<String, String> finalPackage = new TreeMap<>();
-//        String packages = "prepay_id=" + payUnifiedOrderResult.getPrepayId();
-//        String timeStamp = String.valueOf(System.currentTimeMillis());
-//        finalPackage.put("appId", wxPayProperties.getAppId());
-//        finalPackage.put("timeStamp", timeStamp);
-//        finalPackage.put("nonceStr", payUnifiedOrderResult.getNonceStr());
-//        finalPackage.put("package", packages);
-//        finalPackage.put("signType", "MD5");
-//        String paySign = Sign.createSign(finalPackage, wxPayProperties.getMchKey());
-//
-//        PayResult payResult = new PayResult();
-//        payResult.setPayType(param.getPayType());
-//        payResult.setNonceStr(finalPackage.get("nonceStr"));
-//        payResult.setTimeStamp(finalPackage.get("timeStamp"));
-//        payResult.setPrepayId(payUnifiedOrderResult.getPrepayId());
-//        payResult.setSignType("MD5");
-//        payResult.setPaySign(paySign);
-//        return payResult;
-//    }
 
     @Override
     public String wxPayNotify(String content) {
@@ -247,15 +175,6 @@ public class OrderServiceImpl implements OrderService {
             order.setStatus(OrderStatus.PAID_SUCCESS.getValue());
             orderDao.save(order);
 
-            OrderPay orderPay = orderPayDao.findByOrderId(order.getId());
-            if (orderPay == null) {
-                throw new BusinessException("订单不存在");
-            }
-            if (orderPay.getStatus() != OrderStatus.READY_FOR_PAY.getValue()) {
-                throw new BusinessException("订单状态不对");
-            }
-            orderPay.setStatus(OrderStatus.PAID_SUCCESS.getValue());
-            orderPayDao.save(orderPay);
         } catch (Exception e) {
             throw new BusinessException("回调失败:", e);
         }
