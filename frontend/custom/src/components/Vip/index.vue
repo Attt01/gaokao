@@ -5,7 +5,8 @@
     width="400px"
     center
     :before-close="handleClose">
-    <img class="vip-code" :src="require('@/assets/img/QR_code_fake.jpg')"/>
+<!--    <img class="vip-code" :src="require('@/assets/img/QR_code_fake.jpg')"/>-->
+    <img class="vip-code" :src="'/xhr/v1/users/orders/saveOrder?userId=' + userId"/>
     <div class="vip-word">微信支付</div>
     <h2 class="vip-price">￥99.00</h2>
     <div class="vip-privilege">
@@ -31,6 +32,11 @@
 </template>
 
 <script>
+// 1.生成订单号和二维码
+// 2.扫描二维码支付，回调支付结果
+// 3.若未支付则订单状态为待支付，可在我的订单页面查看并支付，也可以取消订单
+import { saveOrder, success, cancelOrder } from '@/api/vip'
+import { getInfo } from '@/api/login'
 export default {
   name: 'vip',
   props: {
@@ -38,7 +44,10 @@ export default {
   },
   data() {
     return {
-      dialogVisible: false
+      dialogVisible: false,
+      orderId: 0,
+      code: '',
+      userId: 0
     }
   },
   methods: {
@@ -51,11 +60,35 @@ export default {
     },
     hideDialog() {
       this.dialogVisible = false
+    },
+    init() {
+      getInfo().then(res => {
+        this.userId = res.data.id
+      })
     }
+    // 支付回调
+    // onSubmitCallback(result) {
+    //   // 发起微信支付
+    //   if (result.payType == PayTypeEnum.WECHAT.value) {
+    //     wxPayment(result)
+    //       .then(() => {
+    //         this.$success('支付成功')
+    //         success(this.orderId)
+    //       })
+    //       .catch(err => {
+    //         this.$error('订单未支付')
+    //       })
+    //       .finally(() => {
+    //         this.disabled = false
+    //       })
+    //   }
+    // }
+
   },
   watch: {
     visible(val, oldVal) {
       this.dialogVisible = val
+      this.init()
     }
   }
 }

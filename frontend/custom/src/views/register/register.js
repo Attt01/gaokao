@@ -52,7 +52,7 @@ export default {
         //username: [{required: true, trigger: 'blur', validator: validateUsername}],
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 6, message: '密码长度不能少于6位', trigger: 'blur'},
+          { min: 8, message: '密码长度不能少于8位', trigger: 'blur'},
           { max: 14, message: '密码长度不能少于14位', trigger: 'blur'}
         ],
         confirmpwd: [{ required: true, trigger: 'blur', validator: validateConfirmPwd }],
