@@ -117,10 +117,10 @@ export default {
   computed: {
     userInfoStr() {
       const subjects = ['', '物理', '化学', '生物', '历史', '地理', '政治']
-      if (this.userInfo.score) {
-        let subs = this.userInfo.subject
-        return '高考分数: ' + this.userInfo.score
-          + ' / 排名: ' + this.userInfo.provinceRank
+      if (this.regForm.score) {
+        let subs = this.regForm.subject
+        return '高考分数: ' + this.regForm.score
+          + ' / 排名: ' + this.regForm.provinceRank
           + ' / 选科: ' + subjects[subs[0]] + ' ' + subjects[subs[1]] + ' ' + subjects[subs[2]]
       }
     }
