@@ -20,17 +20,6 @@
                     </el-input>
                   </el-form-item>
 
-                  <!-- <el-form-item label="专业意向" prop="major">
-                    <el-cascader
-                      v-model="form.major"
-                      :options="majorOptions"
-                      :props="multiProps"
-                      collapse-tags
-                      clearable
-                      filterable
-                      @change="changeClassify"></el-cascader>
-                  </el-form-item> -->
-
                   <el-form-item label="大学类型" prop="school">
                     <el-cascader
                       v-model="form.school"
@@ -58,10 +47,10 @@
 
                   <el-form-item label="填报方案" prop="plan">
                     <el-form-item>
-                      <el-button type="primary" @click="Click1">冲击型</el-button>
-                      <el-button @click="Click2">稳妥型</el-button>
-                      <el-button type="primary" plain @click="Click3">保底型</el-button>
-                      <el-button plain @click="Click4">自定义</el-button>
+                      <el-button :type="this.activeTab == 1 ? 'primary' : 'default' " @click="Click1">冲击型</el-button>
+                      <el-button :type="this.activeTab == 2 ? 'primary' : 'default' " @click="Click2">稳妥型</el-button>
+                      <el-button :type="this.activeTab == 3 ? 'primary' : 'default' " @click="Click3">保底型</el-button>
+                      <el-button :type="this.activeTab == 4 ? 'primary' : 'default' " @click="Click4">自定义</el-button>
                     </el-form-item>
                   </el-form-item>
 

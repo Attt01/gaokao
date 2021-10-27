@@ -20,9 +20,16 @@ export default {
     const validateInput = (rule, value, callback) => {
       let total = 0;
       for(let i = 0; i < this.Input_form.PlanArr.length; ++i) {
-        total += (parseInt(this.Input_form.PlanArr[i].value))
+        let planNum = parseInt(this.Input_form.PlanArr[i].value);
+        if (window.isNaN(planNum)) {
+          this.Input_form.PlanArr[i].value = 0;
+          planNum = 0;
+        }
+        if (!(0 <= planNum && planNum <= 96)) {
+          callback(new Error('三个志愿总和应该是96'));
+        }
+        total += planNum;
       };
-      //console.log(total);
       if(total != 96) {
         callback(new Error('三个志愿总和应该是96'));
       } else {
@@ -30,6 +37,7 @@ export default {
       }
     };
     return {
+      activeTab: 2,
       dialogFormVisible: false,
       disabled: true,
       //selectAllLocation: false,
@@ -55,7 +63,7 @@ export default {
       locationOptions: [],
       //totalLocationLength: 0,
       classifyOptions: [],
-      plan: [],
+      plan: [25, 46, 25],
       isAutoRecommand: true,
       validateRules: {
         plan: [{ validator: validatePlan, trigger: 'blur' }],
@@ -81,7 +89,7 @@ export default {
           }
         ],
       },
-      checkRules: [{ validator: validateInput, trigger: 'blur'}],
+      checkRules: [{ validator: validateInput, trigger: 'none'}],
 
     };
   },
@@ -184,18 +192,7 @@ export default {
     selectRegion() {
       getRegion().then(response => {
         if (response) {
-          // this.locationOptions.push({
-          //   label: '全选',
-          //   value: '-1'
-          // })
           this.locationOptions.push.apply(this.locationOptions, response.data);
-          // for (let index in this.locationOptions) {
-          //   if (index == 0) {
-          //     continue;
-          //   }
-          //   //console.log(this.locationOptions[index]);
-          //   this.totalLocationLength += this.locationOptions[index].children.length;
-          // }
         }
       })
     },
@@ -206,69 +203,22 @@ export default {
         }
       })
     },
-    //蜜汁全选功能，好像不能用QAQ
-    // changeLocation(value) {
-    //   console.log(value);
-    //   //console.log(this.form.region);
-    //   if (value[0][0] == -1) {
-    //     if (this.selectAllLocation) {
-    //       console.log('owo', this.totalLocationLength + 1, this.form.region.length);
-    //       if (this.form.region.length != this.totalLocationLength + 1) {
-    //         //console.log('before', this.form.region);
-    //         this.form.region.splice(0, 1);
-    //         //value.splice(0, 1);
-    //         this.$forceUpdate();
-    //         console.log('after', this.form.region);
-    //         this.selectAllLocation = false;
-    //         return this.form.region;
-    //       }
-    //     } else {
-    //       this.form.region = [];
-    //       for (let regionIndex in this.locationOptions) {
-    //         if (regionIndex == 0) {
-    //           this.form.region.push([-1]);
-    //         } else {
-    //           //console.log('qwq', this.locationOptions[regionIndex].children);
-    //           for (let cityIndex in this.locationOptions[regionIndex].children) {
-    //             this.form.region.push([
-    //               this.locationOptions[regionIndex].value,
-    //               this.locationOptions[regionIndex].children[cityIndex].value
-    //             ]);
-    //           }
-    //         }
-    //       }
-    //       //console.log(this.form.region);
-    //       this.selectAllLocation = true;
-    //     }
-    //   } else {
-    //     if (this.selectAllLocation) {
-    //       this.form.region = [];
-    //       this.selectAllLocation = false;
-    //     } else {
-    //       if (this.form.region.length != this.totalLocationLength + 1) {
-    //         this.form.region.unshift([-1]);
-    //         this.selectAllLocation = true;
-    //       }
-    //     }
-    //   }
-    // },
-    changeClassify(value) {
-      // this.$forceUpdate();
-      console.log(value)
-    },
     Click1() {
+      this.activeTab = 1;
       this.$forceUpdate();
       this.plan[0]=40;
       this.plan[1]=30;
       this.plan[2]=26;
     },
     Click2() {
+      this.activeTab = 2;
       this.$forceUpdate();
       this.plan[0]=25;
       this.plan[1]=46;
       this.plan[2]=25;
     },
     Click3() {
+      this.activeTab = 3;
       this.$forceUpdate();
       this.plan[0]=20;
       this.plan[1]=30;
@@ -282,9 +232,20 @@ export default {
       this.dialogFormVisible = false;
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('自定义填报成功');
+          this.$message({
+            type: 'success',
+            message: '自定义志愿成功'
+          });
+          this.activeTab = 4;
+          for (let i = 0; i < 3; i++) {
+            this.plan[i] = this.Input_form.PlanArr[i].value;
+          }
         } else {
-          alert('自定义填报错误');
+          this.$refs[formName].resetFields();
+          this.$message({
+            type: 'error',
+            message: '自定义失败'
+          })
           return false;
         }
       });
