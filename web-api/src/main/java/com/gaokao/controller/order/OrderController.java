@@ -1,8 +1,10 @@
 package com.gaokao.controller.order;
 
 import com.gaokao.common.config.WxPayProperties;
+import com.gaokao.common.meta.AjaxResult;
 import com.gaokao.common.meta.po.Order;
 import com.gaokao.common.service.OrderService;
+import com.gaokao.common.utils.UserUtils;
 import com.github.binarywang.utils.qrcode.MatrixToImageWriter;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
@@ -11,10 +13,7 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,18 +33,32 @@ public class OrderController {
 
     /**
      * 下单接口
+     * @param
+     * @return
+     * @throws Exception
+     */
+    @GetMapping  ("/generateOrder")
+    public AjaxResult<Long> generateOrder(@RequestParam Long userId) throws Exception{
+        Order order = new Order();
+        order.setUserId(userId);
+        Long orderId = orderService.generateOrder(userId);
+        AjaxResult<Long> result = AjaxResult.SUCCESS(orderId);
+        result.setMsg("下单成功");
+        return result;
+    }
+
+    /**
+     * 生成支付二维码接口
      * @param request  用户信息
      * @return
      * @throws Exception
      */
     @GetMapping("/saveOrder")
     public void saveOrder(HttpServletRequest request,
-                          HttpServletResponse response, @RequestParam Long userId) throws Exception {
-        Order order = new Order();
-        order.setUserId(userId);
+                          HttpServletResponse response, @RequestParam Long orderId) throws Exception {
 
         //统一下单拿支付交易链接codeUrl
-        String codeUrl = orderService.saveOrder(userId);//orderService.saveOrder(userId);
+        String codeUrl = orderService.saveOrder(orderId);//orderService.saveOrder(userId);
         if(codeUrl == null){
             throw new NullPointerException();
         }
@@ -66,7 +79,5 @@ public class OrderController {
         }catch (Exception e){
             e.printStackTrace();
         }
-
-
     }
 }

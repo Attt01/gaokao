@@ -18,6 +18,9 @@ public interface OrderService {
 
 
     @Transactional(propagation = Propagation.REQUIRED)//默认隔离级别
+    Long generateOrder(Long userId) throws Exception;
+
+    @Transactional(propagation = Propagation.REQUIRED)//默认隔离级别
     String saveOrder(Long userId) throws Exception;
 
     /**

@@ -41,7 +41,7 @@ wx:
     # 支付方式，取值如下：JSAPI，NATIVE，APP
     tradeType: NATIVE
     #通知地址
-    notifyUrl: http://z29eku.natappfree.cc/xhr/v1/orders/wxPayNotify
+    notifyUrl:  http://7zcc7f.natappfree.cc/xhr/v1/orders/wxPayNotify
     #请求地址
     UnifiedOrderUrl : https://api.mch.weixin.qq.com/v3/pay/transactions/native
 

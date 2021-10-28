@@ -7,7 +7,7 @@ public enum OrderStatus {
 
     CANCELED(2, "已取消"),
 
-    PAID_SUCCESS(5, "支付成功,待商家接单"),
+    PAID_SUCCESS(5, "支付成功"),
 
     APPLY_FOR_REFUND(14, "退款申请中"),
 
@@ -19,9 +19,7 @@ public enum OrderStatus {
 
     CLOSED(25, "已关闭"),
 
-    COMPLETED(30, "订单已完成"),
-
-    EVALUATED(35, "已评价");
+    COMPLETED(30, "订单已完成");
 
     private final int value;
     private final String desc;
