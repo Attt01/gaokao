@@ -1,8 +1,8 @@
-
-env: DEV
+env: online
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/gaokao?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=GMT%2B8
+    #xxx.xxx.xxx需替换为机器的主私网ip
+    url: jdbc:mysql://xxx.xxx.xxx:3306/gaokao?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=GMT%2B8
     username: Gaokao
     password: Gaokao522
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -31,25 +31,33 @@ wx:
   #支付
   pay:
     # 小程序appid
-    appId: wx6c3f8b761f7a1e03
+    appId: wxfd24dcdd82129aaa
     # 商户号
     mchId: 1613925940
     # api密钥
     mchKey: Ljmswxfd24dcdd82129aaa0123456789
     # 证书路径
     keyPath: classpath:cert/apiclient_cert.p12
+    # 微信支付异步回调地址
+    payCallbackUrl:
+    # 微信支付二维码key
+    qrcodeKey: wxpay_qrcode
+    # 微信支付二维码过期时间为 < 2小时（微信二维码code_url有效期为2小时）
+    qrcodeExpire: 7000
     # 支付方式，取值如下：JSAPI，NATIVE，APP
     tradeType: NATIVE
-    #通知地址
-    notifyUrl:  http://7zcc7f.natappfree.cc/xhr/v1/orders/wxPayNotify
-    #请求地址
-    UnifiedOrderUrl : https://api.mch.weixin.qq.com/v3/pay/transactions/native
+    # 商户秘钥
+    secrectKey:
+    #统一下单地址
+    placeOrderUrl:
+    # APP和网页支付提交用户端ip，Native支付填调用微信支付API的机器IP
+    spbillCreateIp:
 
     sanbox: true
 
 logging:
-  config: classpath:config/dev/logback.xml
+  config: classpath:config/online/logback.xml
 
 server:
-  port: 9090
+  port: 9090    #待确定
 
