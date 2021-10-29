@@ -263,6 +263,24 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public void completeOrder(Long orderId, Long userId) {
+        Order order = orderDao.findById(orderId).orElse(null);
+        if (order == null || !order.getUserId().equals(userId)) {
+            throw new BusinessException("订单不存在");
+        }
+        if (order.getStatus() != OrderStatus.PAID_SUCCESS.getValue()) {
+            throw new BusinessException("订单状态不对");
+        }
+        order.setStatus(OrderStatus.COMPLETED.getValue());
+        orderDao.save(order);
+        //完成之后变为vip
+        UserMember userMember=userMemberDao.findUserMemberById(userId);
+        userMember.setVipIsOrNot(true);
+        userMemberDao.save(userMember);
+
+    }
+
+    @Override
     public void close(Long orderId, Long userId) {
         Order order = orderDao.findById(orderId).orElse(null);
         if (order == null || !order.getUserId().equals(userId)) {
@@ -386,24 +404,6 @@ public class OrderServiceImpl implements OrderService {
         }
         order.setStatus(OrderStatus.CANCELED.getValue());
         orderDao.save(order);
-    }
-
-    @Override
-    public void completeOrder(Long orderId, Long userId) {
-        Order order = orderDao.findById(orderId).orElse(null);
-        if (order == null || !order.getUserId().equals(userId)) {
-            throw new BusinessException("订单不存在");
-        }
-        if (order.getStatus() != OrderStatus.PAID_SUCCESS.getValue()) {
-            throw new BusinessException("订单状态不对");
-        }
-        order.setStatus(OrderStatus.COMPLETED.getValue());
-        orderDao.save(order);
-        //完成之后变为vip
-        UserMember userMember=userMemberDao.findUserMemberById(userId);
-        userMember.setVipIsOrNot(true);
-        userMemberDao.save(userMember);
-
     }
 
     @Override
