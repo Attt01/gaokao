@@ -1,15 +1,25 @@
 import request from '@/utils/request'
 /**
- * 生成订单和支付二维码
+ * 生成订单
  *
  */
-export function saveOrder(userId) {
+export function generateOrder(userId) {
   return request({
-    url: '/xhr/v1/users/orders/saveOrder?userId=' + userId,
+    url: '/xhr/v1/users/orders/generateOrder?userId=' + userId,
     method: 'get'
   })
 }
 
+/**
+ * 生成二维码
+ *
+ */
+export function saveOrder(orderId) {
+  return request({
+    url: '/xhr/v1/users/orders/saveOrder?outTradeNo=' + orderId,
+    method: 'get'
+  })
+}
 /**
  * 取消订单
  */
@@ -26,13 +36,20 @@ export function cancelOrder(params) {
 /**
  * 充值成功
  */
-export function success(params) {
+export function success(orderId) {
   return request({
-    url: '/xhr/v1/orders/success',
-    method: 'post',
-    data: {
-      orderId: params.orderId
-    }
+    url: '/xhr/v1/users/orders/success?orderId=' + orderId,
+    method: 'post'
+  })
+}
+
+/**
+ * 查询订单状态
+ */
+export function getOrder(orderId) {
+  return request({
+    url: '/xhr/v1/users/orders/getStatus?orderId=' + orderId,
+    method: 'post'
   })
 }
 

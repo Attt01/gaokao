@@ -3,6 +3,7 @@ package com.gaokao.controller.order;
 import com.gaokao.common.config.WxPayProperties;
 import com.gaokao.common.meta.AjaxResult;
 import com.gaokao.common.meta.po.Order;
+import com.gaokao.common.meta.vo.order.OrderVO;
 import com.gaokao.common.service.OrderService;
 import com.gaokao.common.utils.UserUtils;
 import com.github.binarywang.utils.qrcode.MatrixToImageWriter;
@@ -80,8 +81,21 @@ public class OrderController {
             e.printStackTrace();
         }
     }
+    @PostMapping("/getStatus")
+    public AjaxResult<OrderVO> getOrderStatus(@RequestParam String orderId) {
+        Long userId = UserUtils.getUserId();
+        AjaxResult<OrderVO> result = AjaxResult.SUCCESS(orderService.getByOrderId(Long.valueOf(orderId), userId));
+        result.setMsg("成功");
+        return result;
+    }
 
-
-
-  
+    @PostMapping("/success")
+    public AjaxResult<Boolean> success(@RequestParam String orderId) {
+        //获取当前用户id
+        Long userId = UserUtils.getUserId();
+        orderService.completeOrder(Long.valueOf(orderId), userId);
+        AjaxResult<Boolean> result = AjaxResult.SUCCESS(true);
+        result.setMsg("成功");
+        return result;
+    }
 }
