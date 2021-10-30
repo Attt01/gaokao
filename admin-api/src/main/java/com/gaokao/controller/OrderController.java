@@ -2,14 +2,10 @@ package com.gaokao.controller;
 
 
 
-import com.alibaba.druid.util.StringUtils;
 import com.gaokao.common.config.WxPayProperties;
 import com.gaokao.common.meta.AjaxResult;
-import com.gaokao.common.meta.po.Order;
 import com.gaokao.common.meta.vo.order.*;
 import com.gaokao.common.service.OrderService;
-import com.gaokao.common.utils.IPUtils;
-import com.gaokao.common.utils.JsonResult;
 import com.gaokao.common.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,12 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author attack204
@@ -42,11 +32,11 @@ public class OrderController {
     @Autowired
     private WxPayProperties wxPayProperties;
 
-
     @PostMapping("/wxPayNotify")
     public String wxPayNotify(@RequestBody String xmlData) {
         return orderService.wxPayNotify(xmlData);
     }
+
 
 
     @PostMapping("/submit")
@@ -56,7 +46,11 @@ public class OrderController {
         return AjaxResult.SUCCESS(String.valueOf(orderId));
     }
 
-
+    @PostMapping("/getStatus")
+    public Integer getOrderStatus(@RequestParam Long id, @RequestParam Long userId) {
+        OrderVO orderVO = orderService.getByOrderId(id,userId);
+        return orderVO.getStatus();
+    }
 
     @PostMapping("/success")
     public AjaxResult<Boolean> success(@RequestParam String orderId) {

@@ -29,4 +29,6 @@ public class OrderVO {
     private String thirdPaySn;
 
     private Integer status;
+
+    private String ip;
 }
