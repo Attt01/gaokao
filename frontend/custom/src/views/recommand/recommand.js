@@ -46,7 +46,7 @@ export default {
         score: 0,
         subject: [],
         provinceRank: 0,
-        id: 0,
+        id: 0
       },
       form: {
         major: [],
@@ -268,7 +268,6 @@ export default {
     }
   }
   ,
-
   computed: {
     userInfoStr() {
       const subjects = ['', '物理', '化学', '生物', '历史', '地理', '政治']
