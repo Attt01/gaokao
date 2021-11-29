@@ -72,79 +72,6 @@ public class OrderServiceImpl implements OrderService {
 
     private final static String NOT_RECEIVE_ORDER = "NO";
 
-//    @Override
-//    @Transactional(propagation = Propagation.REQUIRED)//默认隔离级别
-//    public String saveOrder(Long userId) throws Exception {
-//        //获取ip 模拟一个假的ip
-//        //String ip = IpUtils.getIpAddr(request);
-//        String ip = "120.25.1.43";
-//        Order order = new Order();
-//        order.setIp(ip);
-//        //查询用户信息
-//        UserMember user = userMemberDao.findUserMemberById(userId);
-//        if (user == null) {
-//            return "用户不存在";
-//        }
-//        //已经是vip
-//        if (user.isVipIsOrNot() == true) {
-//            return "您已经是vip";
-//        }
-//        //生成订单
-//        String outTradeNo = RandomUtils.randomUUID();
-//        order.setUserId(userId);//用户
-//        order.setStatus(OrderStatus.READY_FOR_PAY.getValue());//待支付
-//        order.setId(1L);//订单号
-//        order.setCreateTime(System.currentTimeMillis());//创建时间
-//        order.setOutTradeNo(outTradeNo);//对外订单号
-//        order.setPayType(PayType.WX_NATIVE_PAY.getValue());//支付方式为微信支付
-//        order.setThirdPaySn("11");
-//        order.setRealPrice(1);//todo
-//        order.setGoodsId(1L);//todo
-//        order.setPayTime(System.currentTimeMillis());
-//        order.setTotalPrice(1);
-//        //保存订单
-//        orderDao.save(order);
-//
-//        //发送请求
-//        WxPayUnifiedOrderRequest request = WxPayUnifiedOrderRequest.newBuilder().build();
-//        request.setAppid("wx6c3f8b761f7a1e03");//公众号AppId
-//        request.setMchId(wxPayProperties.getMchId());//商户ID
-//        request.setOutTradeNo(order.getOutTradeNo());//订单流水号
-//        request.setTradeType("NATIVE");//交易类型 扫码支付
-//        request.setBody("鲁济名师助力每一位考生的梦想");//商品描述
-//        request.setTotalFee(1);//商品金额
-//        request.setSpbillCreateIp(order.getIp());//终端IP
-//        request.setNotifyUrl(wxPayProperties.getNotify_url());//通知地址
-//        request.setProductId("1");
-//
-//        //创建sign
-//        SortedMap<String,String> params = new TreeMap<>();
-//        params.put("appid","wx6c3f8b761f7a1e03");//公众号AppId
-//        params.put("mch_id",wxPayProperties.getMchId());//商户ID
-//        params.put("out_trade_no",order.getOutTradeNo());//订单流水号
-//        params.put("trade_type",wxPayProperties.getTradeType());//交易类型 扫码支付
-//        params.put("body","111");//商品描述
-//        params.put("total_fee","1");//商品金额
-//        params.put("spbill_create_ip",order.getIp());//终端IP
-//        params.put("notify_url",wxPayProperties.getNotify_url());//通知地址
-//        String sign = WXPayUtil.createSign(params,wxPayProperties.getMchKey());
-//        params.put("sign",sign);
-//
-//
-//
-//        request.setSign(sign);
-//        WxPayUnifiedOrderResult payUnifiedOrderResult;
-//        try {
-//            payUnifiedOrderResult = this.wxService.unifiedOrder(request);
-//        } catch (Exception e) {
-//            log.error("[pay] pay failed.request={}", request, e);
-//            throw new BusinessException("微信支付失败");
-//        }
-//        //生成二维码
-//        return payUnifiedOrderResult.getCodeURL();
-//
-//    }
-
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)//默认隔离级别
@@ -223,6 +150,33 @@ public class OrderServiceImpl implements OrderService {
         }
         //生成二维码
         return payUnifiedOrderResult.getCodeURL();
+    }
+
+    //查询订单支付状态
+    @Override
+    public Map<String, String> queryPayStatus(String orderNo) {
+        try {
+            //1、封装参数
+            Map m = new HashMap<>();
+            m.put("appid", "wx6c3f8b761f7a1e03");
+            m.put("mch_id", "1613925940");
+            m.put("out_trade_no", orderNo);
+            m.put("nonce_str", com.github.wxpay.sdk.WXPayUtil.generateNonceStr());
+
+            //2 发送httpclient
+            HttpClient client = new HttpClient("https://api.mch.weixin.qq.com/pay/orderquery");
+            client.setXmlParam(com.github.wxpay.sdk.WXPayUtil.generateSignedXml(m,"Ljmswxfd24dcdd82129aaa0123456789"));
+            client.setHttps(true);
+            client.post();
+
+            //3 得到请求返回内容
+            String xml = client.getContent();
+            Map<String, String> resultMap = WXPayUtil.xmlToMap(xml);
+            //6、转成Map再返回
+            return resultMap;
+        }catch(Exception e) {
+            return null;
+        }
     }
 
 

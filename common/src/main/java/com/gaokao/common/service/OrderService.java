@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.InputStream;
+import java.util.Map;
 
 /**
  * @author wyc-0705
@@ -22,6 +23,9 @@ public interface OrderService {
 
     @Transactional(propagation = Propagation.REQUIRED)//默认隔离级别
     String saveOrder(Long userId) throws Exception;
+
+    //查询订单支付状态
+    Map<String, String> queryPayStatus(String orderNo);
 
     /**
      * 1: 提交订单

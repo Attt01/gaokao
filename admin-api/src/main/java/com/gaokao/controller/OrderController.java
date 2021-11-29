@@ -2,8 +2,10 @@ package com.gaokao.controller;
 
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.gaokao.common.config.WxPayProperties;
 import com.gaokao.common.meta.AjaxResult;
+import com.gaokao.common.meta.po.Order;
 import com.gaokao.common.meta.vo.order.*;
 import com.gaokao.common.service.OrderService;
 import com.gaokao.common.utils.UserUtils;
@@ -13,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 /**
  * @author attack204
@@ -60,6 +64,13 @@ public class OrderController {
         AjaxResult<Boolean> result = AjaxResult.SUCCESS(true);
         result.setMsg("成功");
         return result;
+    }
+
+    //2 根据订单id查询订单信息
+    @GetMapping("getOrderInfo")
+    public Map<String, String> getOrderInfo(@RequestParam String orderId) {
+        Map<String, String> map = orderService.queryPayStatus(orderId);
+        return map;
     }
 
     @PostMapping("/close")
