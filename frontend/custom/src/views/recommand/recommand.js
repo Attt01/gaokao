@@ -2,6 +2,7 @@ import { getBatch, getMajorType, getRegion, getSchoolType } from "../../api/scre
 import { autoGenerateForm } from "@/api/recommand"
 import { changeCurrentForm } from "@/api/volunteer"
 import { STATUS_CODE } from "@/api/statusCode";
+import { getInfo } from '../../api/login'
 
 export default {
   data() {
@@ -90,14 +91,15 @@ export default {
         ],
       },
       checkRules: [{ validator: validateInput, trigger: 'none'}],
-
+      vipIsOrNot: false,
+      vipDialog: false
     };
   },
   methods: {
     initData() {
       //if (getToken())
       this.userInfo = JSON.parse(localStorage.getItem('userGaoKaoInfo'));
-      //console.log(this.userInfo);
+      // console.log(this.userInfo);
       this.selectBatch();
       this.selectRegion();
       this.selectSchoolType();
@@ -141,42 +143,49 @@ export default {
     onSubmit() {
       this.$refs['form'].validate((isValid) => {
         if (isValid) {
-          //console.log(parseInt(this.plan[2]));
-          this.getClassification();
-          this.getArrayRegion();
-          let totalForm = {
-            chongRate: window.isNaN(parseInt(this.plan[0])) ? 0 : parseInt(this.plan[0]),
-            baoRate: window.isNaN(parseInt(this.plan[1])) ? 0 : parseInt(this.plan[1]),
-            wenRate: window.isNaN(parseInt(this.plan[2])) ? 0 : parseInt(this.plan[2]),
-            region: this.form.region,
-            batch: [this.form.batch],
-            schoolTeSe: this.form.schoolTeSe,
-            schoolXingZhi: this.form.schoolXingZhi,
-            schoolType: this.form.schoolType,
-            score: this.userInfo.score,
-            subject: this.userInfo.subject,
-            userId: this.userInfo.id,
-            majorName: '',
-            page: 1,
-            limit: 96,
-            total: 96,
-            type: 0,
-            universityName: ''
-          };
-          autoGenerateForm(totalForm).then(res => {
-            //console.log(res);
-            if (res.code === STATUS_CODE.SUCCESS) {
-              this.$message({
-                type: 'success',
-                message: '智能推荐生成志愿表成功'
-              });
-              changeCurrentForm({newFormId: res.data.id}).then(res => {
-                if (res.code === STATUS_CODE.SUCCESS) {
-                  this.$router.push('/preference');
-                }
-              });
+          getInfo().then(res => {
+            this.vipIsOrNot = res.data.vipIsOrNot
+            if (!this.vipIsOrNot) {
+              this.vipDialog = true
+              return
             }
-          });
+            //console.log(parseInt(this.plan[2]));
+            this.getClassification();
+            this.getArrayRegion();
+            let totalForm = {
+              chongRate: window.isNaN(parseInt(this.plan[0])) ? 0 : parseInt(this.plan[0]),
+              baoRate: window.isNaN(parseInt(this.plan[1])) ? 0 : parseInt(this.plan[1]),
+              wenRate: window.isNaN(parseInt(this.plan[2])) ? 0 : parseInt(this.plan[2]),
+              region: this.form.region,
+              batch: [this.form.batch],
+              schoolTeSe: this.form.schoolTeSe,
+              schoolXingZhi: this.form.schoolXingZhi,
+              schoolType: this.form.schoolType,
+              score: this.userInfo.score,
+              subject: this.userInfo.subject,
+              userId: this.userInfo.id,
+              majorName: '',
+              page: 1,
+              limit: 96,
+              total: 96,
+              type: 0,
+              universityName: ''
+            };
+            autoGenerateForm(totalForm).then(res => {
+              //console.log(res);
+              if (res.code === STATUS_CODE.SUCCESS) {
+                this.$message({
+                  type: 'success',
+                  message: '智能推荐生成志愿表成功'
+                });
+                changeCurrentForm({newFormId: res.data.id}).then(res => {
+                  if (res.code === STATUS_CODE.SUCCESS) {
+                    this.$router.push('/preference');
+                  }
+                });
+              }
+            });
+          })
         } else {
           return false;
         }
@@ -254,8 +263,11 @@ export default {
       this.dialogFormVisible = false;
       this.$refs[formName].resetFields();
     },
-  },
-
+    closeDialog(param) {
+      this.vipDialog = param
+    }
+  }
+  ,
   computed: {
     userInfoStr() {
       const subjects = ['', '物理', '化学', '生物', '历史', '地理', '政治']
@@ -268,6 +280,6 @@ export default {
     }
   },
   mounted() {
-    this.initData();
-  },
+    this.initData()
+  }
 }

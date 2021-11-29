@@ -87,10 +87,10 @@
 
                   <el-row type="flex" justify="space-around">
                     <el-col :span="8">
-                      <el-button type="primary" @click="onSubmit">立即生成推荐表</el-button>
+                      <el-button type="primary" @click="onSubmit()">立即生成推荐表</el-button>
                     </el-col>
+                    <vip :visible="vipDialog" v-if="vipDialog" @closeDialog="closeDialog"></vip>
                   </el-row>
-
                 </el-form>
               </div>
             </el-col>
