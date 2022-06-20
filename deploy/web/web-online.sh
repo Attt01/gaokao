@@ -3,7 +3,7 @@
 CURRENT_PATH=$(cd "$(dirname "$0")"; pwd)
 JAR=$(find $CURRENT_PATH -maxdepth 1 -name "*.jar")
 PID=$(ps -ef | grep $JAR | grep -v grep | awk '{ print $2 }')
-JVM_OPTS_BASE="-cp . -ea -Xms4096m -Xmx4096m -XX:MaxTenuringThreshold=7 -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+UnlockExperimentalVMOptions"
+JVM_OPTS_BASE="-cp . -ea -Xms2048m -Xmx2048m -XX:MaxTenuringThreshold=7 -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+UnlockExperimentalVMOptions"
 JAVA_OPTS="-XX:+UseG1GC -XX:G1LogLevel=finest -XX:+PrintHeapAtGC -XX:+UseGCLogFileRotation  -XX:NumberOfGCLogFiles=5 -XX:GCLogFileSize=10240k -XX:+HeapDumpOnOutOfMemoryError -XX:-OmitStackTraceInFastThrow -Xloggc:/home/logs/mobile/gc.log"
 
 case "$1" in

@@ -47,8 +47,8 @@ wx:
 
     sanbox: true
 
-logging:
-  config: classpath:config/dev/logback.xml
+#logging:
+#  config: classpath:config/dev/logback.xml
 
 server:
   port: 9090

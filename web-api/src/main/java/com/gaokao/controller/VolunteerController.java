@@ -7,11 +7,17 @@ import com.gaokao.common.meta.vo.volunteer.*;
 import com.gaokao.common.service.VolunteerService;
 import com.gaokao.common.utils.UserUtils;
 //import com.sun.org.apache.xpath.internal.operations.Bool;
+import com.github.xiaolyuh.annotation.CachePut;
+import com.github.xiaolyuh.annotation.Cacheable;
+import com.github.xiaolyuh.annotation.FirstCache;
+import com.github.xiaolyuh.annotation.SecondaryCache;
+import com.github.xiaolyuh.support.CacheMode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author attack204
@@ -30,7 +36,10 @@ public class VolunteerController {
      * 查询某一用户当前的志愿表
      * 这个类型不是null，后期会改
      */
-    @GetMapping("/getCurrent")
+    @GetMapping("/getCurrent/")
+    @Cacheable(value = "user:info", depict = "用户信息缓存", cacheMode = CacheMode.ALL,
+            firstCache = @FirstCache(expireTime = 4, timeUnit = TimeUnit.SECONDS),
+            secondaryCache = @SecondaryCache(expireTime = 10, preloadTime = 3, forceRefresh = true, timeUnit = TimeUnit.SECONDS))
     public AjaxResult<UserFormDetailVO> listCurrent() {
         Long id = UserUtils.getUserId();
         UserFormDetailVO userFormDetailVO = volunteerService.listCurrentForm(id);
@@ -88,8 +97,8 @@ public class VolunteerController {
     public AjaxResult<Boolean> queryExist(@RequestBody VolunteerExistParams volunteerExistParams) {
 
         Boolean result = volunteerService.queryExist(volunteerExistParams.getFormId(),
-                                                     volunteerExistParams.getVolunteerSection(),
-                                                     volunteerExistParams.getVolunteerPosition());
+                volunteerExistParams.getVolunteerSection(),
+                volunteerExistParams.getVolunteerPosition());
         return AjaxResult.SUCCESS(result);
 
     }
@@ -153,7 +162,7 @@ public class VolunteerController {
     public AjaxResult<Long> swapVolunteer(@RequestBody SwapVolunteerParams swapVolunteerParams) {
 
         if(swapVolunteerParams.getFirstVolunteerPosition() < 1 || swapVolunteerParams.getFirstVolunteerPosition() > 96
-         ||swapVolunteerParams.getSecondVolunteerPosition() < 1 || swapVolunteerParams.getSecondVolunteerPosition() > 96) {
+                ||swapVolunteerParams.getSecondVolunteerPosition() < 1 || swapVolunteerParams.getSecondVolunteerPosition() > 96) {
             return AjaxResult.FAIL("需要交换志愿的边界出现异常");
         }
 

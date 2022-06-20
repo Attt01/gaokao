@@ -17,6 +17,7 @@ public interface UserFormDao extends PagingAndSortingRepository<UserForm, Long> 
 
     List<UserForm> findAllByUserId(Long userId);
 
+    @Query(value = "select * from tb_user_form where user_id = ?1 and is_current = ?2 limit 1;", nativeQuery = true)
     UserForm findUserFormByUserIdAndCurrent(Long userId, Boolean current);
 
     @Query(value = "select * from tb_user_form where user_id = ?1 and generated_time = ?2 ;", nativeQuery = true)

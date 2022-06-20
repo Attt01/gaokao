@@ -16,6 +16,12 @@
     <name>common</name>
     <description>本模块为项目公共层</description>
 
+    <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+    <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>18.0</version>
+    </dependency>
 
     <properties>
         <java_source_version>1.8</java_source_version>
