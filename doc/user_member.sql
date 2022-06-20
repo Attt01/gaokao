@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS `tb_user_member`;
+
 CREATE TABLE `tb_user_member`
 (
     id              bigint auto_increment not null comment '主键',
