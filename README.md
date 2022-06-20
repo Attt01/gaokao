@@ -2,7 +2,7 @@
 
 ## 前提：尽量减少IDEA的警告 
 
-1. 类字段尽量声明为`final`，包括`static`字段及普通字段；
+1. 类字段尽量声明为`final`，包括`static`字段及普通字段； 
 2. 禁止`List`/`Set`/`Map`的raw使用；
 3. `@Autowired`注解优先使用构造方法注入；
 4. 使用`@GetMapping`代替`@RequestMapping(method = RequestMethod.GET)`，
