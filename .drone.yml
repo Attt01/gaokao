@@ -99,8 +99,8 @@ steps:
         from_secret: dockername
       password:
         from_secret: dockerpass
-      repo: swr.cn-east-3.myhuaweicloud.com/ljms/manage
-      registry: swr.cn-east-3.myhuaweicloud.com
+      repo: ccr.ccs.tencentyun.com/gaokao_system/manage
+      registry: ccr.ccs.tencentyun.com
       dockerfile: /drone/src/admin-api/Dockerfile
     depends_on:
       - maven_compile
@@ -116,8 +116,8 @@ steps:
         from_secret: dockername
       password:
         from_secret: dockerpass
-      repo: swr.cn-east-3.myhuaweicloud.com/ljms/custom
-      registry:  swr.cn-east-3.myhuaweicloud.com
+      repo: ccr.ccs.tencentyun.com/gaokao_system/custom
+      registry:  ccr.ccs.tencentyun.com
       dockerfile: /drone/src/web-api/Dockerfile
     depends_on:
       - docker_build_admin
@@ -182,7 +182,6 @@ steps:
       dockerpass:
         from_secret: dockerpass
     commands:
-      - echo $PROFILES_ACTIVE_$TAG
       - export days=`date +"%Y%m%d"`
       - /home/tools/docker_start.sh  $dockername $dockerpass $PROFILES_ACTIVE"_"$TAG"_"$days
 
