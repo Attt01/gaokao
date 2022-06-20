@@ -6,6 +6,7 @@
         <artifactId>beauty-o2o</artifactId>
         <groupId>cn.enilu</groupId>
         <version>${revision}</version>
+        <relativePath />
     </parent>
 
     <groupId>com.gaokao.webapi</groupId>
