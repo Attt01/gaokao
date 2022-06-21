@@ -13,7 +13,7 @@
         <module>web-api</module>
         <module>admin-api</module>
     </modules>
-
+<!--
     <repositories>
         <repository>
             <id>aliyun-jcenter</id>
@@ -51,7 +51,7 @@
             </snapshots>
         </pluginRepository>
     </pluginRepositories>
-
+-->
     <properties>
         <revision>0.0.1-SNAPSHOT</revision>
 
