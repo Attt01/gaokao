@@ -26,9 +26,9 @@ spring:
   servlet:
     multipart:
       max-file-size: 10MB
-
 logging:
-  config: classpath:config/dev/logback.xml
+#  config: classpath:config/dev/logback.xml
+#
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml
