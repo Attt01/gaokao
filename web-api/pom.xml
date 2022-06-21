@@ -49,10 +49,7 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>com.gaokao</groupId>
-            <artifactId>common</artifactId>
-        </dependency>
+
 
         <!-- redis相关依赖-->
         <dependency>
@@ -92,6 +89,14 @@
                     </excludes>
                     <includeSystemScope>true</includeSystemScope>
                 </configuration>
+                <dependencies>
+                    <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-compress -->
+                    <dependency>
+                        <groupId>org.apache.commons</groupId>
+                        <artifactId>commons-compress</artifactId>
+                        <version>1.21</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>

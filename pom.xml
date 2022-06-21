@@ -103,11 +103,7 @@
     </properties>
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>org.apache.httpcomponents</groupId>
-                <artifactId>httpclient</artifactId>
-                <version>4.5.2</version>
-            </dependency>
+
 
             <dependency>
                 <groupId>javax.mail</groupId>
@@ -119,6 +115,9 @@
                 <artifactId>layering-cache-starter</artifactId>
                 <version>3.4.3</version>
             </dependency>
+
+
+
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context-support</artifactId>
