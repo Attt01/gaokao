@@ -27,6 +27,8 @@
 
       <el-form-item prop="username">
         <el-row :gutter="20">
+          <h5>测试用户名：12345678910</h5>
+          <h5>测试密码：12345678</h5>
           <el-col :span="2">
             <svg-icon icon-class="user"/>
           </el-col>
