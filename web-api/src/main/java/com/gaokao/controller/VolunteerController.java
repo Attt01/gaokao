@@ -37,9 +37,6 @@ public class VolunteerController {
      * 这个类型不是null，后期会改
      */
     @GetMapping("/getCurrent/")
-    @Cacheable(value = "user:info", depict = "用户信息缓存", cacheMode = CacheMode.ALL,
-            firstCache = @FirstCache(expireTime = 4, timeUnit = TimeUnit.SECONDS),
-            secondaryCache = @SecondaryCache(expireTime = 10, preloadTime = 3, forceRefresh = true, timeUnit = TimeUnit.SECONDS))
     public AjaxResult<UserFormDetailVO> listCurrent() {
         Long id = UserUtils.getUserId();
         UserFormDetailVO userFormDetailVO = volunteerService.listCurrentForm(id);
