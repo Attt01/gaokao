@@ -12,18 +12,13 @@
         <i class="el-icon-circle-plus-outline" />
         新建志愿表
       </el-button>
-      <el-button type="primary" v-if="isExist">
-        <i class="el-icon-document" /> 复制志愿表</el-button
-      >
-      <el-button type="success" v-if="isExist">
-        <i class="el-icon-upload2" /> 导出志愿表</el-button
-      >
+
       <el-button
         @click="
           mode = false;
           dialogVisible = true;
         "
-        type="info"
+
         v-if="isExist"
       >
         <i class="el-icon-edit" />

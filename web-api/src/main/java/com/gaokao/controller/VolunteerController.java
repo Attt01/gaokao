@@ -36,7 +36,7 @@ public class VolunteerController {
      * 查询某一用户当前的志愿表
      * 这个类型不是null，后期会改
      */
-    @GetMapping("/getCurrent/")
+    @GetMapping("/getCurrent")
     public AjaxResult<UserFormDetailVO> listCurrent() {
         Long id = UserUtils.getUserId();
         UserFormDetailVO userFormDetailVO = volunteerService.listCurrentForm(id);
