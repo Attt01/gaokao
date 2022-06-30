@@ -101,7 +101,7 @@
         <div class="right-container">
           <!--轮播图/宣传图留空-->
           <el-image
-            src="https://imagezy.eol.cn/_nuxt/img/banner-s1.1b8e78b.png"
+            src="https://cdn.attack204.com/gaokao2.jpg"
           >
           </el-image>
         </div>
