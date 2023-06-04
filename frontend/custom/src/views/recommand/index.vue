@@ -126,7 +126,11 @@
   </div>
 </template>
 
-<script src="./recommand.js"></script>
+<script src="./recommand.js">
+
+
+</script>
+
 
 <style lang="scss" scoped>
 .form-container {
