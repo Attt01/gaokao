@@ -1,8 +1,10 @@
 package com.gaokao.common.service;
 
 import com.gaokao.common.meta.po.FormVolunteer;
+import com.gaokao.common.meta.po.Volunteer;
 import com.gaokao.common.meta.vo.volunteer.UserFormAllVO;
 import com.gaokao.common.meta.vo.volunteer.UserFormDetailVO;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -30,5 +32,10 @@ public interface VolunteerService {
     FormVolunteer findByFormIdAndSectionAndVolunteerPosition(Long formId, Boolean section, Integer position);
 
     Boolean queryExist(Long formId, Boolean volunteerSection, Integer position);
+    Boolean addOneVolunteer(Volunteer volunteer);
 
+    Boolean updateOneVolunteer(Volunteer volunteer);
+
+    Boolean deleteOneVolunteer(Long volunteerId);
+    Page<Volunteer> getVolunteers(int pageNo, int pageSize, String searchText);
 }

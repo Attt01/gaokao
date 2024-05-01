@@ -81,12 +81,12 @@ export const asyncRouterMap = [
         component: () => import('@/views/business/spider/index'),
         meta: {title: '爬虫管理', permCode: 'spider'}
       },
-      // {
-      //   path: 'service',
-      //   name: 'service',
-      //   component: () => import('@/views/business/good/index'),
-      //   meta: {title: '大学管理', permCode: 'goods'}
-      // },
+      {
+        path: 'service',
+        name: 'service',
+        component: () => import('@/views/business/good/index'),
+        meta: {title: '志愿管理', permCode: 'goods'}
+      },
       {
         path: 'order',
         name: 'order',

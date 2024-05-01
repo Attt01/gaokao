@@ -1,5 +1,6 @@
 package com.gaokao.common.meta.po;
 
+import lombok.Builder;
 import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
