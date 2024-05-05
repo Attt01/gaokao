@@ -5,22 +5,23 @@ import com.gaokao.common.constants.VolunteerConstant;
 import com.gaokao.common.dao.FormVolunteerDao;
 import com.gaokao.common.dao.VolunteerDao;
 import com.gaokao.common.dao.UserFormDao;
-import com.gaokao.common.enums.Subject;
 import com.gaokao.common.meta.po.FormVolunteer;
 import com.gaokao.common.meta.po.UserForm;
 import com.gaokao.common.meta.po.Volunteer;
 import com.gaokao.common.meta.vo.volunteer.UserFormAllVO;
 import com.gaokao.common.meta.vo.volunteer.UserFormDetailVO;
-import com.gaokao.common.meta.vo.volunteer.VolunteerCreateParams;
 import com.gaokao.common.meta.vo.volunteer.VolunteerVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author attack204
@@ -220,6 +221,41 @@ public class VolunteerServiceImpl implements VolunteerService{
     @Override
     public FormVolunteer findByFormIdAndSectionAndVolunteerPosition(Long formId, Boolean section, Integer position) {
         return formVolunteerDao.findByFormIdAndVolunteerSectionAndVolunteerPosition(formId, section, position);
+    }
 
+    public Page<Volunteer> getVolunteers(int pageNo, int pageSize, String searchText) {
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+        return volunteerDao.findByNameContaining(searchText, pageable);
+    }
+    @Override
+    public Boolean addOneVolunteer(Volunteer volunteer) {
+        volunteerDao.save(volunteer);
+        return Boolean.TRUE;
+    }
+
+    @Override
+    public Boolean updateOneVolunteer(Volunteer volunteer) {
+        Optional<Volunteer> pre = volunteerDao.findById(volunteer.getId());
+        if(pre.isPresent()) {
+            Volunteer volunteer1 = pre.get();
+            volunteer1.setName(volunteer.getName());
+            volunteer1.setProfessionalName(volunteer.getProfessionalName());
+            volunteer1.setEnrollment(volunteer.getEnrollment());
+            volunteer1.setLowestScore(volunteer.getLowestScore());
+            volunteer1.setLowestPosition(volunteer.getLowestPosition());
+            try {
+                volunteerDao.save(volunteer1);
+            } catch (Exception e) {
+                System.out.printf(e.getMessage());
+            }
+
+        }
+        return Boolean.TRUE;
+    }
+
+    @Override
+    public Boolean deleteOneVolunteer(Long volunteerId) {
+        volunteerDao.deleteById(volunteerId);
+        return Boolean.TRUE;
     }
 }
